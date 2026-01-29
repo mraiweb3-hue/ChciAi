@@ -359,7 +359,10 @@ export default function SetupPage() {
                 <div className="space-y-2">
                   <Label htmlFor="provider" className="text-zinc-200">LLM Provider</Label>
                   <Select 
-                    onValueChange={setProvider} 
+                    onValueChange={(val) => {
+                      setProvider(val);
+                      if (val === 'emergent') setApiKey('');
+                    }} 
                     value={provider}
                     disabled={loading}
                   >
@@ -371,51 +374,61 @@ export default function SetupPage() {
                       <SelectValue placeholder="Choose provider" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#141416] border-[#1f2022]">
+                      <SelectItem value="emergent" className="focus:bg-[#1f2022]">
+                        Emergent (Recommended - No key needed)
+                      </SelectItem>
                       <SelectItem value="anthropic" className="focus:bg-[#1f2022]">
-                        Anthropic (Claude)
+                        Anthropic (Claude) - Bring your own key
                       </SelectItem>
                       <SelectItem value="openai" className="focus:bg-[#1f2022]">
-                        OpenAI (GPT)
+                        OpenAI (GPT) - Bring your own key
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                  {provider === 'emergent' && (
+                    <p className="text-xs text-[#22c55e]">
+                      Pre-configured with GPT-5.2 and Claude Sonnet 4.5
+                    </p>
+                  )}
                 </div>
 
-                {/* API Key Input */}
-                <div className="space-y-2">
-                  <Label htmlFor="apiKey" className="text-zinc-200">API Key</Label>
-                  <div className="relative">
-                    <Input
-                      id="apiKey"
-                      data-testid="api-key-input"
-                      type={reveal ? 'text' : 'password'}
-                      value={apiKey}
-                      onChange={(e) => setApiKey(e.target.value)}
-                      disabled={loading}
-                      className="pr-20 tracking-wider bg-[#0f0f10] border-[#1f2022] focus-visible:ring-[#FF4500] focus-visible:ring-offset-0 h-11 api-key-input"
-                      placeholder={provider === 'openai' ? 'sk-...' : 'sk-ant-...'}
-                      aria-describedby="apiKeyHelp"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      data-testid="reveal-api-key-toggle"
-                      onClick={() => setReveal(r => !r)}
-                      disabled={loading}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#1f2022]"
-                    >
-                      {reveal ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </Button>
+                {/* API Key Input - Only show for non-emergent providers */}
+                {provider !== 'emergent' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="apiKey" className="text-zinc-200">API Key</Label>
+                    <div className="relative">
+                      <Input
+                        id="apiKey"
+                        data-testid="api-key-input"
+                        type={reveal ? 'text' : 'password'}
+                        value={apiKey}
+                        onChange={(e) => setApiKey(e.target.value)}
+                        disabled={loading}
+                        className="pr-20 tracking-wider bg-[#0f0f10] border-[#1f2022] focus-visible:ring-[#FF4500] focus-visible:ring-offset-0 h-11 api-key-input"
+                        placeholder={provider === 'openai' ? 'sk-...' : 'sk-ant-...'}
+                        aria-describedby="apiKeyHelp"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        data-testid="reveal-api-key-toggle"
+                        onClick={() => setReveal(r => !r)}
+                        disabled={loading}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#1f2022]"
+                      >
+                        {reveal ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <p id="apiKeyHelp" className="text-xs text-zinc-500">
+                      Your key is used only to start Moltbot and is stored securely.
+                    </p>
                   </div>
-                  <p id="apiKeyHelp" className="text-xs text-zinc-500">
-                    Your key is used only to start Moltbot and is stored securely.
-                  </p>
-                </div>
+                )}
 
                 {/* Error Alert */}
                 {error && (
