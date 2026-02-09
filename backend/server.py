@@ -113,7 +113,10 @@ class SessionRequest(BaseModel):
 
 # ============== Authentication Helpers ==============
 
-EMERGENT_AUTH_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+EMERGENT_AUTH_URL = os.environ.get(
+    'EMERGENT_AUTH_URL',
+    "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+)
 SESSION_EXPIRY_DAYS = 7
 
 
