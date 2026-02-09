@@ -1,9 +1,12 @@
 import requests
 import sys
+import os
 from datetime import datetime
 
 class MoltbotAPITester:
-    def __init__(self, base_url="https://brave-torvalds.preview.emergent.test/api"):
+    def __init__(self, base_url=None):
+        if base_url is None:
+            base_url = os.environ.get('TEST_BASE_URL', 'http://localhost:8001/api')
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0
