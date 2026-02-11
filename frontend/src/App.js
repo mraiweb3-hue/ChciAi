@@ -41,6 +41,7 @@ const Navbar = () => {
 
   const navLinks = [
     { href: "#sluzby", label: "Služby" },
+    { href: "#pro-koho", label: "Pro koho" },
     { href: "#o-nas", label: "O nás" },
     { href: "#kontakt", label: "Kontakt" },
   ];
