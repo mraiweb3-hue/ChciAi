@@ -13,6 +13,7 @@ Vytvořit profesionální firemní web pro chciai.cz - AI konzultační služby 
 - ✅ Responzivní layout
 - ✅ Hero sekce s CTA
 - ✅ 4 služby (AI Asistenti, Automatizace, Training, Partnerství)
+- ✅ **NOVÉ: Use Cases sekce pro 8 oborů**
 - ✅ O nás sekce (Martin + Aji)
 - ✅ Kontaktní formulář
 - ✅ AI Chatbot (Claude Sonnet 4.5)
@@ -29,11 +30,28 @@ Vytvořit profesionální firemní web pro chciai.cz - AI konzultační služby 
 2. ✅ Glassmorphism navbar s animacemi
 3. ✅ Hero sekce s cyan glow efektem
 4. ✅ 4 service cards s hover efekty
-5. ✅ O nás sekce s profily (Martin + Aji)
-6. ✅ Kontaktní formulář s backend integrací
-7. ✅ AI Chatbot widget (Claude Sonnet 4.5) - plně funkční
-8. ✅ Calendly embed pro rezervace konzultací
-9. ✅ Responzivní design pro mobily
+5. ✅ **NOVÉ: "AI asistent pro váš obor" sekce**
+   - 8 kategorií: Autoservisy, Kadeřnictví, Kosmetika, Restaurace, Fitness, Reality, E-shopy, Účetní
+   - Konkrétní problémy a řešení pro každý obor
+   - Úspora času a výhody
+   - Interaktivní přepínání kategorií
+6. ✅ O nás sekce s profily (Martin + Aji)
+7. ✅ Kontaktní formulář s backend integrací
+8. ✅ AI Chatbot widget (Claude Sonnet 4.5) - plně funkční
+9. ✅ Calendly embed pro rezervace konzultací
+10. ✅ Responzivní design pro mobily
+
+## Use Cases obory
+| Obor | Problém | Úspora |
+|------|---------|--------|
+| Autoservisy | Zmeškané telefonáty, STK | 5+ hodin/týden |
+| Kadeřnictví | No-shows, chaos v kalendáři | 70% méně no-shows |
+| Kosmetika | Přeplněné DMs | 3+ hodiny/den |
+| Restaurace | Přetížená linka | 40% více rezervací |
+| Fitness | Zrušené lekce | 10+ hodin/měsíc |
+| Reality | Stovky dotazů | 60% méně zbytečných prohlídek |
+| E-shopy | "Kde je zásilka?" | 80% méně ticketů |
+| Účetní | Zmeškané termíny | 15+ hodin/měsíc |
 
 ## API Endpoints
 - `POST /api/contact` - kontaktní formulář
