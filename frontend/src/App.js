@@ -1099,14 +1099,31 @@ const Footer = () => {
   );
 };
 
-// Chat Widget
+// Chat Widget with Voice Input and Language Selection
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+  const [language, setLanguage] = useState("cs");
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
   const messagesEndRef = useRef(null);
+
+  const languages = [
+    { code: "cs", name: "Čeština", flag: "🇨🇿" },
+    { code: "en", name: "English", flag: "🇬🇧" },
+    { code: "de", name: "Deutsch", flag: "🇩🇪" },
+    { code: "sk", name: "Slovenčina", flag: "🇸🇰" },
+  ];
+
+  const welcomeMessages = {
+    cs: "Ahoj! Jsem Aji, váš AI asistent. Jak vám mohu pomoci?",
+    en: "Hello! I'm Aji, your AI assistant. How can I help you?",
+    de: "Hallo! Ich bin Aji, Ihr KI-Assistent. Wie kann ich Ihnen helfen?",
+    sk: "Ahoj! Som Aji, váš AI asistent. Ako vám môžem pomôcť?",
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1116,11 +1133,10 @@ const ChatWidget = () => {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
+  const sendMessage = async (messageText) => {
+    if (!messageText.trim() || loading) return;
 
-    const userMessage = input.trim();
+    const userMessage = messageText.trim();
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setLoading(true);
@@ -1129,6 +1145,7 @@ const ChatWidget = () => {
       const response = await axios.post(`${API}/chat`, {
         session_id: sessionId,
         message: userMessage,
+        language: language,
       });
       setMessages((prev) => [
         ...prev,
@@ -1136,12 +1153,75 @@ const ChatWidget = () => {
       ]);
     } catch (error) {
       console.error("Chat error:", error);
+      const errorMessages = {
+        cs: "Omlouvám se, něco se pokazilo. Zkuste to prosím znovu.",
+        en: "Sorry, something went wrong. Please try again.",
+        de: "Entschuldigung, etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        sk: "Prepáčte, niečo sa pokazilo. Skúste to prosím znova.",
+      };
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Omlouvám se, něco se pokazilo. Zkuste to prosím znovu." },
+        { role: "assistant", content: errorMessages[language] || errorMessages.cs },
       ]);
     }
     setLoading(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await sendMessage(input);
+  };
+
+  // Voice recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        stream.getTracks().forEach(track => track.stop());
+        
+        // Send to transcription API
+        const formData = new FormData();
+        formData.append('audio', blob, 'recording.webm');
+        formData.append('language', language);
+
+        try {
+          setLoading(true);
+          const response = await axios.post(`${API}/transcribe`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          if (response.data.text) {
+            await sendMessage(response.data.text);
+          }
+        } catch (error) {
+          console.error("Transcription error:", error);
+        }
+        setLoading(false);
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Microphone access error:", error);
+      alert("Nepodařilo se získat přístup k mikrofonu. Zkontrolujte oprávnění.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
   };
 
   return (
@@ -1155,32 +1235,52 @@ const ChatWidget = () => {
             className="chat-window"
             data-testid="chat-window"
           >
-            {/* Header */}
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#0A0A0A]">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#00D9FF]/20 flex items-center justify-center">
-                  <Bot size={20} className="text-[#00D9FF]" />
+            {/* Header with language selector */}
+            <div className="p-4 border-b border-white/10 bg-[#0A0A0A]">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#00D9FF]/20 flex items-center justify-center">
+                    <Bot size={20} className="text-[#00D9FF]" />
+                  </div>
+                  <div>
+                    <h4 className="font-heading font-semibold text-white text-sm">Aji</h4>
+                    <p className="text-xs text-neutral-500">AI asistent</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-heading font-semibold text-white text-sm">Aji</h4>
-                  <p className="text-xs text-neutral-500">AI asistent</p>
-                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-neutral-400 hover:text-white transition-colors"
+                  data-testid="chat-close"
+                >
+                  <X size={20} />
+                </button>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-neutral-400 hover:text-white transition-colors"
-                data-testid="chat-close"
-              >
-                <X size={20} />
-              </button>
+              
+              {/* Language selector */}
+              <div className="flex gap-1">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all ${
+                      language === lang.code
+                        ? "bg-[#00D9FF] text-black"
+                        : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                    }`}
+                    data-testid={`lang-${lang.code}`}
+                  >
+                    {lang.flag}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Messages */}
-            <div className="h-[320px] overflow-y-auto p-4 space-y-4">
+            <div className="h-[280px] overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
                 <div className="text-center py-8">
                   <p className="text-neutral-500 text-sm">
-                    Ahoj! Jsem Aji, váš AI asistent. Jak vám mohu pomoci?
+                    {welcomeMessages[language]}
                   </p>
                 </div>
               )}
@@ -1214,26 +1314,51 @@ const ChatWidget = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <form onSubmit={sendMessage} className="p-4 border-t border-white/10">
+            {/* Input with voice */}
+            <form onSubmit={handleSubmit} className="p-4 border-t border-white/10">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Napište zprávu..."
+                  placeholder={language === "cs" ? "Napište zprávu..." : language === "en" ? "Type a message..." : language === "de" ? "Nachricht eingeben..." : "Napíšte správu..."}
                   className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
                   data-testid="chat-input"
+                  disabled={isRecording}
                 />
+                
+                {/* Voice button */}
+                <button
+                  type="button"
+                  onClick={isRecording ? stopRecording : startRecording}
+                  disabled={loading}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    isRecording
+                      ? "bg-red-500 text-white animate-pulse"
+                      : "bg-white/10 text-neutral-400 hover:bg-white/20 hover:text-white"
+                  }`}
+                  data-testid="chat-voice"
+                  title={isRecording ? "Zastavit nahrávání" : "Hlasová zpráva"}
+                >
+                  {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
+                </button>
+
+                {/* Send button */}
                 <button
                   type="submit"
-                  disabled={loading || !input.trim()}
+                  disabled={loading || !input.trim() || isRecording}
                   className="w-10 h-10 rounded-full bg-[#00D9FF] flex items-center justify-center text-black hover:bg-[#00B8D9] transition-colors disabled:opacity-50"
                   data-testid="chat-send"
                 >
                   <Send size={18} />
                 </button>
               </div>
+              
+              {isRecording && (
+                <p className="text-xs text-red-400 mt-2 text-center animate-pulse">
+                  🎙️ Nahrávám... Klikněte pro zastavení
+                </p>
+              )}
             </form>
           </motion.div>
         )}
