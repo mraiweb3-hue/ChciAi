@@ -418,6 +418,188 @@ const AboutSection = () => {
   );
 };
 
+// Use Cases Section - Pro koho je AI asistent
+const UseCasesSection = () => {
+  const [activeCase, setActiveCase] = useState(0);
+
+  return (
+    <section id="pro-koho" className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
+            <Clock size={16} className="text-[#00D9FF]" />
+            <span className="text-sm text-[#00D9FF]">Ušetřete hodiny práce každý týden</span>
+          </div>
+          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
+            AI asistent pro váš obor
+          </h2>
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            Podívejte se, jak AI řeší konkrétní problémy v různých odvětvích. 
+            <span className="text-white font-semibold"> 24 hodin denně, 7 dní v týdnu.</span>
+          </p>
+        </motion.div>
+
+        {/* Industry tabs */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {useCases.map((useCase, index) => (
+            <button
+              key={useCase.industry}
+              onClick={() => setActiveCase(index)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeCase === index
+                  ? "bg-[#00D9FF] text-black"
+                  : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white"
+              }`}
+              data-testid={`usecase-tab-${index}`}
+            >
+              <span className="mr-2">{useCase.icon}</span>
+              {useCase.industry}
+            </button>
+          ))}
+        </div>
+
+        {/* Active use case detail */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCase}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
+            {/* Problem & Solutions */}
+            <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-4xl">{useCases[activeCase].icon}</span>
+                <div>
+                  <h3 className="font-heading font-bold text-2xl text-white">
+                    {useCases[activeCase].industry}
+                  </h3>
+                  <p className="text-neutral-500">AI asistent na míru</p>
+                </div>
+              </div>
+
+              {/* Problem */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
+                    <X size={14} className="text-red-400" />
+                  </div>
+                  <span className="text-red-400 font-semibold text-sm">Běžné problémy</span>
+                </div>
+                <p className="text-neutral-300 bg-red-500/5 border border-red-500/10 rounded-lg p-4">
+                  {useCases[activeCase].problem}
+                </p>
+              </div>
+
+              {/* Solutions */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Check size={14} className="text-green-400" />
+                  </div>
+                  <span className="text-green-400 font-semibold text-sm">Co AI vyřeší</span>
+                </div>
+                <ul className="space-y-2">
+                  {useCases[activeCase].solutions.map((solution, idx) => (
+                    <li key={idx} className="flex items-start gap-3 text-neutral-300">
+                      <ArrowRight size={16} className="text-[#00D9FF] mt-1 flex-shrink-0" />
+                      {solution}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Results & CTA */}
+            <div className="flex flex-col gap-6">
+              {/* Savings highlight */}
+              <div className="bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 border border-[#00D9FF]/30 rounded-2xl p-8 text-center">
+                <Clock size={32} className="text-[#00D9FF] mx-auto mb-4" />
+                <p className="text-neutral-400 mb-2">Průměrná úspora času</p>
+                <p className="font-heading font-bold text-4xl text-white mb-2">
+                  {useCases[activeCase].savings}
+                </p>
+                <p className="text-[#00D9FF] font-medium">
+                  {useCases[activeCase].highlight}
+                </p>
+              </div>
+
+              {/* Benefits */}
+              <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
+                <h4 className="font-heading font-semibold text-white mb-4">
+                  Co získáte navíc
+                </h4>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3 text-neutral-300">
+                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
+                      <Zap size={16} className="text-[#00D9FF]" />
+                    </div>
+                    <span>Odpovědi zákazníkům <strong className="text-white">do 3 sekund</strong></span>
+                  </li>
+                  <li className="flex items-center gap-3 text-neutral-300">
+                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
+                      <Clock size={16} className="text-[#00D9FF]" />
+                    </div>
+                    <span>Dostupnost <strong className="text-white">24/7/365</strong></span>
+                  </li>
+                  <li className="flex items-center gap-3 text-neutral-300">
+                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
+                      <Users size={16} className="text-[#00D9FF]" />
+                    </div>
+                    <span>Spokojení zákazníci = <strong className="text-white">více doporučení</strong></span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* CTA */}
+              <a
+                href="#kontakt"
+                className="bg-[#00D9FF] text-black px-8 py-4 rounded-xl font-semibold text-lg hover:bg-[#00B8D9] transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                data-testid="usecase-cta"
+              >
+                Chci AI asistenta pro {useCases[activeCase].industry.toLowerCase()}
+                <ArrowRight size={20} />
+              </a>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Stats bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4"
+        >
+          {[
+            { value: "24/7", label: "Dostupnost" },
+            { value: "3s", label: "Průměrná odpověď" },
+            { value: "70%", label: "Méně zmeškaných hovorů" },
+            { value: "∞", label: "Trpělivost s klienty" },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white/5 border border-white/10 rounded-xl p-6 text-center"
+            >
+              <p className="font-heading font-bold text-2xl md:text-3xl text-[#00D9FF]">
+                {stat.value}
+              </p>
+              <p className="text-neutral-500 text-sm">{stat.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Contact Section with Calendly
 const ContactSection = () => {
   const [formData, setFormData] = useState({
