@@ -612,6 +612,311 @@ const UseCasesSection = () => {
   );
 };
 
+// Pricing Section
+const pricingPlans = [
+  {
+    name: "Start",
+    price: "4 990",
+    period: "měsíc",
+    description: "Ideální pro začínající podnikatele",
+    features: [
+      "1 AI asistent (chatbot)",
+      "Až 500 konverzací/měsíc",
+      "Integrace na web",
+      "Základní analytika",
+      "Email podpora",
+      "Čeština + Angličtina",
+    ],
+    notIncluded: [
+      "Hlasový asistent",
+      "Vlastní integrace",
+      "Prioritní podpora",
+    ],
+    popular: false,
+    cta: "Začít zdarma",
+  },
+  {
+    name: "Business",
+    price: "9 990",
+    period: "měsíc",
+    description: "Pro rostoucí firmy s většími nároky",
+    features: [
+      "3 AI asistenti",
+      "Neomezené konverzace",
+      "Web + Instagram + WhatsApp",
+      "Pokročilá analytika",
+      "Hlasový asistent",
+      "Automatizace (n8n/Make)",
+      "Prioritní podpora",
+      "4 jazyky",
+    ],
+    notIncluded: [
+      "Vlastní AI model",
+    ],
+    popular: true,
+    cta: "Vybrat Business",
+  },
+  {
+    name: "Enterprise",
+    price: "19 990",
+    period: "měsíc",
+    description: "Kompletní AI transformace firmy",
+    features: [
+      "Neomezení asistenti",
+      "Neomezené konverzace",
+      "Všechny platformy",
+      "Vlastní AI model na míru",
+      "Plná automatizace procesů",
+      "Dedikovaný account manager",
+      "SLA 99.9%",
+      "Všechny jazyky",
+      "On-site školení",
+      "API přístup",
+    ],
+    notIncluded: [],
+    popular: false,
+    cta: "Kontaktovat",
+  },
+];
+
+const PricingSection = () => {
+  return (
+    <section id="cenik" className="py-24 md:py-32 relative">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
+            <Star size={16} className="text-[#00D9FF]" />
+            <span className="text-sm text-[#00D9FF]">Transparentní ceny bez skrytých poplatků</span>
+          </div>
+          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
+            Vyberte si svůj plán
+          </h2>
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            Všechny ceny jsou bez DPH. První konzultace je vždy zdarma.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {pricingPlans.map((plan, index) => (
+            <motion.div
+              key={plan.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className={`relative bg-[#0A0A0A] border rounded-2xl p-8 ${
+                plan.popular
+                  ? "border-[#00D9FF] shadow-lg shadow-[#00D9FF]/10"
+                  : "border-white/10"
+              }`}
+              data-testid={`pricing-${plan.name.toLowerCase()}`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="bg-[#00D9FF] text-black text-sm font-semibold px-4 py-1 rounded-full">
+                    Nejoblíbenější
+                  </span>
+                </div>
+              )}
+
+              <div className="text-center mb-6">
+                <h3 className="font-heading font-bold text-2xl text-white mb-2">
+                  {plan.name}
+                </h3>
+                <p className="text-neutral-500 text-sm mb-4">{plan.description}</p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="font-heading font-bold text-4xl text-white">
+                    {plan.price}
+                  </span>
+                  <span className="text-neutral-400">Kč/{plan.period}</span>
+                </div>
+              </div>
+
+              <ul className="space-y-3 mb-8">
+                {plan.features.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-neutral-300">
+                    <Check size={18} className="text-[#00D9FF] flex-shrink-0 mt-0.5" />
+                    {feature}
+                  </li>
+                ))}
+                {plan.notIncluded.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-neutral-600">
+                    <X size={18} className="flex-shrink-0 mt-0.5" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="#kontakt"
+                className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${
+                  plan.popular
+                    ? "bg-[#00D9FF] text-black hover:bg-[#00B8D9]"
+                    : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                }`}
+              >
+                {plan.cta}
+              </a>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Additional info */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 text-center"
+        >
+          <p className="text-neutral-500 text-sm mb-4">
+            💡 Potřebujete něco specifického? Vytvoříme vám řešení na míru.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-neutral-400">
+            <span className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              14 dní na vyzkoušení
+            </span>
+            <span className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              Bez závazků
+            </span>
+            <span className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              Možnost měsíční platby
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Callback Request Section
+const CallbackSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    language: "cs",
+  });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const languages = [
+    { code: "cs", name: "Čeština", flag: "🇨🇿" },
+    { code: "en", name: "English", flag: "🇬🇧" },
+    { code: "de", name: "Deutsch", flag: "🇩🇪" },
+    { code: "sk", name: "Slovenčina", flag: "🇸🇰" },
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+      await axios.post(`${API}/callback`, formData);
+      setSent(true);
+      setFormData({ name: "", phone: "", language: "cs" });
+    } catch (error) {
+      console.error("Error submitting callback request:", error);
+    }
+    setSending(false);
+  };
+
+  return (
+    <section className="py-16 relative">
+      <div className="max-w-4xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-gradient-to-br from-[#00D9FF]/10 to-transparent border border-[#00D9FF]/20 rounded-2xl p-8 md:p-12"
+        >
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 rounded-full bg-[#00D9FF]/20 flex items-center justify-center mx-auto mb-4">
+              <PhoneCall size={28} className="text-[#00D9FF]" />
+            </div>
+            <h3 className="font-heading font-bold text-2xl md:text-3xl text-white mb-2">
+              Nechte nám číslo, zavoláme vám
+            </h3>
+            <p className="text-neutral-400">
+              AI asistent vám zavolá zpět do 24 hodin v jazyce dle vašeho výběru
+            </p>
+          </div>
+
+          {sent ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                <Check size={28} className="text-green-400" />
+              </div>
+              <h4 className="font-heading text-lg text-white mb-2">Děkujeme!</h4>
+              <p className="text-neutral-400">Brzy vám zavoláme.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+              <div className="relative">
+                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                <input
+                  type="text"
+                  placeholder="Vaše jméno"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] focus:ring-1 focus:ring-[#00D9FF] outline-none transition-colors"
+                  data-testid="callback-name"
+                />
+              </div>
+
+              <div className="relative">
+                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                <input
+                  type="tel"
+                  placeholder="+420 xxx xxx xxx"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  required
+                  className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] focus:ring-1 focus:ring-[#00D9FF] outline-none transition-colors"
+                  data-testid="callback-phone"
+                />
+              </div>
+
+              <div className="relative">
+                <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                <select
+                  value={formData.language}
+                  onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                  className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white focus:border-[#00D9FF] focus:ring-1 focus:ring-[#00D9FF] outline-none transition-colors appearance-none cursor-pointer"
+                  data-testid="callback-language"
+                >
+                  {languages.map((lang) => (
+                    <option key={lang.code} value={lang.code} className="bg-[#0A0A0A]">
+                      {lang.flag} {lang.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 pointer-events-none" />
+              </div>
+
+              <button
+                type="submit"
+                disabled={sending}
+                className="w-full bg-[#00D9FF] text-black py-3 rounded-lg font-semibold hover:bg-[#00B8D9] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                data-testid="callback-submit"
+              >
+                {sending ? "Odesílám..." : "Zavolejte mi zpět"}
+                <PhoneCall size={18} />
+              </button>
+            </form>
+          )}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Contact Section with Calendly
 const ContactSection = () => {
   const [formData, setFormData] = useState({
