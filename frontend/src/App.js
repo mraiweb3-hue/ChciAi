@@ -4,13 +4,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
-// Lucide React icons
 import {
   Bot,
   Sparkles,
-  Cog,
-  GraduationCap,
-  Handshake,
   Send,
   X,
   MessageCircle,
@@ -37,7 +33,6 @@ import {
   Calculator,
   HelpCircle,
   ChevronRight,
-  Quote,
   Target,
   Rocket,
   Brain,
@@ -45,12 +40,37 @@ import {
   BadgeCheck,
   Gauge,
   MessageSquare,
-  Calendar,
   CreditCard,
-  BarChart3,
   Smartphone,
   Headphones,
   RefreshCw,
+  Lock,
+  Unlock,
+  Code,
+  GitBranch,
+  Laptop,
+  Tablet,
+  Monitor,
+  Link,
+  Share2,
+  BarChart3,
+  Mail as MailIcon,
+  Instagram,
+  Facebook,
+  Linkedin,
+  Search,
+  ShoppingCart,
+  Database,
+  Workflow,
+  Languages,
+  GraduationCap,
+  Handshake,
+  Timer,
+  ShieldCheck,
+  CircleDollarSign,
+  Infinity,
+  Crown,
+  Gem,
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -78,6 +98,22 @@ const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
   return <span ref={ref}>{count}{suffix}</span>;
 };
 
+// All supported languages
+const allLanguages = [
+  { code: "cs", name: "Čeština", flag: "🇨🇿" },
+  { code: "sk", name: "Slovenčina", flag: "🇸🇰" },
+  { code: "en", name: "English", flag: "🇬🇧" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "vi", name: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "zh", name: "中文", flag: "🇨🇳" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
+  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "pl", name: "Polski", flag: "🇵🇱" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+];
+
 // Navbar Component
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -90,10 +126,10 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
+    { href: "#vibe-coding", label: "Vibe Coding" },
+    { href: "#openclaw", label: "OpenClaw" },
     { href: "#sluzby", label: "Služby" },
-    { href: "#pro-koho", label: "Pro koho" },
     { href: "#cenik", label: "Ceník" },
-    { href: "#reference", label: "Reference" },
     { href: "#faq", label: "FAQ" },
     { href: "#kontakt", label: "Kontakt" },
   ];
@@ -118,7 +154,6 @@ const Navbar = () => {
               key={link.href}
               href={link.href}
               className="text-neutral-400 hover:text-white transition-colors font-body text-sm"
-              data-testid={`nav-${link.label.toLowerCase()}`}
             >
               {link.label}
             </a>
@@ -191,19 +226,20 @@ const HeroSection = () => {
           className="text-center max-w-4xl mx-auto"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 mb-8">
-            <Rocket size={16} className="text-[#00D9FF]" />
-            <span className="text-sm text-neutral-400">AI transformace pro české firmy</span>
+            <Code size={16} className="text-[#00D9FF]" />
+            <span className="text-sm text-neutral-400">Vibe Coding × OpenClaw × Emergent</span>
           </div>
           
           <h1 className="font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-6 tracking-tight">
-            Váš digitální partner
+            Naučíme vás
             <br />
-            <span className="text-[#00D9FF]">pro AI budoucnost</span>
+            <span className="text-[#00D9FF]">spolupracovat s AI</span>
           </h1>
           
           <p className="text-lg md:text-xl text-neutral-400 mb-10 max-w-2xl mx-auto font-body">
-            Pomáháme českým firmám implementovat AI asistenty, automatizovat procesy 
-            a transformovat byznys pomocí nejmodernějších technologií.
+            <strong className="text-white">Vibe Coding</strong> = vy řídíte, AI vykonává. 
+            Váš osobní AI asistent pracuje 24/7 na vašich cílech - komunikuje s klienty, 
+            spravuje firmu online i telefonicky. Ve <strong className="text-[#00D9FF]">všech světových jazycích</strong>.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -216,13 +252,25 @@ const HeroSection = () => {
               Zavoláme vám do 2 minut
             </a>
             <a
-              href="#demo"
+              href="#openclaw"
               className="border border-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/5 transition-all inline-flex items-center justify-center gap-2"
               data-testid="hero-cta-secondary"
             >
-              <PlayCircle size={20} />
-              Sledovat demo
+              <GitBranch size={20} />
+              Co je OpenClaw?
             </a>
+          </div>
+
+          {/* Language badges */}
+          <div className="mt-12 flex flex-wrap justify-center gap-2">
+            {allLanguages.slice(0, 8).map((lang) => (
+              <span key={lang.code} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm text-neutral-400">
+                {lang.flag} {lang.name}
+              </span>
+            ))}
+            <span className="px-3 py-1 bg-[#00D9FF]/10 border border-[#00D9FF]/30 rounded-full text-sm text-[#00D9FF]">
+              +50 jazyků
+            </span>
           </div>
         </motion.div>
       </div>
@@ -230,36 +278,228 @@ const HeroSection = () => {
   );
 };
 
-// Live Stats Section
-const StatsSection = () => {
-  const stats = [
-    { icon: Users, value: 500, suffix: "+", label: "Spokojených klientů" },
-    { icon: MessageSquare, value: 50000, suffix: "+", label: "Vyřízených konverzací" },
-    { icon: Clock, value: 24, suffix: "/7", label: "Dostupnost" },
-    { icon: Gauge, value: 3, suffix: "s", label: "Průměrná odpověď" },
+// Vibe Coding Section
+const VibeCodingSection = () => {
+  return (
+    <section id="vibe-coding" className="py-24 md:py-32 relative">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
+              <Brain size={16} className="text-[#00D9FF]" />
+              <span className="text-sm text-[#00D9FF]">Nový způsob práce</span>
+            </div>
+            
+            <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-6">
+              Co je <span className="text-[#00D9FF]">Vibe Coding</span>?
+            </h2>
+            
+            <p className="text-neutral-400 text-lg mb-6">
+              <strong className="text-white">Vibe Coding</strong> je revoluční způsob spolupráce člověka s AI. 
+              Vy určujete směr a cíle, AI asistent je realizuje. Komunikujete přirozeně - 
+              hlasem, textem, v jakémkoliv jazyce.
+            </p>
+            
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Target size={16} className="text-[#00D9FF]" />
+                </div>
+                <div>
+                  <strong className="text-white">Vy řídíte</strong>
+                  <p className="text-neutral-500 text-sm">Definujete cíle, priority a hranice</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Bot size={16} className="text-[#00D9FF]" />
+                </div>
+                <div>
+                  <strong className="text-white">AI vykonává</strong>
+                  <p className="text-neutral-500 text-sm">Komunikace, administrativa, marketing 24/7</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <GraduationCap size={16} className="text-[#00D9FF]" />
+                </div>
+                <div>
+                  <strong className="text-white">My vás naučíme</strong>
+                  <p className="text-neutral-500 text-sm">Training je součástí každého balíčku</p>
+                </div>
+              </li>
+            </ul>
+
+            <a
+              href="#cenik"
+              className="inline-flex items-center gap-2 text-[#00D9FF] font-semibold hover:gap-3 transition-all"
+            >
+              Vybrat balíček s trainingem
+              <ArrowRight size={18} />
+            </a>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+                <span className="text-neutral-600 text-sm ml-2">vibe-session.ai</span>
+              </div>
+              
+              <div className="space-y-4 font-mono text-sm">
+                <div className="flex gap-3">
+                  <span className="text-[#00D9FF]">Vy:</span>
+                  <span className="text-neutral-300">"Potřebuji odpovědět všem klientům z víkendu"</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-green-400">AI:</span>
+                  <span className="text-neutral-400">Mám 12 nových zpráv. 8 dotazů na ceník, 3 rezervace, 1 reklamace. Připravuji odpovědi...</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-green-400">AI:</span>
+                  <span className="text-neutral-400">✓ 11 odpovědí odesláno. Reklamaci jsem eskaloval vám.</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-[#00D9FF]">Vy:</span>
+                  <span className="text-neutral-300">"Skvělé. Zavolej panu Novákovi ohledně jeho objednávky."</span>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-green-400">AI:</span>
+                  <span className="text-neutral-400">Volám +420 xxx xxx xxx v češtině...</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#00D9FF]/20 rounded-full blur-3xl" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// OpenClaw Section
+const OpenClawSection = () => {
+  const benefits = [
+    {
+      icon: Unlock,
+      title: "100% Open Source",
+      description: "Žádné skryté poplatky, žádný vendor lock-in. Kód je váš, data jsou vaše.",
+    },
+    {
+      icon: Shield,
+      title: "Plná kontrola",
+      description: "Běží na vašem zařízení. Vy rozhodujete, kam má AI přístup.",
+    },
+    {
+      icon: CircleDollarSign,
+      title: "Bez měsíčních poplatků za AI",
+      description: "Platíte jen za tokeny které spotřebujete. Průhledné náklady.",
+    },
+    {
+      icon: Languages,
+      title: "50+ světových jazyků",
+      description: "Čeština, angličtina, vietnamština, mandarínština, arabština, ukrajinština...",
+    },
+    {
+      icon: Workflow,
+      title: "Integrace se vším",
+      description: "CRM, email, WhatsApp, Instagram, Facebook, SEO nástroje, e-shopy.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Bezpečnostní limity",
+      description: "Ochrana proti zneužití - časové limity na hovory a zprávy.",
+    },
   ];
 
   return (
-    <section className="py-16 relative">
+    <section id="openclaw" className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="text-center mb-16"
         >
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 text-center group hover:border-[#00D9FF]/30 transition-all"
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500/30 bg-green-500/10 mb-6">
+            <GitBranch size={16} className="text-green-400" />
+            <span className="text-sm text-green-400">Open Source</span>
+          </div>
+          
+          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
+            Proč <span className="text-[#00D9FF]">OpenClaw</span>?
+          </h2>
+          
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            OpenClaw je open source AI asistent postavený na platformě <strong className="text-white">Emergent</strong>. 
+            Žádné skryté náklady, plná transparentnost, absolutní kontrola nad vašimi daty.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {benefits.map((benefit, index) => (
+            <motion.div
+              key={benefit.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/30 transition-all"
             >
-              <stat.icon size={28} className="text-[#00D9FF] mx-auto mb-3 group-hover:scale-110 transition-transform" />
-              <p className="font-heading font-bold text-3xl md:text-4xl text-white mb-1">
-                <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-              </p>
-              <p className="text-neutral-500 text-sm">{stat.label}</p>
-            </div>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 flex items-center justify-center mb-4">
+                <benefit.icon size={24} className="text-[#00D9FF]" />
+              </div>
+              <h3 className="font-heading font-semibold text-lg text-white mb-2">
+                {benefit.title}
+              </h3>
+              <p className="text-neutral-400 text-sm">{benefit.description}</p>
+            </motion.div>
           ))}
+        </div>
+
+        {/* Devices */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 text-center"
+        >
+          <h3 className="font-heading font-semibold text-xl text-white mb-6">
+            OpenClaw běží všude
+          </h3>
+          <div className="flex flex-wrap justify-center gap-8">
+            <div className="flex flex-col items-center gap-2">
+              <Monitor size={40} className="text-[#00D9FF]" />
+              <span className="text-neutral-400 text-sm">Počítač</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Laptop size={40} className="text-[#00D9FF]" />
+              <span className="text-neutral-400 text-sm">Notebook</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Tablet size={40} className="text-[#00D9FF]" />
+              <span className="text-neutral-400 text-sm">iPad</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Smartphone size={40} className="text-[#00D9FF]" />
+              <span className="text-neutral-400 text-sm">Mobil</span>
+            </div>
+          </div>
+          <p className="text-neutral-500 text-sm mt-6">
+            Ovládejte přes WhatsApp, Telegram, email nebo webové rozhraní
+          </p>
         </motion.div>
       </div>
     </section>
@@ -269,29 +509,40 @@ const StatsSection = () => {
 // Services Section
 const services = [
   {
-    icon: Brain,
-    title: "AI Asistenti",
-    subtitle: "Clawdbot & OpenClawd",
-    description: "Kompletní nasazení inteligentních AI asistentů přizpůsobených vašemu byznysu.",
+    icon: Bot,
+    title: "Nastavení OpenClaw",
+    description: "Kompletní instalace a konfigurace AI asistenta na vaše zařízení.",
+    includes: ["Instalace na PC/tablet/mobil", "Základní konfigurace", "Propojení s WhatsApp"],
   },
   {
-    icon: RefreshCw,
-    title: "Automatizace",
-    subtitle: "n8n, Make.com, API",
-    description: "Propojíme vaše systémy a automatizujeme repetitivní úlohy.",
+    icon: Link,
+    title: "Integrace",
+    description: "Propojení s vašimi stávajícími systémy a aplikacemi.",
+    includes: ["CRM systémy", "Email marketing", "Sociální sítě", "E-shop platformy"],
   },
   {
     icon: GraduationCap,
-    title: "Training",
-    subtitle: "Pro váš tým",
-    description: "Naučíme váš tým efektivně využívat AI nástroje.",
+    title: "Vibe Coding Training",
+    description: "Naučíme vás efektivně spolupracovat s AI asistentem.",
+    includes: ["Osobní školení", "Video tutoriály", "Průběžná podpora"],
   },
   {
-    icon: HeartHandshake,
-    title: "Partnerství",
-    subtitle: "Dlouhodobá podpora",
-    description: "Nejsme jen dodavatelé - jsme vaši digitální partneři.",
+    icon: ShieldCheck,
+    title: "Bezpečnost & Limity",
+    description: "Ochrana proti zneužití a kontrola nákladů.",
+    includes: ["Časové limity hovorů", "Denní limity zpráv", "Monitoring spotřeby"],
   },
+];
+
+const integrationsIcons = [
+  { icon: MailIcon, name: "Email" },
+  { icon: MessageSquare, name: "WhatsApp" },
+  { icon: Instagram, name: "Instagram" },
+  { icon: Facebook, name: "Facebook" },
+  { icon: Linkedin, name: "LinkedIn" },
+  { icon: Search, name: "SEO" },
+  { icon: ShoppingCart, name: "E-shop" },
+  { icon: Database, name: "CRM" },
 ];
 
 const ServicesSection = () => {
@@ -305,14 +556,14 @@ const ServicesSection = () => {
           className="text-center mb-16"
         >
           <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
-            Naše služby
+            Co pro vás uděláme
           </h2>
           <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            Komplexní řešení pro vaši AI transformaci
+            Kompletní nastavení, integrace a training v jednom balíčku
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -320,236 +571,49 @@ const ServicesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="service-card bg-[#0A0A0A] border border-white/10 rounded-2xl p-6"
-              data-testid={`service-card-${index}`}
+              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 flex items-center justify-center mb-4">
                 <service.icon size={24} className="text-[#00D9FF]" />
               </div>
-              <h3 className="font-heading font-semibold text-lg text-white mb-1">
+              <h3 className="font-heading font-semibold text-xl text-white mb-2">
                 {service.title}
               </h3>
-              <p className="text-[#00D9FF] text-xs font-mono mb-3">
-                {service.subtitle}
-              </p>
-              <p className="text-neutral-400 text-sm">{service.description}</p>
+              <p className="text-neutral-400 mb-4">{service.description}</p>
+              <ul className="space-y-2">
+                {service.includes.map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-2 text-neutral-300 text-sm">
+                    <Check size={14} className="text-[#00D9FF]" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
 
-// Use Cases Section
-const useCases = [
-  {
-    icon: "🔧",
-    industry: "Autoservisy",
-    problem: "Zmeškané telefonáty, zapomenuté STK, ztracené objednávky",
-    solutions: ["AI přijímá objednávky 24/7", "Automatické připomenutí STK", "Historie oprav na jeden klik"],
-    savings: "5+ hodin týdně",
-    highlight: "Zákazník si objedná i v neděli večer",
-  },
-  {
-    icon: "💇",
-    industry: "Kadeřnictví",
-    problem: "Neustálé telefonáty, no-shows, chaos v kalendáři",
-    solutions: ["Online rezervace bez volání", "SMS/WhatsApp připomenutí", "Zákazník vidí volné termíny"],
-    savings: "70% méně no-shows",
-    highlight: "Vy stříháte, AI řeší telefony",
-  },
-  {
-    icon: "💅",
-    industry: "Kosmetika & Nehty",
-    problem: "Přeplněné DMs, opakované dotazy na ceník",
-    solutions: ["AI odpoví na Instagram/FB", "Automatický ceník a portfolio", "Rezervace přímo z chatu"],
-    savings: "3+ hodiny denně",
-    highlight: "Klientky si zarezervují i o půlnoci",
-  },
-  {
-    icon: "🍽️",
-    industry: "Restaurace",
-    problem: "Přetížená linka, chybné rezervace",
-    solutions: ["AI rezervace stolů non-stop", "Odpovědi na Google recenze", "Menu a alergeny na dotaz"],
-    savings: "40% více rezervací",
-    highlight: "Obsluha se věnuje hostům",
-  },
-  {
-    icon: "💪",
-    industry: "Fitness & Trenéři",
-    problem: "Zrušené lekce, motivace klientů",
-    solutions: ["Automatické plánování tréninků", "Motivační zprávy a tipy", "Sledování pokroku klientů"],
-    savings: "10+ hodin měsíčně",
-    highlight: "Klient dostane plán ihned",
-  },
-  {
-    icon: "🏠",
-    industry: "Reality",
-    problem: "Stovky dotazů, opakované informace",
-    solutions: ["AI odpoví na dotazy 24/7", "Automatické plánování prohlídek", "Kvalifikace zájemců předem"],
-    savings: "60% méně zbytečných prohlídek",
-    highlight: "Jen vážní zájemci",
-  },
-  {
-    icon: "🛒",
-    industry: "E-shopy",
-    problem: "Kde je zásilka?, vratky, dotazy",
-    solutions: ["Sledování zásilek automaticky", "Odpovědi na FAQ 24/7", "Pomoc s výběrem produktu"],
-    savings: "80% méně ticketů",
-    highlight: "Odpověď za 3 sekundy",
-  },
-  {
-    icon: "📊",
-    industry: "Účetní",
-    problem: "Chybějící dokumenty, zmeškané termíny",
-    solutions: ["Připomenutí daňových termínů", "Automatický sběr dokladů", "Odpovědi na časté dotazy"],
-    savings: "15+ hodin měsíčně",
-    highlight: "Klient pošle fakturu přes WhatsApp",
-  },
-];
-
-const UseCasesSection = () => {
-  const [activeCase, setActiveCase] = useState(0);
-
-  return (
-    <section id="pro-koho" className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Integrations */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
-            <Target size={16} className="text-[#00D9FF]" />
-            <span className="text-sm text-[#00D9FF]">Ušetřete hodiny práce každý týden</span>
-          </div>
-          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
-            AI asistent pro váš obor
-          </h2>
-          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            <span className="text-white font-semibold">24 hodin denně, 7 dní v týdnu.</span>
-          </p>
-        </motion.div>
-
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {useCases.map((useCase, index) => (
-            <button
-              key={useCase.industry}
-              onClick={() => setActiveCase(index)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                activeCase === index
-                  ? "bg-[#00D9FF] text-black"
-                  : "bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white"
-              }`}
-              data-testid={`usecase-tab-${index}`}
-            >
-              <span className="mr-2">{useCase.icon}</span>
-              {useCase.industry}
-            </button>
-          ))}
-        </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCase}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-          >
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="text-4xl">{useCases[activeCase].icon}</span>
-                <div>
-                  <h3 className="font-heading font-bold text-2xl text-white">
-                    {useCases[activeCase].industry}
-                  </h3>
-                  <p className="text-neutral-500">AI asistent na míru</p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
-                    <X size={14} className="text-red-400" />
-                  </div>
-                  <span className="text-red-400 font-semibold text-sm">Běžné problémy</span>
-                </div>
-                <p className="text-neutral-300 bg-red-500/5 border border-red-500/10 rounded-lg p-4">
-                  {useCases[activeCase].problem}
-                </p>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Check size={14} className="text-green-400" />
-                  </div>
-                  <span className="text-green-400 font-semibold text-sm">Co AI vyřeší</span>
-                </div>
-                <ul className="space-y-2">
-                  {useCases[activeCase].solutions.map((solution, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-neutral-300">
-                      <ChevronRight size={16} className="text-[#00D9FF] mt-1 flex-shrink-0" />
-                      {solution}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-6">
-              <div className="bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 border border-[#00D9FF]/30 rounded-2xl p-8 text-center">
-                <TrendingUp size={32} className="text-[#00D9FF] mx-auto mb-4" />
-                <p className="text-neutral-400 mb-2">Průměrná úspora</p>
-                <p className="font-heading font-bold text-4xl text-white mb-2">
-                  {useCases[activeCase].savings}
-                </p>
-                <p className="text-[#00D9FF] font-medium">
-                  {useCases[activeCase].highlight}
-                </p>
-              </div>
-
-              <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
-                <h4 className="font-heading font-semibold text-white mb-4">
-                  Co získáte navíc
-                </h4>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3 text-neutral-300">
-                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
-                      <Zap size={16} className="text-[#00D9FF]" />
-                    </div>
-                    <span>Odpovědi <strong className="text-white">do 3 sekund</strong></span>
-                  </li>
-                  <li className="flex items-center gap-3 text-neutral-300">
-                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
-                      <Clock size={16} className="text-[#00D9FF]" />
-                    </div>
-                    <span>Dostupnost <strong className="text-white">24/7/365</strong></span>
-                  </li>
-                  <li className="flex items-center gap-3 text-neutral-300">
-                    <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center">
-                      <BadgeCheck size={16} className="text-[#00D9FF]" />
-                    </div>
-                    <span><strong className="text-white">Spokojení zákazníci</strong> = více doporučení</span>
-                  </li>
-                </ul>
-              </div>
-
-              <a
-                href="#callback"
-                className="bg-[#00D9FF] text-black px-8 py-4 rounded-xl font-semibold text-lg hover:bg-[#00B8D9] transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
-                data-testid="usecase-cta"
+          <h3 className="font-heading font-semibold text-xl text-white mb-6">
+            Propojíme vás se vším
+          </h3>
+          <div className="flex flex-wrap justify-center gap-4">
+            {integrationsIcons.map((integration) => (
+              <div
+                key={integration.name}
+                className="flex flex-col items-center gap-2 px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:border-[#00D9FF]/30 transition-all"
               >
-                Chci AI asistenta
-                <ArrowRight size={20} />
-              </a>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+                <integration.icon size={24} className="text-neutral-400" />
+                <span className="text-xs text-neutral-500">{integration.name}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -559,63 +623,72 @@ const UseCasesSection = () => {
 const pricingPlans = [
   {
     name: "Start",
-    price: "4 990",
-    period: "měsíc",
-    description: "Ideální pro začínající podnikatele",
-    features: [
-      "1 AI asistent (chatbot)",
-      "Až 500 konverzací/měsíc",
-      "Integrace na web",
-      "Základní analytika",
-      "Email podpora",
-      "Čeština + Angličtina",
-    ],
-    notIncluded: ["Hlasový asistent", "Vlastní integrace", "Prioritní podpora"],
-    popular: false,
-    cta: "Začít zdarma",
+    price: "9 500",
+    priceType: "jednorázově",
+    description: "Pro jednotlivce a malé firmy",
     icon: Rocket,
+    features: [
+      "Nastavení OpenClaw AI asistenta",
+      "Instalace na 1 zařízení (PC/tablet/mobil)",
+      "Propojení s WhatsApp",
+      "2 hodiny Vibe Coding training",
+      "Čeština + 2 další jazyky",
+      "Email podpora 30 dní",
+      "Bezpečnostní limity nastaveny",
+    ],
+    notIncluded: [
+      "CRM integrace",
+      "Sociální sítě",
+      "Prioritní podpora",
+    ],
+    popular: false,
+    color: "white",
   },
   {
     name: "Business",
-    price: "9 990",
-    period: "měsíc",
-    description: "Pro rostoucí firmy s většími nároky",
-    features: [
-      "3 AI asistenti",
-      "Neomezené konverzace",
-      "Web + Instagram + WhatsApp",
-      "Pokročilá analytika",
-      "Hlasový asistent",
-      "Automatizace (n8n/Make)",
-      "Prioritní podpora",
-      "4 jazyky",
-    ],
-    notIncluded: ["Vlastní AI model"],
-    popular: true,
-    cta: "Vybrat Business",
+    price: "19 500",
+    priceType: "jednorázově",
+    description: "Pro rostoucí firmy",
     icon: TrendingUp,
+    features: [
+      "Vše ze Start +",
+      "Instalace na 3 zařízení",
+      "WhatsApp + email integrace",
+      "Instagram & Facebook propojení",
+      "CRM integrace (základní)",
+      "5 hodin Vibe Coding training",
+      "Všechny světové jazyky",
+      "Prioritní podpora 60 dní",
+      "Pokročilé bezpečnostní limity",
+    ],
+    notIncluded: [
+      "Vlastní AI model",
+      "SEO automatizace",
+    ],
+    popular: true,
+    color: "cyan",
   },
   {
     name: "Enterprise",
-    price: "19 990",
-    period: "měsíc",
-    description: "Kompletní AI transformace firmy",
+    price: "39 500",
+    priceType: "jednorázově",
+    description: "Kompletní AI transformace",
+    icon: Crown,
     features: [
-      "Neomezení asistenti",
-      "Neomezené konverzace",
-      "Všechny platformy",
+      "Vše z Business +",
+      "Neomezená zařízení",
+      "Všechny integrace (CRM, e-shop, SEO...)",
       "Vlastní AI model na míru",
-      "Plná automatizace procesů",
+      "10 hodin Vibe Coding training",
+      "On-site školení vašeho týmu",
       "Dedikovaný account manager",
-      "SLA 99.9%",
-      "Všechny jazyky",
-      "On-site školení",
-      "API přístup",
+      "Prioritní podpora 6 měsíců",
+      "Telefonní linka 24/7",
+      "Pokročilý monitoring a reporty",
     ],
     notIncluded: [],
     popular: false,
-    cta: "Kontaktovat",
-    icon: Award,
+    color: "gold",
   },
 ];
 
@@ -631,13 +704,15 @@ const PricingSection = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
             <CreditCard size={16} className="text-[#00D9FF]" />
-            <span className="text-sm text-[#00D9FF]">Transparentní ceny bez skrytých poplatků</span>
+            <span className="text-sm text-[#00D9FF]">Jednorázová platba + vaše tokeny</span>
           </div>
           <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
-            Vyberte si svůj plán
+            Vyberte si balíček
           </h2>
           <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            Všechny ceny jsou bez DPH. První konzultace je vždy zdarma.
+            Platíte jednorázově za nastavení. Pak jen tokeny které spotřebujete.
+            <br />
+            <span className="text-[#00D9FF]">Žádné měsíční poplatky za AI.</span>
           </p>
         </motion.div>
 
@@ -663,15 +738,24 @@ const PricingSection = () => {
               )}
 
               <div className="text-center mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 flex items-center justify-center mx-auto mb-4">
-                  <plan.icon size={24} className="text-[#00D9FF]" />
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 ${
+                  plan.color === "cyan" ? "bg-gradient-to-br from-[#00D9FF]/30 to-[#00D9FF]/10" :
+                  plan.color === "gold" ? "bg-gradient-to-br from-yellow-500/30 to-yellow-500/10" :
+                  "bg-gradient-to-br from-white/20 to-white/5"
+                }`}>
+                  <plan.icon size={28} className={
+                    plan.color === "cyan" ? "text-[#00D9FF]" :
+                    plan.color === "gold" ? "text-yellow-400" :
+                    "text-white"
+                  } />
                 </div>
                 <h3 className="font-heading font-bold text-2xl text-white mb-2">{plan.name}</h3>
                 <p className="text-neutral-500 text-sm mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="font-heading font-bold text-4xl text-white">{plan.price}</span>
-                  <span className="text-neutral-400">Kč/{plan.period}</span>
+                  <span className="text-neutral-400">Kč</span>
                 </div>
+                <p className="text-[#00D9FF] text-sm">{plan.priceType}</p>
               </div>
 
               <ul className="space-y-3 mb-8">
@@ -697,261 +781,58 @@ const PricingSection = () => {
                     : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
                 }`}
               >
-                {plan.cta}
+                Mám zájem
               </a>
             </motion.div>
           ))}
         </div>
 
+        {/* Token info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12 text-center"
+          className="mt-12 bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 text-center"
         >
-          <p className="text-neutral-500 text-sm mb-4">
-            💡 Potřebujete něco specifického? Vytvoříme vám řešení na míru.
+          <h3 className="font-heading font-semibold text-xl text-white mb-4">
+            💡 Jak fungují tokeny?
+          </h3>
+          <p className="text-neutral-400 max-w-2xl mx-auto mb-6">
+            Tokeny jsou "palivo" pro AI. Platíte jen to, co spotřebujete. 
+            Průměrná firma spotřebuje <strong className="text-white">200-500 Kč měsíčně</strong> na tokenech.
+            Máte plný přehled o spotřebě.
           </p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-neutral-400">
-            <span className="flex items-center gap-2">
-              <Shield size={16} className="text-green-400" />
-              14 dní na vyzkoušení
-            </span>
-            <span className="flex items-center gap-2">
-              <BadgeCheck size={16} className="text-green-400" />
-              Bez závazků
-            </span>
-            <span className="flex items-center gap-2">
-              <Calendar size={16} className="text-green-400" />
-              Měsíční platby
-            </span>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="px-4 py-2 bg-white/5 rounded-lg">
+              <span className="text-neutral-500 text-sm">1 zpráva ≈</span>
+              <span className="text-white font-semibold ml-1">0.10 Kč</span>
+            </div>
+            <div className="px-4 py-2 bg-white/5 rounded-lg">
+              <span className="text-neutral-500 text-sm">1 minuta hovoru ≈</span>
+              <span className="text-white font-semibold ml-1">2 Kč</span>
+            </div>
           </div>
         </motion.div>
-      </div>
-    </section>
-  );
-};
 
-// ROI Calculator Section
-const ROICalculatorSection = () => {
-  const [calls, setCalls] = useState(20);
-  const [minutesPerCall, setMinutesPerCall] = useState(5);
-  const hourlyRate = 350; // Kč/hour
-
-  const monthlyHours = (calls * 22 * minutesPerCall) / 60;
-  const monthlySavings = monthlyHours * hourlyRate;
-  const yearlySavings = monthlySavings * 12;
-
-  return (
-    <section className="py-24 md:py-32 relative">
-      <div className="max-w-4xl mx-auto px-6 md:px-12">
+        {/* Security info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-br from-[#0A0A0A] to-[#111] border border-white/10 rounded-3xl p-8 md:p-12"
+          className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-neutral-400"
         >
-          <div className="text-center mb-10">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 flex items-center justify-center mx-auto mb-4">
-              <Calculator size={32} className="text-[#00D9FF]" />
-            </div>
-            <h2 className="font-heading font-bold text-3xl text-white mb-2">
-              Kolik ušetříte s AI asistentem?
-            </h2>
-            <p className="text-neutral-400">
-              Spočítejte si svou potenciální úsporu
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-            <div>
-              <label className="block text-neutral-300 mb-3 font-medium">
-                <Phone size={16} className="inline mr-2 text-[#00D9FF]" />
-                Počet hovorů denně: <span className="text-[#00D9FF] font-bold">{calls}</span>
-              </label>
-              <input
-                type="range"
-                min="5"
-                max="100"
-                value={calls}
-                onChange={(e) => setCalls(parseInt(e.target.value))}
-                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00D9FF]"
-              />
-              <div className="flex justify-between text-xs text-neutral-600 mt-1">
-                <span>5</span>
-                <span>100</span>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-neutral-300 mb-3 font-medium">
-                <Clock size={16} className="inline mr-2 text-[#00D9FF]" />
-                Minut na hovor: <span className="text-[#00D9FF] font-bold">{minutesPerCall}</span>
-              </label>
-              <input
-                type="range"
-                min="2"
-                max="15"
-                value={minutesPerCall}
-                onChange={(e) => setMinutesPerCall(parseInt(e.target.value))}
-                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00D9FF]"
-              />
-              <div className="flex justify-between text-xs text-neutral-600 mt-1">
-                <span>2 min</span>
-                <span>15 min</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white/5 rounded-xl p-6 text-center">
-              <p className="text-neutral-400 text-sm mb-1">Hodin měsíčně</p>
-              <p className="font-heading font-bold text-3xl text-white">
-                {monthlyHours.toFixed(0)}h
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-[#00D9FF]/20 to-[#00D9FF]/5 border border-[#00D9FF]/30 rounded-xl p-6 text-center">
-              <p className="text-[#00D9FF] text-sm mb-1">Úspora měsíčně</p>
-              <p className="font-heading font-bold text-3xl text-white">
-                {monthlySavings.toLocaleString()} Kč
-              </p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-6 text-center">
-              <p className="text-neutral-400 text-sm mb-1">Úspora ročně</p>
-              <p className="font-heading font-bold text-3xl text-[#00D9FF]">
-                {yearlySavings.toLocaleString()} Kč
-              </p>
-            </div>
-          </div>
-
-          <p className="text-center text-neutral-500 text-sm mt-6">
-            * Kalkulace na základě průměrné hodinové sazby {hourlyRate} Kč a 22 pracovních dnů
-          </p>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-// Testimonials Section
-const testimonials = [
-  {
-    name: "Petr Novák",
-    role: "Majitel autoservisu",
-    company: "AutoServis Praha",
-    quote: "AI asistent nám ušetřil minimálně 5 hodin týdně. Zákazníci si teď můžou objednat i v neděli večer a my máme ráno připravený plán.",
-    rating: 5,
-    avatar: "PN",
-  },
-  {
-    name: "Marie Svobodová",
-    role: "Kadeřnice",
-    company: "Salon Marie",
-    quote: "No-shows klesly o 70%! Klienti dostávají automatické připomenutí a já se můžu soustředit na to, co mě baví - stříhání.",
-    rating: 5,
-    avatar: "MS",
-  },
-  {
-    name: "Jan Dvořák",
-    role: "E-shop manager",
-    company: "ModníShop.cz",
-    quote: "Zákaznická podpora běží 24/7 bez jediného zaměstnance navíc. AI vyřeší 80% dotazů automaticky a zbytek předá nám.",
-    rating: 5,
-    avatar: "JD",
-  },
-];
-
-const TestimonialsSection = () => {
-  return (
-    <section id="reference" className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
-            <Quote size={16} className="text-[#00D9FF]" />
-            <span className="text-sm text-[#00D9FF]">Co říkají naši klienti</span>
-          </div>
-          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
-            Reference
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/30 transition-all"
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={16} className="text-yellow-400 fill-yellow-400" />
-                ))}
-              </div>
-              
-              <p className="text-neutral-300 mb-6 italic">"{testimonial.quote}"</p>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00D9FF] to-[#00B8D9] flex items-center justify-center text-black font-bold">
-                  {testimonial.avatar}
-                </div>
-                <div>
-                  <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-neutral-500 text-sm">{testimonial.role}</p>
-                  <p className="text-[#00D9FF] text-xs">{testimonial.company}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Video Demo Section
-const VideoDemoSection = () => {
-  return (
-    <section id="demo" className="py-24 md:py-32 relative">
-      <div className="max-w-5xl mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
-            Podívejte se, jak to funguje
-          </h2>
-          <p className="text-neutral-400 text-lg">
-            2 minuty, které vám změní pohled na zákaznickou podporu
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#0A0A0A]"
-        >
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#00D9FF]/10 to-transparent">
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-[#00D9FF] flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-110 transition-transform">
-                <PlayCircle size={40} className="text-black" />
-              </div>
-              <p className="text-neutral-400">Demo video - připravuje se</p>
-              <p className="text-neutral-600 text-sm mt-2">
-                Zatím si můžete vyzkoušet AI chatbot vpravo dole 👉
-              </p>
-            </div>
-          </div>
+          <span className="flex items-center gap-2">
+            <Timer size={16} className="text-[#00D9FF]" />
+            Časové limity na hovory
+          </span>
+          <span className="flex items-center gap-2">
+            <ShieldCheck size={16} className="text-[#00D9FF]" />
+            Denní limity zpráv
+          </span>
+          <span className="flex items-center gap-2">
+            <Lock size={16} className="text-[#00D9FF]" />
+            Ochrana proti zneužití
+          </span>
         </motion.div>
       </div>
     </section>
@@ -961,28 +842,28 @@ const VideoDemoSection = () => {
 // FAQ Section
 const faqs = [
   {
-    question: "Jak rychle můžete nasadit AI asistenta?",
-    answer: "Základní nasazení trvá 24-48 hodin. Pokročilé integrace a customizace obvykle 1-2 týdny v závislosti na složitosti.",
+    question: "Co je Vibe Coding a jak to funguje?",
+    answer: "Vibe Coding je způsob spolupráce s AI, kde vy určujete cíle a AI je realizuje. Komunikujete přirozeně - hlasem nebo textem. AI asistent pak samostatně vyřizuje komunikaci, odpovídá klientům, spravuje sociální sítě atd. Vy máte plnou kontrolu a můžete kdykoliv zasáhnout.",
   },
   {
-    question: "Potřebuji nějaké technické znalosti?",
-    answer: "Ne! Vše nastavíme za vás a naučíme váš tým s asistentem pracovat. Máme intuitivní dashboard pro správu.",
+    question: "Proč je OpenClaw open source a jaké to má výhody?",
+    answer: "Open source znamená, že kód je veřejný a transparentní. Výhody: 1) Žádné skryté poplatky nebo vendor lock-in, 2) Plná kontrola nad vašimi daty, 3) Možnost úprav na míru, 4) Aktivní komunita vývojářů, 5) Vyšší bezpečnost díky veřejnému auditu kódu.",
   },
   {
     question: "V jakých jazycích AI asistent komunikuje?",
-    answer: "Podporujeme češtinu, slovenštinu, angličtinu a němčinu. Na vyžádání přidáme další jazyky.",
+    answer: "AI asistent komunikuje ve více než 50 světových jazycích včetně: čeština, slovenština, angličtina, němčina, ukrajinština, vietnamština, mandarínština (čínština), arabština, ruština, polština, španělština, francouzština a další.",
   },
   {
-    question: "Co když AI neví odpověď?",
-    answer: "AI je natrénovaná předat složitější dotazy vám. Dostanete notifikaci a můžete převzít konverzaci.",
+    question: "Jak jsou chráněny moje data a tokeny?",
+    answer: "Nastavujeme bezpečnostní limity: časové limity na hovory (např. max 5 min), denní limity na zprávy, monitoring spotřeby tokenů. Můžete nastavit maximální denní/měsíční budget. AI nemá přístup kam vy nechcete - vše je pod vaší kontrolou.",
   },
   {
-    question: "Jak je to s bezpečností dat?",
-    answer: "Data jsou šifrovaná a uložená na serverech v EU. Splňujeme GDPR a můžeme podepsat NDA.",
+    question: "Co všechno mohu s AI asistentem propojit?",
+    answer: "Prakticky cokoliv: CRM systémy (Salesforce, HubSpot...), email (Gmail, Outlook), sociální sítě (Instagram, Facebook, LinkedIn), WhatsApp, e-shop platformy (Shopify, WooCommerce), SEO nástroje, Google kalendář a další. Integrace jsou součástí balíčků nebo je přidáme na míru.",
   },
   {
-    question: "Mohu AI asistenta kdykoliv zrušit?",
-    answer: "Ano, bez sankcí. Platíte měsíčně bez dlouhodobých závazků. Data vám na požádání exportujeme.",
+    question: "Kolik budu platit měsíčně?",
+    answer: "Za nastavení platíte jednorázově (od 9 500 Kč). Pak platíte jen tokeny které AI spotřebuje - průměrně 200-500 Kč měsíčně pro menší firmu. Žádné další měsíční poplatky. Máte plný přehled o spotřebě a můžete nastavit limity.",
   },
 ];
 
@@ -1053,7 +934,7 @@ const FAQSection = () => {
   );
 };
 
-// Callback Section (AI zavolá zpět do 2 minut)
+// Callback Section with all languages
 const CallbackSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -1063,13 +944,6 @@ const CallbackSection = () => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [countdown, setCountdown] = useState(120);
-
-  const languages = [
-    { code: "cs", name: "Čeština", flag: "🇨🇿" },
-    { code: "en", name: "English", flag: "🇬🇧" },
-    { code: "de", name: "Deutsch", flag: "🇩🇪" },
-    { code: "sk", name: "Slovenčina", flag: "🇸🇰" },
-  ];
 
   useEffect(() => {
     if (sent && countdown > 0) {
@@ -1139,7 +1013,7 @@ const CallbackSection = () => {
                 </span>
               </div>
               <p className="text-neutral-500 text-sm mt-4">
-                Jazyk konverzace: {languages.find(l => l.code === formData.language)?.flag} {languages.find(l => l.code === formData.language)?.name}
+                Jazyk: {allLanguages.find(l => l.code === formData.language)?.flag} {allLanguages.find(l => l.code === formData.language)?.name}
               </p>
             </motion.div>
           ) : (
@@ -1176,23 +1050,26 @@ const CallbackSection = () => {
                   V jakém jazyce chcete mluvit?
                 </label>
                 <div className="grid grid-cols-4 gap-2">
-                  {languages.map((lang) => (
+                  {allLanguages.slice(0, 8).map((lang) => (
                     <button
                       key={lang.code}
                       type="button"
                       onClick={() => setFormData({ ...formData, language: lang.code })}
-                      className={`py-3 px-2 rounded-xl text-center transition-all ${
+                      className={`py-2 px-1 rounded-xl text-center transition-all ${
                         formData.language === lang.code
                           ? "bg-[#00D9FF] text-black font-semibold"
                           : "bg-white/5 text-neutral-400 hover:bg-white/10 border border-white/10"
                       }`}
                       data-testid={`callback-lang-${lang.code}`}
                     >
-                      <span className="text-xl block mb-1">{lang.flag}</span>
-                      <span className="text-xs">{lang.name}</span>
+                      <span className="text-lg block">{lang.flag}</span>
+                      <span className="text-xs">{lang.name.slice(0, 6)}</span>
                     </button>
                   ))}
                 </div>
+                <p className="text-neutral-600 text-xs mt-2 text-center">
+                  + 40 dalších jazyků k dispozici
+                </p>
               </div>
 
               <button
@@ -1215,7 +1092,7 @@ const CallbackSection = () => {
               </button>
 
               <p className="text-center text-neutral-500 text-xs">
-                🔒 Vaše údaje jsou v bezpečí. Používáme je pouze pro tento hovor.
+                🔒 Vaše údaje ukládáme v češtině a používáme pouze pro tento hovor.
               </p>
             </form>
           )}
@@ -1225,7 +1102,7 @@ const CallbackSection = () => {
   );
 };
 
-// Contact Section (without Calendly)
+// Contact Section
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -1348,65 +1225,6 @@ const ContactSection = () => {
   );
 };
 
-// Newsletter Section
-const NewsletterSection = () => {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would call your newsletter API
-    setSubscribed(true);
-  };
-
-  return (
-    <section className="py-16 relative">
-      <div className="max-w-3xl mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-r from-[#00D9FF]/10 to-transparent border border-[#00D9FF]/20 rounded-2xl p-8 text-center"
-        >
-          <Mail size={32} className="text-[#00D9FF] mx-auto mb-4" />
-          <h3 className="font-heading font-bold text-2xl text-white mb-2">
-            Novinky ze světa AI
-          </h3>
-          <p className="text-neutral-400 mb-6">
-            Tipy, triky a novinky. Žádný spam, max 2x měsíčně.
-          </p>
-
-          {subscribed ? (
-            <div className="flex items-center justify-center gap-2 text-green-400">
-              <Check size={20} />
-              <span>Děkujeme za přihlášení!</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="vas@email.cz"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="flex-1 bg-black/50 border border-white/10 rounded-full px-5 py-3 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
-                data-testid="newsletter-email"
-              />
-              <button
-                type="submit"
-                className="bg-[#00D9FF] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#00B8D9] transition-all"
-                data-testid="newsletter-submit"
-              >
-                Odebírat
-              </button>
-            </form>
-          )}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
 // Footer
 const Footer = () => {
   return (
@@ -1417,21 +1235,28 @@ const Footer = () => {
             <span className="text-[#00D9FF] font-heading font-bold text-xl">chci</span>
             <span className="font-heading font-bold text-xl text-white">AI</span>
           </div>
-          <p className="text-neutral-500 text-sm">
-            © 2025 chciai.cz. Všechna práva vyhrazena.
-          </p>
+          <div className="flex items-center gap-6 text-sm text-neutral-500">
+            <span>Vibe Coding</span>
+            <span>×</span>
+            <span>OpenClaw</span>
+            <span>×</span>
+            <span>Emergent</span>
+          </div>
           <div className="flex items-center gap-4">
             <a href="mailto:info@chciai.cz" className="text-neutral-400 hover:text-[#00D9FF] transition-colors" data-testid="footer-email">
               info@chciai.cz
             </a>
           </div>
         </div>
+        <p className="text-center text-neutral-600 text-sm mt-6">
+          © 2025 chciai.cz. Všechna práva vyhrazena.
+        </p>
       </div>
     </footer>
   );
 };
 
-// Chat Widget (kept from before with voice and language support)
+// Chat Widget with all languages
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -1443,18 +1268,17 @@ const ChatWidget = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const messagesEndRef = useRef(null);
 
-  const languages = [
-    { code: "cs", name: "CZ", flag: "🇨🇿" },
-    { code: "en", name: "EN", flag: "🇬🇧" },
-    { code: "de", name: "DE", flag: "🇩🇪" },
-    { code: "sk", name: "SK", flag: "🇸🇰" },
-  ];
+  const chatLanguages = allLanguages.slice(0, 6);
 
   const welcomeMessages = {
     cs: "Ahoj! Jsem Aji. Jak vám mohu pomoci?",
+    sk: "Ahoj! Som Aji. Ako vám môžem pomôcť?",
     en: "Hello! I'm Aji. How can I help you?",
     de: "Hallo! Ich bin Aji. Wie kann ich Ihnen helfen?",
-    sk: "Ahoj! Som Aji. Ako vám môžem pomôcť?",
+    uk: "Привіт! Я Aji. Як я можу вам допомогти?",
+    vi: "Xin chào! Tôi là Aji. Tôi có thể giúp gì cho bạn?",
+    zh: "你好！我是Aji。我能帮你什么？",
+    ar: "مرحباً! أنا أجي. كيف يمكنني مساعدتك؟",
   };
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1530,23 +1354,23 @@ const ChatWidget = () => {
                   </div>
                   <div>
                     <h4 className="font-heading font-semibold text-white text-sm">Aji</h4>
-                    <p className="text-xs text-neutral-500">AI asistent</p>
+                    <p className="text-xs text-neutral-500">OpenClaw AI</p>
                   </div>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-neutral-400 hover:text-white" data-testid="chat-close">
                   <X size={20} />
                 </button>
               </div>
-              <div className="flex gap-1">
-                {languages.map((lang) => (
-                  <button key={lang.code} onClick={() => setLanguage(lang.code)} className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all ${language === lang.code ? "bg-[#00D9FF] text-black" : "bg-white/5 text-neutral-400 hover:bg-white/10"}`} data-testid={`lang-${lang.code}`}>
+              <div className="flex gap-1 overflow-x-auto pb-1">
+                {chatLanguages.map((lang) => (
+                  <button key={lang.code} onClick={() => setLanguage(lang.code)} className={`flex-shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-all ${language === lang.code ? "bg-[#00D9FF] text-black" : "bg-white/5 text-neutral-400 hover:bg-white/10"}`} data-testid={`lang-${lang.code}`}>
                     {lang.flag}
                   </button>
                 ))}
               </div>
             </div>
             <div className="h-[280px] overflow-y-auto p-4 space-y-4">
-              {messages.length === 0 && <div className="text-center py-8"><p className="text-neutral-500 text-sm">{welcomeMessages[language]}</p></div>}
+              {messages.length === 0 && <div className="text-center py-8"><p className="text-neutral-500 text-sm">{welcomeMessages[language] || welcomeMessages.cs}</p></div>}
               {messages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${msg.role === "user" ? "bg-[#00D9FF] text-black rounded-br-md" : "bg-white/5 text-white rounded-bl-md"}`}>{msg.content}</div>
@@ -1583,17 +1407,13 @@ const Home = () => {
     <div className="min-h-screen bg-[#030303]">
       <Navbar />
       <HeroSection />
-      <StatsSection />
+      <VibeCodingSection />
+      <OpenClawSection />
       <ServicesSection />
-      <UseCasesSection />
-      <ROICalculatorSection />
       <PricingSection />
-      <TestimonialsSection />
-      <VideoDemoSection />
       <FAQSection />
       <CallbackSection />
       <ContactSection />
-      <NewsletterSection />
       <Footer />
       <ChatWidget />
     </div>
