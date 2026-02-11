@@ -948,6 +948,7 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <ServicesSection />
+      <UseCasesSection />
       <AboutSection />
       <ContactSection />
       <Footer />
