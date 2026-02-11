@@ -1261,6 +1261,8 @@ const Home = () => {
       <HeroSection />
       <ServicesSection />
       <UseCasesSection />
+      <PricingSection />
+      <CallbackSection />
       <AboutSection />
       <ContactSection />
       <Footer />
