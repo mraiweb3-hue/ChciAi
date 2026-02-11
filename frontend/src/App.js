@@ -206,6 +206,106 @@ const services = [
   },
 ];
 
+// Use Cases for different industries
+const useCases = [
+  {
+    icon: "🔧",
+    industry: "Autoservisy",
+    problem: "Zmeškané telefonáty, zapomenuté STK, ztracené objednávky",
+    solutions: [
+      "AI přijímá objednávky 24/7",
+      "Automatické připomenutí STK a servisu",
+      "Historie oprav na jeden klik",
+    ],
+    savings: "5+ hodin týdně",
+    highlight: "Zákazník si objedná i v neděli večer",
+  },
+  {
+    icon: "💇",
+    industry: "Kadeřnictví",
+    problem: "Neustálé telefonáty, no-shows, chaos v kalendáři",
+    solutions: [
+      "Online rezervace bez volání",
+      "SMS/WhatsApp připomenutí",
+      "Zákazník vidí volné termíny",
+    ],
+    savings: "70% méně no-shows",
+    highlight: "Vy stříháte, AI řeší telefony",
+  },
+  {
+    icon: "💅",
+    industry: "Kosmetika & Nehty",
+    problem: "Přeplněné DMs, opakované dotazy na ceník",
+    solutions: [
+      "AI odpoví na Instagram/FB",
+      "Automatický ceník a portfolio",
+      "Rezervace přímo z chatu",
+    ],
+    savings: "3+ hodiny denně",
+    highlight: "Klientky si zarezervují i o půlnoci",
+  },
+  {
+    icon: "🍽️",
+    industry: "Restaurace & Kavárny",
+    problem: "Přetížená linka, chybné rezervace, negativní recenze",
+    solutions: [
+      "AI rezervace stolů non-stop",
+      "Odpovědi na Google recenze",
+      "Menu a alergeny na dotaz",
+    ],
+    savings: "40% více rezervací",
+    highlight: "Obsluha se věnuje hostům, ne telefonu",
+  },
+  {
+    icon: "💪",
+    industry: "Fitness & Trenéři",
+    problem: "Zrušené lekce, motivace klientů, administrativa",
+    solutions: [
+      "Automatické plánování tréninků",
+      "Motivační zprávy a tipy",
+      "Sledování pokroku klientů",
+    ],
+    savings: "10+ hodin měsíčně",
+    highlight: "Klient dostane tréninkový plán ihned",
+  },
+  {
+    icon: "🏠",
+    industry: "Reality & Makléři",
+    problem: "Stovky dotazů, opakované informace, prohlídky",
+    solutions: [
+      "AI odpoví na dotazy k nemovitostem",
+      "Automatické plánování prohlídek",
+      "Kvalifikace zájemců předem",
+    ],
+    savings: "60% méně zbytečných prohlídek",
+    highlight: "Jen vážní zájemci, žádné ztráty času",
+  },
+  {
+    icon: "🛒",
+    industry: "E-shopy",
+    problem: "Kde je zásilka?, vratky, dotazy k produktům",
+    solutions: [
+      "Sledování zásilek automaticky",
+      "Odpovědi na FAQ 24/7",
+      "Pomoc s výběrem produktu",
+    ],
+    savings: "80% méně support ticketů",
+    highlight: "Zákazník dostane odpověď za 3 sekundy",
+  },
+  {
+    icon: "📊",
+    industry: "Účetní & Poradci",
+    problem: "Chybějící dokumenty, zmeškané termíny, dotazy klientů",
+    solutions: [
+      "Připomenutí daňových termínů",
+      "Automatický sběr dokladů",
+      "Odpovědi na časté dotazy",
+    ],
+    savings: "15+ hodin měsíčně",
+    highlight: "Klient pošle fakturu přes WhatsApp",
+  },
+];
+
 const ServicesSection = () => {
   return (
     <section id="sluzby" className="py-24 md:py-32 relative">
