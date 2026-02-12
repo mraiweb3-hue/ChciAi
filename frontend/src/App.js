@@ -3,7 +3,7 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import AvatarShowcase from "./components/AvatarShowcase";
+import SimpleAvatarSelector from "./components/SimpleAvatarSelector";
 import ModernFloatingAvatars from "./components/ModernFloatingAvatars";
 
 // Configure axios defaults
@@ -1742,7 +1742,7 @@ const VoiceCallSection = () => {
                   <Mic size={14} className="inline mr-2" />
                   Vyberte si svého AI asistenta:
                 </label>
-                <AvatarShowcase 
+                <SimpleAvatarSelector 
                   selectedGender={voiceGender} 
                   onSelect={setVoiceGender}
                 />
