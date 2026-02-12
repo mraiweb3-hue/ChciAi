@@ -3,6 +3,7 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import AvatarShowcase from "./components/AvatarShowcase";
 
 // Configure axios defaults
 axios.defaults.timeout = 30000; // 30 seconds
@@ -1605,44 +1606,16 @@ const VoiceCallSection = () => {
                 </div>
               </div>
 
-              {/* Voice Gender selector */}
+              {/* Voice Gender selector with 3D Avatars */}
               <div>
                 <label className="block text-sm text-neutral-400 mb-3">
                   <Mic size={14} className="inline mr-2" />
-                  Hlas AI asistenta:
+                  Vyberte si svého AI asistenta:
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setVoiceGender('female')}
-                    className={`py-4 px-4 rounded-xl border transition-all flex items-center justify-center gap-3 ${
-                      voiceGender === 'female'
-                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
-                        : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
-                    }`}
-                  >
-                    <User size={20} />
-                    <div className="text-left">
-                      <div className="font-semibold">Ženský hlas</div>
-                      <div className="text-xs opacity-70">Přátelský, teplý</div>
-                    </div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setVoiceGender('male')}
-                    className={`py-4 px-4 rounded-xl border transition-all flex items-center justify-center gap-3 ${
-                      voiceGender === 'male'
-                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
-                        : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
-                    }`}
-                  >
-                    <User size={20} />
-                    <div className="text-left">
-                      <div className="font-semibold">Mužský hlas</div>
-                      <div className="text-xs opacity-70">Profesionální, jasný</div>
-                    </div>
-                  </button>
-                </div>
+                <AvatarShowcase 
+                  selectedGender={voiceGender} 
+                  onSelect={setVoiceGender}
+                />
               </div>
 
               {/* Time Slot selector */}
