@@ -9,8 +9,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
-from emergentintegrations.llm.chat import LlmChat, UserMessage
-from emergentintegrations.llm.openai import OpenAISpeechToText, OpenAITextToSpeech
+from openai import AsyncOpenAI
 import tempfile
 from fastapi.responses import StreamingResponse
 import io
@@ -39,12 +38,14 @@ logger = logging.getLogger(__name__)
 # LLM Key
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 
+# Initialize OpenAI client with Emergent
+client = AsyncOpenAI(
+    api_key=EMERGENT_LLM_KEY,
+    base_url="https://api.emergent.sh/v1"
+)
+
 # Store active chat sessions
 chat_sessions = {}
-
-# Initialize STT and TTS
-stt = OpenAISpeechToText(api_key=EMERGENT_LLM_KEY)
-tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
 
 # Define Models
 class StatusCheck(BaseModel):
@@ -280,15 +281,9 @@ async def chat(input: ChatMessageCreate):
         # Create unique session key with language
         session_key = f"{session_id}_{language}"
         
-        # Get or create chat session
+        # Get or create chat history
         if session_key not in chat_sessions:
-            chat_sessions[session_key] = LlmChat(
-                api_key=EMERGENT_LLM_KEY,
-                session_id=session_key,
-                system_message=LANGUAGE_CONFIGS[language]["system_prompt"]
-            ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-        
-        chat = chat_sessions[session_key]
+            chat_sessions[session_key] = []
         
         # Store user message in DB
         user_msg_doc = {
@@ -301,9 +296,31 @@ async def chat(input: ChatMessageCreate):
         }
         await db.chat_messages.insert_one(user_msg_doc)
         
-        # Send message and get response
-        user_message = UserMessage(text=input.message)
-        response = await chat.send_message(user_message)
+        # Build messages for API
+        messages = [
+            {"role": "system", "content": LANGUAGE_CONFIGS[language]["system_prompt"]}
+        ]
+        
+        # Add history
+        for msg in chat_sessions[session_key][-10:]:  # Last 10 messages for context
+            messages.append(msg)
+        
+        # Add current message
+        messages.append({"role": "user", "content": input.message})
+        
+        # Call OpenAI API (Anthropic via Emergent)
+        completion = await client.chat.completions.create(
+            model="anthropic/claude-sonnet-4-5",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=1000
+        )
+        
+        response_text = completion.choices[0].message.content
+        
+        # Store in session history
+        chat_sessions[session_key].append({"role": "user", "content": input.message})
+        chat_sessions[session_key].append({"role": "assistant", "content": response_text})
         
         # Store assistant message in DB
         assistant_msg_doc = {
@@ -311,12 +328,12 @@ async def chat(input: ChatMessageCreate):
             "session_id": session_id,
             "language": language,
             "role": "assistant",
-            "content": response,
+            "content": response_text,
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         await db.chat_messages.insert_one(assistant_msg_doc)
         
-        return ChatResponse(response=response, session_id=session_id)
+        return ChatResponse(response=response_text, session_id=session_id)
         
     except Exception as e:
         logger.error(f"Chat error: {str(e)}")
