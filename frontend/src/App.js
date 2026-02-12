@@ -4,6 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
+// Configure axios defaults
+axios.defaults.timeout = 30000; // 30 seconds
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 import {
   Bot,
   Sparkles,
@@ -1295,12 +1299,25 @@ const ChatWidget = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API}/chat`, {
-        session_id: sessionId,
-        message: userMessage,
-        language: language,
+      // Use fetch instead of axios for better CORS handling
+      const response = await fetch(`${API}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          message: userMessage,
+          language: language,
+        }),
       });
-      const aiResponse = response.data.response;
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.response;
       setMessages((prev) => [...prev, { role: "assistant", content: aiResponse }]);
       
       // Auto-play AI response if audio is enabled
@@ -1309,8 +1326,8 @@ const ChatWidget = () => {
       }
     } catch (error) {
       console.error('Chat error:', error);
-      console.error('Error details:', error.response?.data || error.message);
-      const errorMsg = error.response?.data?.message || error.message || "Omlouvám se, něco se pokazilo.";
+      console.error('Error details:', error);
+      const errorMsg = error.message || "Omlouvám se, něco se pokazilo.";
       setMessages((prev) => [...prev, { role: "assistant", content: `Chyba: ${errorMsg}` }]);
     }
     setLoading(false);
