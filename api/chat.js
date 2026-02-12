@@ -17,26 +17,26 @@ export default async function handler(req, res) {
 
   try {
     const { message, language = 'cs', session_id } = req.body;
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+    const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    if (!OPENAI_API_KEY) {
-      console.error('OPENAI_API_KEY not found in environment');
+    if (!GROQ_API_KEY) {
+      console.error('GROQ_API_KEY not found in environment');
       return res.status(500).json({ error: 'API configuration error' });
     }
 
-    // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call Groq API (OpenAI-compatible)
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.1-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -77,8 +77,8 @@ DŮLEŽITÉ:
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API Error:', response.status, errorText);
-      throw new Error(`OpenAI API error: ${response.status}`);
+      console.error('Groq API Error:', response.status, errorText);
+      throw new Error(`Groq API error: ${response.status}`);
     }
 
     const data = await response.json();
