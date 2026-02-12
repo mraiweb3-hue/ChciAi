@@ -1326,11 +1326,12 @@ const ChatWidget = () => {
       }
     } catch (error) {
       console.error('Chat error:', error);
-      console.error('Error details:', error);
-      const errorMsg = error.message || "Omlouvám se, něco se pokazilo.";
-      setMessages((prev) => [...prev, { role: "assistant", content: `Chyba: ${errorMsg}` }]);
+      // Extract string from error (Error objects can't be cloned in React state)
+      const errorMsg = String(error?.message || error || "Omlouvám se, něco se pokazilo.");
+      setMessages((prev) => [...prev, { role: "assistant", content: errorMsg }]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const playTextToSpeech = async (text) => {
