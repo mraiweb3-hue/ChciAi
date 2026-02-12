@@ -37,15 +37,15 @@ export default async function handler(req) {
       );
     }
 
-    // Call Emergent LLM API
-    const response = await fetch('https://api.emergent.sh/v1/chat/completions', {
+    // Call OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-emergent-bEcBa024324F8269f8',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-sonnet-4-5',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
