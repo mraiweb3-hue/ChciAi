@@ -1,10 +1,6 @@
 import { useRef, useState } from 'react';
-
-// Disable Three.js temporarily to fix build
-const Canvas = null;
-const useFrame = () => {};
-const OrbitControls = null;
-const PerspectiveCamera = null;
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 // Simplified humanoid avatar using primitives
 const HumanoidAvatar = ({ gender, isSelected }) => {

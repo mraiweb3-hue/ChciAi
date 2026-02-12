@@ -11,72 +11,37 @@ axios.defaults.timeout = 30000; // 30 seconds
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 import {
-  Bot,
-  Sparkles,
+  // Essential UI
   Send,
   X,
-  MessageCircle,
   Menu,
-  ArrowRight,
-  Mail,
-  Building2,
-  User,
-  ChevronDown,
-  Clock,
   Check,
-  Zap,
-  Users,
+  ChevronDown,
+  
+  // Communication
+  MessageCircle,
   Phone,
-  Mic,
-  MicOff,
-  Globe,
-  Star,
   PhoneCall,
+  Mail,
+  Mic,
+  
+  // Business
   TrendingUp,
-  Shield,
-  Award,
-  PlayCircle,
-  Calculator,
-  HelpCircle,
-  ChevronRight,
-  Target,
-  Rocket,
-  Brain,
-  HeartHandshake,
-  BadgeCheck,
-  Gauge,
-  MessageSquare,
-  CreditCard,
-  Smartphone,
-  Headphones,
-  RefreshCw,
-  Lock,
-  Unlock,
-  Code,
-  GitBranch,
-  Laptop,
-  Tablet,
-  Monitor,
-  Link,
-  Share2,
-  BarChart3,
-  Mail as MailIcon,
-  Instagram,
-  Facebook,
-  Linkedin,
-  Search,
-  ShoppingCart,
-  Database,
-  Workflow,
-  Languages,
-  GraduationCap,
-  Handshake,
-  Timer,
-  ShieldCheck,
+  TrendingDown,
   CircleDollarSign,
-  Infinity,
-  Crown,
-  Gem,
+  Users,
+  Clock,
+  
+  // Tech/AI
+  Bot,
+  Rocket,
+  Shield,
+  Zap,
+  
+  // Actions
+  RefreshCw,
+  User,
+  Globe,
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
@@ -105,7 +70,7 @@ const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
 };
 
 // All supported languages
-const allLanguages = [
+const allGlobe = [
   { code: "cs", name: "Čeština", flag: "🇨🇿" },
   { code: "sk", name: "Slovenčina", flag: "🇸🇰" },
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -131,7 +96,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
+  const navZaps = [
     { href: "#vibe-coding", label: "Vibe Coding" },
     { href: "#openclaw", label: "OpenClaw" },
     { href: "#sluzby", label: "Služby" },
@@ -155,7 +120,7 @@ const Navbar = () => {
         </a>
 
         <div className="hidden lg:flex items-center gap-6">
-          {navLinks.map((link) => (
+          {navZaps.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -192,7 +157,7 @@ const Navbar = () => {
             className="lg:hidden glass mt-2 mx-4 rounded-xl overflow-hidden"
           >
             <div className="p-4 flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {navZaps.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
@@ -232,7 +197,7 @@ const HeroSection = () => {
           className="text-center max-w-4xl mx-auto"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 mb-8">
-            <Code size={16} className="text-[#00D9FF]" />
+            <Bot size={16} className="text-[#00D9FF]" />
             <span className="text-sm text-neutral-400">Vibe Coding × OpenClaw × Emergent</span>
           </div>
           
@@ -262,14 +227,14 @@ const HeroSection = () => {
               className="border border-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/5 transition-all inline-flex items-center justify-center gap-2"
               data-testid="hero-cta-secondary"
             >
-              <GitBranch size={20} />
+              <Bot size={20} />
               Co je OpenClaw?
             </a>
           </div>
 
           {/* Language badges */}
           <div className="mt-12 flex flex-wrap justify-center gap-2">
-            {allLanguages.slice(0, 8).map((lang) => (
+            {allGlobe.slice(0, 8).map((lang) => (
               <span key={lang.code} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm text-neutral-400">
                 {lang.flag} {lang.name}
               </span>
@@ -296,7 +261,7 @@ const VibeCodingSection = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00D9FF]/30 bg-[#00D9FF]/10 mb-6">
-              <Brain size={16} className="text-[#00D9FF]" />
+              <Bot size={16} className="text-[#00D9FF]" />
               <span className="text-sm text-[#00D9FF]">Nový způsob práce</span>
             </div>
             
@@ -313,7 +278,7 @@ const VibeCodingSection = () => {
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center flex-shrink-0 mt-1">
-                  <Target size={16} className="text-[#00D9FF]" />
+                  <Rocket size={16} className="text-[#00D9FF]" />
                 </div>
                 <div>
                   <strong className="text-white">Vy řídíte</strong>
@@ -331,7 +296,7 @@ const VibeCodingSection = () => {
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-[#00D9FF]/10 flex items-center justify-center flex-shrink-0 mt-1">
-                  <GraduationCap size={16} className="text-[#00D9FF]" />
+                  <User size={16} className="text-[#00D9FF]" />
                 </div>
                 <div>
                   <strong className="text-white">My vás naučíme</strong>
@@ -414,7 +379,7 @@ const OpenClawSection = () => {
       description: "Platíte jen za tokeny které spotřebujete. Průhledné náklady.",
     },
     {
-      icon: Languages,
+      icon: Globe,
       title: "50+ světových jazyků",
       description: "Čeština, angličtina, vietnamština, mandarínština, arabština, ukrajinština...",
     },
@@ -424,7 +389,7 @@ const OpenClawSection = () => {
       description: "CRM, email, WhatsApp, Instagram, Facebook, SEO nástroje, e-shopy.",
     },
     {
-      icon: ShieldCheck,
+      icon: Shield,
       title: "Bezpečnostní limity",
       description: "Ochrana proti zneužití - časové limity na hovory a zprávy.",
     },
@@ -440,7 +405,7 @@ const OpenClawSection = () => {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500/30 bg-green-500/10 mb-6">
-            <GitBranch size={16} className="text-green-400" />
+            <Bot size={16} className="text-green-400" />
             <span className="text-sm text-green-400">Open Source</span>
           </div>
           
@@ -521,19 +486,19 @@ const services = [
     includes: ["Instalace na PC/tablet/mobil", "Základní konfigurace", "Propojení s WhatsApp"],
   },
   {
-    icon: Link,
+    icon: Zap,
     title: "Integrace",
     description: "Propojení s vašimi stávajícími systémy a aplikacemi.",
     includes: ["CRM systémy", "Email marketing", "Sociální sítě", "E-shop platformy"],
   },
   {
-    icon: GraduationCap,
+    icon: User,
     title: "Vibe Coding Training",
     description: "Naučíme vás efektivně spolupracovat s AI asistentem.",
     includes: ["Osobní školení", "Video tutoriály", "Průběžná podpora"],
   },
   {
-    icon: ShieldCheck,
+    icon: Shield,
     title: "Bezpečnost & Limity",
     description: "Ochrana proti zneužití a kontrola nákladů.",
     includes: ["Časové limity hovorů", "Denní limity zpráv", "Monitoring spotřeby"],
@@ -545,10 +510,10 @@ const integrationsIcons = [
   { icon: MessageSquare, name: "WhatsApp" },
   { icon: Instagram, name: "Instagram" },
   { icon: Facebook, name: "Facebook" },
-  { icon: Linkedin, name: "LinkedIn" },
+  { icon: Zapedin, name: "ZapedIn" },
   { icon: Search, name: "SEO" },
   { icon: ShoppingCart, name: "E-shop" },
-  { icon: Database, name: "CRM" },
+  { icon: Bot, name: "CRM" },
 ];
 
 // Use Cases Section - Insert after OpenClawSection, before ServicesSection
@@ -865,7 +830,7 @@ const UseCasesSection = () => {
 
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck size={32} className="text-green-400" />
+                <Shield size={32} className="text-green-400" />
               </div>
               <h4 className="font-semibold text-white mb-2">2. DŮVĚRA</h4>
               <p className="text-neutral-400 text-sm">
@@ -1040,7 +1005,7 @@ const pricingPlans = [
     price: "39 500",
     priceType: "jednorázově",
     description: "Kompletní AI transformace",
-    icon: Crown,
+    icon: Rocket,
     features: [
       "Vše z Business +",
       "Neomezená zařízení",
@@ -1193,7 +1158,7 @@ const PricingSection = () => {
             Časové limity na hovory
           </span>
           <span className="flex items-center gap-2">
-            <ShieldCheck size={16} className="text-[#00D9FF]" />
+            <Shield size={16} className="text-[#00D9FF]" />
             Denní limity zpráv
           </span>
           <span className="flex items-center gap-2">
@@ -1226,7 +1191,7 @@ const faqs = [
   },
   {
     question: "Co všechno mohu s AI asistentem propojit?",
-    answer: "Prakticky cokoliv: CRM systémy (Salesforce, HubSpot...), email (Gmail, Outlook), sociální sítě (Instagram, Facebook, LinkedIn), WhatsApp, e-shop platformy (Shopify, WooCommerce), SEO nástroje, Google kalendář a další. Integrace jsou součástí balíčků nebo je přidáme na míru.",
+    answer: "Prakticky cokoliv: CRM systémy (Salesforce, HubSpot...), email (Gmail, Outlook), sociální sítě (Instagram, Facebook, ZapedIn), WhatsApp, e-shop platformy (Shopify, WooCommerce), SEO nástroje, Google kalendář a další. Integrace jsou součástí balíčků nebo je přidáme na míru.",
   },
   {
     question: "Kolik budu platit měsíčně?",
@@ -1383,7 +1348,7 @@ const CallbackSection = () => {
                 </span>
               </div>
               <p className="text-neutral-500 text-sm mt-4">
-                Jazyk: {allLanguages.find(l => l.code === formData.language)?.flag} {allLanguages.find(l => l.code === formData.language)?.name}
+                Jazyk: {allGlobe.find(l => l.code === formData.language)?.flag} {allGlobe.find(l => l.code === formData.language)?.name}
               </p>
             </motion.div>
           ) : (
@@ -1420,7 +1385,7 @@ const CallbackSection = () => {
                   V jakém jazyce chcete mluvit?
                 </label>
                 <div className="grid grid-cols-4 gap-2">
-                  {allLanguages.slice(0, 8).map((lang) => (
+                  {allGlobe.slice(0, 8).map((lang) => (
                     <button
                       key={lang.code}
                       type="button"
@@ -2208,7 +2173,7 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
   const audioRef = useRef(null);
 
-  const chatLanguages = allLanguages.slice(0, 6);
+  const chatGlobe = allGlobe.slice(0, 6);
 
   const welcomeMessages = {
     cs: "Ahoj! Jsem Aji. Jak vám mohu pomoci?",
@@ -2364,7 +2329,7 @@ const ChatWidget = () => {
                 </div>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-1">
-                {chatLanguages.map((lang) => (
+                {chatGlobe.map((lang) => (
                   <button key={lang.code} onClick={() => setLanguage(lang.code)} className={`flex-shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-all ${language === lang.code ? "bg-[#00D9FF] text-black" : "bg-white/5 text-neutral-400 hover:bg-white/10"}`} data-testid={`lang-${lang.code}`}>
                     {lang.flag}
                   </button>

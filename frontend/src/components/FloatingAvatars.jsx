@@ -1,11 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
-
-// Disable Three.js temporarily to fix build
-const Canvas = null;
-const useFrame = () => {};
-const PerspectiveCamera = null;
+import { Canvas, useFrame } from '@react-three/fiber';
+import { PerspectiveCamera } from '@react-three/drei';
 
 // Simple animated avatar
 const AnimatedAvatar = ({ gender, action, intensity = 1 }) => {
