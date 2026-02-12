@@ -644,9 +644,16 @@ const UseCasesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/30 transition-all group"
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/50 hover:shadow-lg hover:shadow-[#00D9FF]/20 transition-all duration-300 group cursor-pointer"
             >
-              <div className="text-4xl mb-4">{useCase.icon}</div>
+              <motion.div 
+                className="text-4xl mb-4"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {useCase.icon}
+              </motion.div>
               <h3 className="font-heading font-semibold text-lg text-white mb-3">
                 {useCase.title}
               </h3>
@@ -2025,9 +2032,18 @@ const Footer = () => {
             <span>×</span>
             <span>Emergent</span>
           </div>
-          <div className="flex items-center gap-4">
-            <a href="mailto:info@chciai.cz" className="text-neutral-400 hover:text-[#00D9FF] transition-colors" data-testid="footer-email">
+          <div className="flex flex-col md:flex-row items-center gap-4 text-sm">
+            <a href="mailto:kontakt@chciai.cz" className="text-neutral-400 hover:text-[#00D9FF] transition-colors flex items-center gap-2">
+              <Mail size={16} />
+              kontakt@chciai.cz
+            </a>
+            <a href="mailto:info@chciai.cz" className="text-neutral-400 hover:text-[#00D9FF] transition-colors flex items-center gap-2">
+              <Mail size={16} />
               info@chciai.cz
+            </a>
+            <a href="tel:+420608922096" className="text-neutral-400 hover:text-[#00D9FF] transition-colors flex items-center gap-2">
+              <Phone size={16} />
+              +420 608 922 096
             </a>
           </div>
         </div>
