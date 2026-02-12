@@ -3,7 +3,8 @@ export const config = {
   runtime: 'edge',
 };
 
-export default async function handler(req) {
+export default async function handler(req, context) {
+  const OPENAI_API_KEY = context.env?.OPENAI_API_KEY || process.env.OPENAI_API_KEY;
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -42,7 +43,7 @@ export default async function handler(req) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
