@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   
   <!-- Homepage -->
@@ -12,40 +10,43 @@
     <priority>1.0</priority>
   </url>
   
-  <!-- Blog Articles -->
+  <!-- Key Landing Pages (when created) -->
   <url>
-    <loc>https://chciai.cz/blog/ai-automatizace-pro-male-firmy</loc>
+    <loc>https://chciai.cz/cenik</loc>
+    <lastmod>2026-02-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://chciai.cz/kontakt</loc>
     <lastmod>2026-02-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
+  <!-- Blog section (ready for future) -->
   <url>
-    <loc>https://chciai.cz/blog/jak-ai-chatbot-usetri-cas</loc>
+    <loc>https://chciai.cz/blog</loc>
     <lastmod>2026-02-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
+  <!-- FAQ -->
   <url>
-    <loc>https://chciai.cz/blog/whatsapp-bot-pro-firmy</loc>
+    <loc>https://chciai.cz/faq</loc>
     <lastmod>2026-02-12</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   
+  <!-- Use Cases -->
   <url>
-    <loc>https://chciai.cz/blog/automaticke-rezervace-klientu</loc>
+    <loc>https://chciai.cz/pouziti</loc>
     <lastmod>2026-02-12</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://chciai.cz/blog/ai-asistent-pro-kadernictvi</loc>
-    <lastmod>2026-02-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
