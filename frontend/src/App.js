@@ -1111,6 +1111,7 @@ const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     company: "",
     message: "",
   });
@@ -1123,7 +1124,7 @@ const ContactSection = () => {
     try {
       await axios.post(`${API}/contact`, formData);
       setSent(true);
-      setFormData({ name: "", email: "", company: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", company: "", message: "" });
     } catch (error) {
       console.error("Error submitting contact form:", error);
     }
@@ -1159,7 +1160,11 @@ const ContactSection = () => {
                 <Check size={28} className="text-green-400" />
               </div>
               <h4 className="font-heading text-xl text-white mb-2">Děkujeme!</h4>
-              <p className="text-neutral-400">Ozveme se vám co nejdříve.</p>
+              <p className="text-neutral-400 mb-3">Formulář byl úspěšně odeslán.</p>
+              <div className="flex items-center justify-center gap-2 text-[#00D9FF] text-sm">
+                <PhoneCall size={16} className="animate-pulse" />
+                <span>Náš AI asistent vám zavolá do 2 minut!</span>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -1190,16 +1195,30 @@ const ContactSection = () => {
                 </div>
               </div>
               
-              <div className="relative">
-                <Building2 size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
-                <input
-                  type="text"
-                  placeholder="Firma (volitelné)"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
-                  data-testid="contact-company"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="relative">
+                  <PhoneCall size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                  <input
+                    type="tel"
+                    placeholder="Telefon (pro zavolání AI)"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
+                    className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
+                    data-testid="contact-phone"
+                  />
+                </div>
+                <div className="relative">
+                  <Building2 size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                  <input
+                    type="text"
+                    placeholder="Firma (volitelné)"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    className="w-full bg-black/50 border border-white/10 rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
+                    data-testid="contact-company"
+                  />
+                </div>
               </div>
               
               <textarea
