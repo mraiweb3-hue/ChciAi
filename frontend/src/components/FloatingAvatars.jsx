@@ -1,15 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 
-// Lazy load Three.js components to avoid SSR issues
-let Canvas, useFrame, PerspectiveCamera;
-if (typeof window !== 'undefined') {
-  const fiber = require('@react-three/fiber');
-  const drei = require('@react-three/drei');
-  Canvas = fiber.Canvas;
-  useFrame = fiber.useFrame;
-  PerspectiveCamera = drei.PerspectiveCamera;
-}
+// Disable Three.js temporarily to fix build
+const Canvas = null;
+const useFrame = () => {};
+const PerspectiveCamera = null;
 
 // Simple animated avatar
 const AnimatedAvatar = ({ gender, action, intensity = 1 }) => {

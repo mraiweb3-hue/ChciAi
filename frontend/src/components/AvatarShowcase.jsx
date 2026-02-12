@@ -1,15 +1,10 @@
 import { useRef, useState } from 'react';
 
-// Lazy load Three.js to avoid SSR issues  
-let Canvas, useFrame, OrbitControls, PerspectiveCamera;
-if (typeof window !== 'undefined') {
-  const fiber = require('@react-three/fiber');
-  const drei = require('@react-three/drei');
-  Canvas = fiber.Canvas;
-  useFrame = fiber.useFrame;
-  OrbitControls = drei.OrbitControls;
-  PerspectiveCamera = drei.PerspectiveCamera;
-}
+// Disable Three.js temporarily to fix build
+const Canvas = null;
+const useFrame = () => {};
+const OrbitControls = null;
+const PerspectiveCamera = null;
 
 // Simplified humanoid avatar using primitives
 const HumanoidAvatar = ({ gender, isSelected }) => {
