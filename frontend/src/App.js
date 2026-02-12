@@ -235,15 +235,15 @@ const HeroSection = () => {
           </div>
           
           <h1 className="font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-6 tracking-tight">
-            Digitální spolupracovník
+            AI tým který
             <br />
-            <span className="text-[#00D9FF]">který pracuje 24/7/365</span>
+            <span className="text-[#00D9FF]">komunikuje, prodává, roste</span>
           </h1>
           
           <p className="text-lg md:text-xl text-neutral-400 mb-10 max-w-2xl mx-auto font-body">
-            Získejte AI asistenta, který <strong className="text-white">nikdy nespí</strong>. 
-            Komunikuje s klienty, řeší rezervace, odpovídá na dotazy a <strong className="text-[#00D9FF]">roste s vámi</strong>. 
-            Ve více než 50 světových jazycích. Začnete za 30 sekund.
+            <strong className="text-white">Nikdy nespí.</strong> Odpovídá klientům, rezervuje termíny, 
+            <strong className="text-[#00D9FF]"> prodává vaše služby 24/7</strong>. 
+            Podle vašich potřeb. Ve 50+ jazycích. Začnete za 30 sekund.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1717,7 +1717,10 @@ const VoiceCallSection = () => {
                 ) : (
                   <>
                     <PhoneCall size={24} className="group-hover:animate-pulse" />
-                    AI mi zavolá TEĎ!
+                    {timeSlot === 30 ? "Zavolat TEĎ (30s)" : 
+                     timeSlot === 60 ? "Zavolat za 1 minutu" :
+                     timeSlot === 120 ? "Zavolat za 2 minuty" :
+                     "Zavolat za 5 minut"}
                   </>
                 )}
               </button>
@@ -2260,8 +2263,6 @@ const Home = () => {
       <ServicesSection />
       <PricingSection />
       <FAQSection />
-      <CallbackSection />
-      {/* <ContactSection /> - TEMPORARILY HIDDEN - VOICE CALL PRIORITY */}
       <VoiceCallSection />
       <Footer />
       <ChatWidget />
