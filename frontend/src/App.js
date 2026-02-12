@@ -1266,7 +1266,10 @@ const ChatWidget = () => {
   const [language, setLanguage] = useState("cs");
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const messagesEndRef = useRef(null);
+  const audioRef = useRef(null);
 
   const chatLanguages = allLanguages.slice(0, 6);
 
@@ -1297,11 +1300,46 @@ const ChatWidget = () => {
         message: userMessage,
         language: language,
       });
-      setMessages((prev) => [...prev, { role: "assistant", content: response.data.response }]);
+      const aiResponse = response.data.response;
+      setMessages((prev) => [...prev, { role: "assistant", content: aiResponse }]);
+      
+      // Auto-play AI response if audio is enabled
+      if (audioEnabled && aiResponse) {
+        await playTextToSpeech(aiResponse);
+      }
     } catch (error) {
       setMessages((prev) => [...prev, { role: "assistant", content: "Omlouvám se, něco se pokazilo." }]);
     }
     setLoading(false);
+  };
+
+  const playTextToSpeech = async (text) => {
+    try {
+      setIsPlaying(true);
+      const formData = new FormData();
+      formData.append('text', text);
+      formData.append('language', language);
+      
+      const response = await axios.post(`${API}/speak`, formData, {
+        responseType: 'blob',
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      const audioBlob = new Blob([response.data], { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+        audioRef.current.onended = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+      }
+    } catch (error) {
+      console.error('TTS error:', error);
+      setIsPlaying(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -1357,9 +1395,19 @@ const ChatWidget = () => {
                     <p className="text-xs text-neutral-500">OpenClaw AI</p>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="text-neutral-400 hover:text-white" data-testid="chat-close">
-                  <X size={20} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => setAudioEnabled(!audioEnabled)} 
+                    className={`p-2 rounded-lg transition-all ${audioEnabled ? "bg-[#00D9FF] text-black" : "bg-white/10 text-neutral-400 hover:bg-white/20"}`}
+                    title={audioEnabled ? "Vypnout zvuk" : "Zapnout zvuk"}
+                    data-testid="audio-toggle"
+                  >
+                    {audioEnabled ? <Headphones size={16} /> : <Phone size={16} className="opacity-50" />}
+                  </button>
+                  <button onClick={() => setIsOpen(false)} className="text-neutral-400 hover:text-white" data-testid="chat-close">
+                    <X size={20} />
+                  </button>
+                </div>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-1">
                 {chatLanguages.map((lang) => (
@@ -1377,8 +1425,10 @@ const ChatWidget = () => {
                 </div>
               ))}
               {loading && <div className="flex justify-start"><div className="bg-white/5 rounded-2xl rounded-bl-md"><div className="typing-indicator"><span></span><span></span><span></span></div></div></div>}
+              {isPlaying && <div className="flex justify-center"><div className="text-xs text-[#00D9FF] flex items-center gap-2 animate-pulse"><Headphones size={14} /> Přehrávám odpověď...</div></div>}
               <div ref={messagesEndRef} />
             </div>
+            <audio ref={audioRef} style={{ display: 'none' }} />
             <form onSubmit={handleSubmit} className="p-4 border-t border-white/10">
               <div className="flex gap-2">
                 <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Napište zprávu..." className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none" data-testid="chat-input" disabled={isRecording} />

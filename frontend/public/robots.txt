@@ -1,4 +1,25 @@
+# robots.txt pro ChciAI.cz - AI asistent pro české firmy
+
+# Povolit všem robotům přístup
 User-agent: *
 Allow: /
 
+# Speciální pravidla pro AI crawlery (ChatGPT, Claude, atd.)
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Sitemap
 Sitemap: https://chciai.cz/sitemap.xml
+
+# Disallow admin/private paths (none currently)
+# User-agent: *
+# Disallow: /admin/

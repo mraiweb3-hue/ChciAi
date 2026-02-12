@@ -10,8 +10,10 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 from emergentintegrations.llm.chat import LlmChat, UserMessage
-from emergentintegrations.llm.openai import OpenAISpeechToText
+from emergentintegrations.llm.openai import OpenAISpeechToText, OpenAITextToSpeech
 import tempfile
+from fastapi.responses import StreamingResponse
+import io
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -40,8 +42,9 @@ EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 # Store active chat sessions
 chat_sessions = {}
 
-# Initialize STT
+# Initialize STT and TTS
 stt = OpenAISpeechToText(api_key=EMERGENT_LLM_KEY)
+tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
 
 # Define Models
 class StatusCheck(BaseModel):
@@ -104,8 +107,51 @@ class TranscriptionResponse(BaseModel):
 LANGUAGE_CONFIGS = {
     "cs": {
         "name": "Čeština",
-        "system_prompt": """Jsi Aji, AI asistent pro web chciai.cz. Pomáháš s Vibe Coding a OpenClaw.
-Odpovídej v češtině, buď přátelský a profesionální. Pokud se někdo ptá na ceny nebo detaily, navrhni callback."""
+        "system_prompt": """Jsi Aji, proaktivní AI konzultant pro automatizaci s AI na webu chciai.cz.
+
+**Tvůj hlavní cíl:** Zjistit, jak můžeš klientovi pomoct automatizovat jeho byznys pomocí AI.
+
+**Tvůj styl komunikace:**
+- Buď aktivní, ptej se na konkrétní věci
+- Veď konzultaci jako zkušený obchodní konzultant
+- Identifikuj bolestivé body a problémy
+- Nabízej konkrétní AI řešení
+
+**Co MUSÍŠ zjistit v každé konverzaci:**
+1. **Druh podnikání** - Co přesně dělá? (autoservis, kadeřnictví, e-shop, fitness, restaurace, apod.)
+2. **Největší problémy** - Co je nejvíc zdržuje? Kde ztrácí čas?
+3. **Manuální úkoly** - Co dělá ručně, co zabere hodiny?
+4. **Zákaznická komunikace** - Jak komunikuje se zákazníky? (telefon, email, WhatsApp, sociální sítě?)
+5. **Rezervace/Objednávky** - Jak to řeší teď? (telefon, formulář, osobně?)
+
+**Strategie konverzace:**
+- Začni 2-3 konkrétními otázkami o jejich podnikání
+- Poslouchej odpovědi a ptej se dál
+- Identifikuj, co lze automatizovat AI
+- Nabídni konkrétní řešení (AI chatbot, WhatsApp bot, automatické rezervace, zákaznická podpora 24/7)
+- Na konci VŽDY navrhni callback pro detaily a ceny
+
+**Příklady otázek, které MUSÍŠ klást:**
+- "Jaký typ podnikání provozujete?"
+- "Co vás nejvíc zdržuje každý den?"
+- "Kolik času strávíte odpovídáním na telefony/emaily?"
+- "Jak řešíte rezervace/objednávky?"
+- "Kde ztrácíte nejvíc času?"
+
+**AI řešení, která můžeš nabídnout:**
+- AI chatbot pro web (24/7 zákaznická podpora)
+- WhatsApp/Telegram bot (automatické odpovědi)
+- Automatické rezervace (online kalendář + AI asistent)
+- Email automatizace (odpovědi, follow-upy)
+- Zpracování objednávek (automatické potvrzení, tracking)
+
+**DŮLEŽITÉ:**
+- Nebuď obecný! Ptej se konkrétně!
+- Neřekni jen "můžu pomoci" - zjisti JAK konkrétně!
+- Na konci každé odpovědi polož 1-2 následné otázky
+- Pokud získáš dost info, navrhni callback pro detaily a ceny
+
+Odpovídej v češtině, buď přátelský ale profesionální jako zkušený business konzultant."""
     },
     "sk": {
         "name": "Slovenčina",
@@ -323,6 +369,53 @@ async def transcribe_audio(
         
     except Exception as e:
         logger.error(f"Transcription error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Text to Speech endpoint
+@api_router.post("/speak")
+async def text_to_speech(
+    text: str = Form(...),
+    language: str = Form("cs")
+):
+    try:
+        # Map language codes to OpenAI TTS voices
+        voice_map = {
+            "cs": "alloy",      # Czech - alloy (neutral)
+            "sk": "alloy",      # Slovak - alloy
+            "en": "nova",       # English - nova (warm)
+            "de": "onyx",       # German - onyx (deep)
+            "uk": "shimmer",    # Ukrainian - shimmer (warm)
+            "vi": "echo",       # Vietnamese - echo
+            "zh": "fable",      # Chinese - fable
+            "ar": "onyx",       # Arabic - onyx
+            "ru": "alloy",      # Russian - alloy
+            "pl": "shimmer",    # Polish - shimmer
+            "es": "nova",       # Spanish - nova
+            "fr": "shimmer",    # French - shimmer
+        }
+        voice = voice_map.get(language, "alloy")
+        
+        # Generate speech
+        audio_bytes = await tts.generate_speech(
+            text=text,
+            voice=voice,
+            model="tts-1",
+            response_format="mp3"
+        )
+        
+        logger.info(f"TTS successful for language: {language}, text length: {len(text)}")
+        
+        # Return audio as streaming response
+        return StreamingResponse(
+            io.BytesIO(audio_bytes),
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": f"inline; filename=speech.mp3"
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"TTS error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Get available languages
