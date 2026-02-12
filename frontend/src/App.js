@@ -235,15 +235,15 @@ const HeroSection = () => {
           </div>
           
           <h1 className="font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-6 tracking-tight">
-            Naučíme vás
+            Digitální spolupracovník
             <br />
-            <span className="text-[#00D9FF]">spolupracovat s AI</span>
+            <span className="text-[#00D9FF]">který pracuje 24/7/365</span>
           </h1>
           
           <p className="text-lg md:text-xl text-neutral-400 mb-10 max-w-2xl mx-auto font-body">
-            <strong className="text-white">Vibe Coding</strong> = vy řídíte, AI vykonává. 
-            Váš osobní AI asistent pracuje 24/7 na vašich cílech - komunikuje s klienty, 
-            spravuje firmu online i telefonicky. Ve <strong className="text-[#00D9FF]">všech světových jazycích</strong>.
+            Získejte AI asistenta, který <strong className="text-white">nikdy nespí</strong>. 
+            Komunikuje s klienty, řeší rezervace, odpovídá na dotazy a <strong className="text-[#00D9FF]">roste s vámi</strong>. 
+            Ve více než 50 světových jazycích. Začnete za 30 sekund.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -253,7 +253,7 @@ const HeroSection = () => {
               data-testid="hero-cta-primary"
             >
               <PhoneCall size={20} />
-              Zavoláme vám do 2 minut
+              AI mi zavolá TEĎ (za 30s)
             </a>
             <a
               href="#openclaw"
@@ -945,10 +945,11 @@ const CallbackSection = () => {
     phone: "",
     language: "cs",
     voiceGender: "female",
+    timeSlot: 30,
   });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const [countdown, setCountdown] = useState(120);
+  const [countdown, setCountdown] = useState(30);
 
   useEffect(() => {
     if (sent && countdown > 0) {
@@ -965,6 +966,7 @@ const CallbackSection = () => {
     try {
       await axios.post(`${API}/callback`, formData);
       setSent(true);
+      setCountdown(formData.timeSlot);
     } catch (error) {
       console.error("Error submitting callback request:", error);
     }
@@ -1117,6 +1119,35 @@ const CallbackSection = () => {
                 </div>
               </div>
 
+              {/* Time Slot selector */}
+              <div>
+                <label className="block text-neutral-400 text-sm mb-3">
+                  <Clock size={14} className="inline mr-2" />
+                  Za jak dlouho zavolat:
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { value: 30, label: '30s' },
+                    { value: 60, label: '1 min' },
+                    { value: 120, label: '2 min' },
+                    { value: 300, label: '5 min' },
+                  ].map((slot) => (
+                    <button
+                      key={slot.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, timeSlot: slot.value })}
+                      className={`py-3 px-2 rounded-xl border transition-all text-sm font-semibold ${
+                        formData.timeSlot === slot.value
+                          ? 'bg-[#00D9FF] border-[#00D9FF] text-black'
+                          : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
+                      }`}
+                    >
+                      {slot.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={sending}
@@ -1156,9 +1187,10 @@ const VoiceCallSection = () => {
   const [calling, setCalling] = useState(false);
   const [called, setCalled] = useState(false);
   const [language, setLanguage] = useState("cs");
-  const [voiceGender, setVoiceGender] = useState("female"); // "male" or "female"
-  const [countdown, setCountdown] = useState(120); // 2 minutes in seconds
-  const [callResult, setCallResult] = useState(null); // API response
+  const [voiceGender, setVoiceGender] = useState("female");
+  const [timeSlot, setTimeSlot] = useState(30);
+  const [countdown, setCountdown] = useState(30);
+  const [callResult, setCallResult] = useState(null);
 
   // Countdown timer effect
   useEffect(() => {
@@ -1193,15 +1225,16 @@ const VoiceCallSection = () => {
         company: "",
         message: `Požadavek na demo hovor (jazyk: ${language}, hlas: ${voiceGender === 'female' ? 'ženský' : 'mužský'})`,
         language,
-        voiceGender
+        voiceGender,
+        timeSlot
       });
       
       if (response.data.success) {
         setCalled(true);
-        setCallResult(response.data); // Store API response
+        setCallResult(response.data);
         setPhone("");
         setName("");
-        setCountdown(120); // Reset countdown
+        setCountdown(timeSlot);
       }
     } catch (error) {
       console.error("Voice call error:", error);
@@ -1412,6 +1445,35 @@ const VoiceCallSection = () => {
                       <div className="text-xs opacity-70">Profesionální, jasný</div>
                     </div>
                   </button>
+                </div>
+              </div>
+
+              {/* Time Slot selector */}
+              <div>
+                <label className="block text-sm text-neutral-400 mb-3">
+                  <Clock size={14} className="inline mr-2" />
+                  Za jak dlouho zavolat:
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { value: 30, label: '30s' },
+                    { value: 60, label: '1 min' },
+                    { value: 120, label: '2 min' },
+                    { value: 300, label: '5 min' },
+                  ].map((slot) => (
+                    <button
+                      key={slot.value}
+                      type="button"
+                      onClick={() => setTimeSlot(slot.value)}
+                      className={`py-3 rounded-xl border transition-all text-sm font-semibold ${
+                        timeSlot === slot.value
+                          ? 'bg-[#00D9FF] border-[#00D9FF] text-black'
+                          : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
+                      }`}
+                    >
+                      {slot.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
