@@ -1,7 +1,15 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, MeshWobbleMaterial, Text } from '@react-three/drei';
 import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+
+// Lazy load Three.js to avoid SSR issues  
+let Canvas, useFrame, OrbitControls, PerspectiveCamera;
+if (typeof window !== 'undefined') {
+  const fiber = require('@react-three/fiber');
+  const drei = require('@react-three/drei');
+  Canvas = fiber.Canvas;
+  useFrame = fiber.useFrame;
+  OrbitControls = drei.OrbitControls;
+  PerspectiveCamera = drei.PerspectiveCamera;
+}
 
 // Simplified humanoid avatar using primitives
 const HumanoidAvatar = ({ gender, isSelected }) => {
@@ -175,4 +183,44 @@ const AvatarShowcase = ({ selectedGender, onSelect }) => {
   );
 };
 
-export default AvatarShowcase;
+// Fallback component for SSR/build
+const AvatarShowcaseSafe = ({ selectedGender, onSelect }) => {
+  if (typeof window === 'undefined' || !Canvas) {
+    // Fallback UI without 3D
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div 
+          onClick={() => onSelect('female')}
+          className={`bg-black/50 rounded-2xl border ${
+            selectedGender === 'female' ? 'border-[#00D9FF]' : 'border-white/10'
+          } p-6 cursor-pointer transition-all hover:border-[#00D9FF]/50`}
+        >
+          <div className="h-64 flex items-center justify-center mb-4">
+            <div className="text-6xl">👩‍💼</div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-white font-semibold text-xl mb-2">AJI - Ženský hlas</h3>
+            <p className="text-neutral-400 text-sm">Přátelský, teplý, energický</p>
+          </div>
+        </div>
+        <div 
+          onClick={() => onSelect('male')}
+          className={`bg-black/50 rounded-2xl border ${
+            selectedGender === 'male' ? 'border-[#00D9FF]' : 'border-white/10'
+          } p-6 cursor-pointer transition-all hover:border-[#00D9FF]/50`}
+        >
+          <div className="h-64 flex items-center justify-center mb-4">
+            <div className="text-6xl">👨‍💼</div>
+          </div>
+          <div className="text-center">
+            <h3 className="text-white font-semibold text-xl mb-2">MARTIN - Mužský hlas</h3>
+            <p className="text-neutral-400 text-sm">Profesionální, jasný, důvěryhodný</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return <AvatarShowcase selectedGender={selectedGender} onSelect={onSelect} />;
+};
+
+export default AvatarShowcaseSafe;

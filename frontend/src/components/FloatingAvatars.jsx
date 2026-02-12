@@ -1,7 +1,15 @@
-import { Canvas, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, MeshWobbleMaterial, Html } from '@react-three/drei';
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+
+// Lazy load Three.js components to avoid SSR issues
+let Canvas, useFrame, PerspectiveCamera;
+if (typeof window !== 'undefined') {
+  const fiber = require('@react-three/fiber');
+  const drei = require('@react-three/drei');
+  Canvas = fiber.Canvas;
+  useFrame = fiber.useFrame;
+  PerspectiveCamera = drei.PerspectiveCamera;
+}
 
 // Simple animated avatar
 const AnimatedAvatar = ({ gender, action, intensity = 1 }) => {
@@ -260,4 +268,12 @@ const ScrollingAvatars = () => {
   );
 };
 
-export default ScrollingAvatars;
+// Fallback for SSR/build
+const ScrollingAvatarsSafe = () => {
+  if (typeof window === 'undefined' || !Canvas) {
+    return null;
+  }
+  return <ScrollingAvatars />;
+};
+
+export default ScrollingAvatarsSafe;
