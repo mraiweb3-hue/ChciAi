@@ -26,7 +26,7 @@ export default async function handler(req) {
 
   try {
     const body = await req.json();
-    const { name, phone, language = 'cs', voiceGender = 'female' } = body;
+    const { name, phone, language = 'cs', voiceGender = 'female', timeSlot = 30 } = body;
 
     // Validation
     if (!phone || phone.length < 9) {
@@ -49,22 +49,34 @@ export default async function handler(req) {
       timestamp: new Date().toISOString(),
     });
 
-    // TODO: Integrate with your voice calling system
-    // For now, just return success
-    // In production, you would:
-    // 1. Send to Twilio/Vonage for voice call
-    // 2. Or send to your backend queue
-    // 3. Or trigger webhook
+    // TODO: Production integrations:
+    // 1. Send SMS confirmation (call /api/sms)
+    // 2. Schedule voice call via Twilio
+    // 3. Trigger webhook
+
+    // Send SMS confirmation
+    try {
+      await fetch('/api/sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, name, language, timeSlot }),
+      });
+    } catch (smsError) {
+      console.error('SMS send failed:', smsError);
+      // Continue even if SMS fails
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true,
         message: 'Callback request received',
         voiceCallInitiated: true,
-        estimatedCallTime: '2 minutes',
+        estimatedCallTime: `${timeSlot} seconds`,
+        timeSlot,
         language,
         voiceGender,
         voiceDescription: voiceGender === 'female' ? 'Ženský hlas' : 'Mužský hlas',
+        smsNotification: 'SMS potvrzení odesláno',
       }), 
       { status: 200, headers }
     );
