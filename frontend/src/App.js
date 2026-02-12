@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import AvatarShowcase from "./components/AvatarShowcase";
-import ScrollingAvatars from "./components/FloatingAvatars";
+import ModernFloatingAvatars from "./components/ModernFloatingAvatars";
 
 // Configure axios defaults
 axios.defaults.timeout = 30000; // 30 seconds
@@ -2385,7 +2385,7 @@ const Home = () => {
       <FAQSection />
       <VoiceCallSection />
       <Footer />
-      <ScrollingAvatars />
+      <ModernFloatingAvatars />
       <ChatWidget />
       <FloatingVoiceButton />
     </div>
