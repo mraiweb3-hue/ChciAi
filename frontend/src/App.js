@@ -549,6 +549,196 @@ const integrationsIcons = [
   { icon: Database, name: "CRM" },
 ];
 
+// Use Cases Section - Insert after OpenClawSection, before ServicesSection
+
+const useCases = [
+  {
+    icon: "🔧",
+    title: "Automechanik",
+    problem: "10+ hodin týdně na telefonech s rezervacemi",
+    solution: "AI rezervuje termíny, připomíná STK, odpovídá na dotazy o cenách",
+    savings: "10 hodin/týdně",
+    color: "orange"
+  },
+  {
+    icon: "💅",
+    title: "Kosmetička",
+    problem: "Ztracené rezervace přes Instagram DM",
+    solution: "AI spravuje kalendář, potvrzuje termíny, posílá připomínky",
+    savings: "15+ nových klientů/měsíc",
+    color: "pink"
+  },
+  {
+    icon: "🏠",
+    title: "Reality",
+    problem: "První kontakt s klienty trvá příliš dlouho",
+    solution: "AI odpovídá na dotazy 24/7, posílá info o nemovitostech, domlouvá prohlídky",
+    savings: "50% rychlejší reakce",
+    color: "blue"
+  },
+  {
+    icon: "💪",
+    title: "Posilovna",
+    problem: "Správa členství a rezervací trenérů",
+    solution: "AI řeší registrace, rezervace lekcí, platby, připomínky",
+    savings: "8 hodin/týdně",
+    color: "red"
+  },
+  {
+    icon: "🧘",
+    title: "Jóga Studio",
+    problem: "Komunikace s klienty o kurzech a cenách",
+    solution: "AI booking lekcí, info o kurzech, speciální nabídky",
+    savings: "100% automatizace",
+    color: "purple"
+  },
+  {
+    icon: "🍽️",
+    title: "Restaurace",
+    problem: "Rezervace stolů přes telefon/WhatsApp",
+    solution: "AI rezervace 24/7, menu info, speciální události, delivery",
+    savings: "20+ rezervací navíc/den",
+    color: "green"
+  },
+  {
+    icon: "🎵",
+    title: "Klub/Bar",
+    problem: "VIP rezervace, akce, guest listy",
+    solution: "AI VIP stoly, info o akcích, guest list management",
+    savings: "30% více VIP rezervací",
+    color: "cyan"
+  },
+  {
+    icon: "🎨",
+    title: "Umělec/Kreativec",
+    problem: "Cenové nabídky a objednávky custom prací",
+    solution: "AI posílá portfolio, cenové kalkulace, domlouvá schůzky",
+    savings: "5+ nových zakázek/měsíc",
+    color: "yellow"
+  },
+];
+
+const UseCasesSection = () => {
+  return (
+    <section className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
+            Kdo využívá AI asistenty?
+          </h2>
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            Konkrétní příklady z praxe. Vyberte si svůj obor a zjistěte, jak AI ušetří váš čas.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {useCases.map((useCase, index) => (
+            <motion.div
+              key={useCase.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/30 transition-all group"
+            >
+              <div className="text-4xl mb-4">{useCase.icon}</div>
+              <h3 className="font-heading font-semibold text-lg text-white mb-3">
+                {useCase.title}
+              </h3>
+              <div className="space-y-3 text-sm">
+                <div>
+                  <span className="text-red-400 font-semibold">Problém:</span>
+                  <p className="text-neutral-500 mt-1">{useCase.problem}</p>
+                </div>
+                <div>
+                  <span className="text-[#00D9FF] font-semibold">Řešení:</span>
+                  <p className="text-neutral-400 mt-1">{useCase.solution}</p>
+                </div>
+                <div className="pt-3 border-t border-white/10">
+                  <span className="text-green-400 font-semibold">Úspora:</span>
+                  <p className="text-green-300 mt-1">{useCase.savings}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Growth Journey */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-gradient-to-r from-[#0A0A0A] to-[#00D9FF]/10 border border-[#00D9FF]/20 rounded-2xl p-8 md:p-12"
+        >
+          <h3 className="font-heading font-bold text-2xl md:text-3xl text-white mb-8 text-center">
+            Od komunikace k aplikacím na míru
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-[#00D9FF]/20 flex items-center justify-center mx-auto mb-4">
+                <MessageSquare size={32} className="text-[#00D9FF]" />
+              </div>
+              <h4 className="font-semibold text-white mb-2">1. START</h4>
+              <p className="text-neutral-400 text-sm">
+                AI komunikuje s klienty přes WhatsApp, email, sociální sítě
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck size={32} className="text-green-400" />
+              </div>
+              <h4 className="font-semibold text-white mb-2">2. DŮVĚRA</h4>
+              <p className="text-neutral-400 text-sm">
+                Vidíte že funguje. AI zvládá rutinu bezchybně 24/7
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
+                <Zap size={32} className="text-purple-400" />
+              </div>
+              <h4 className="font-semibold text-white mb-2">3. EXPANZE</h4>
+              <p className="text-neutral-400 text-sm">
+                Otevíráte více funkcí: rezervace, platby, CRM, marketing
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-4">
+                <Rocket size={32} className="text-yellow-400" />
+              </div>
+              <h4 className="font-semibold text-white mb-2">4. RŮST</h4>
+              <p className="text-neutral-400 text-sm">
+                Webové stránky, mobilní aplikace, komplexní digitální systémy
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10 text-center">
+            <p className="text-neutral-300 mb-6">
+              <strong className="text-white">Nabízíme kompletní digitální řešení:</strong><br/>
+              AI asistenti • Webové stránky • Mobilní aplikace • E-shopy • CRM systémy
+            </p>
+            <a
+              href="#callback"
+              className="inline-flex items-center gap-2 bg-[#00D9FF] text-black px-8 py-4 rounded-full font-semibold hover:bg-[#00B8D9] transition-all"
+            >
+              <PhoneCall size={20} />
+              Začněte s AI asistentem TEĎ
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 const ServicesSection = () => {
   return (
     <section id="sluzby" className="py-24 md:py-32 relative">
@@ -2066,6 +2256,7 @@ const Home = () => {
       <HeroSection />
       <VibeCodingSection />
       <OpenClawSection />
+      <UseCasesSection />
       <ServicesSection />
       <PricingSection />
       <FAQSection />
