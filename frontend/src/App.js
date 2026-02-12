@@ -1308,7 +1308,10 @@ const ChatWidget = () => {
         await playTextToSpeech(aiResponse);
       }
     } catch (error) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Omlouvám se, něco se pokazilo." }]);
+      console.error('Chat error:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      const errorMsg = error.response?.data?.message || error.message || "Omlouvám se, něco se pokazilo.";
+      setMessages((prev) => [...prev, { role: "assistant", content: `Chyba: ${errorMsg}` }]);
     }
     setLoading(false);
   };
