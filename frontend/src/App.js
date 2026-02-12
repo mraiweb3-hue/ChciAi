@@ -1115,6 +1115,25 @@ const VoiceCallSection = () => {
   const [calling, setCalling] = useState(false);
   const [called, setCalled] = useState(false);
   const [language, setLanguage] = useState("cs");
+  const [countdown, setCountdown] = useState(120); // 2 minutes in seconds
+  const [callResult, setCallResult] = useState(null); // API response
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (called && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [called, countdown]);
+
+  // Format countdown as MM:SS
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleVoiceCall = async (e) => {
     e.preventDefault();
@@ -1136,8 +1155,10 @@ const VoiceCallSection = () => {
       
       if (response.data.success) {
         setCalled(true);
+        setCallResult(response.data); // Store API response
         setPhone("");
         setName("");
+        setCountdown(120); // Reset countdown
       }
     } catch (error) {
       console.error("Voice call error:", error);
@@ -1217,21 +1238,73 @@ const VoiceCallSection = () => {
               >
                 <PhoneCall size={48} className="text-green-400 animate-pulse" />
               </motion.div>
+              
               <h3 className="font-heading text-2xl md:text-3xl text-white mb-4">
-                Voláme vám! 📞
+                ✅ Formulář odeslán!
               </h3>
-              <p className="text-neutral-400 text-lg mb-2">
-                Náš AI asistent vás kontaktuje během <strong className="text-[#00D9FF]">2 minut</strong>.
-              </p>
-              <p className="text-neutral-500 text-sm mb-6">
-                Připravte si otázky! AI mluví ve vašem jazyce.
-              </p>
-              <button
-                onClick={() => setCalled(false)}
-                className="text-[#00D9FF] hover:text-white transition-colors text-sm"
-              >
-                ← Zadat jiné číslo
-              </button>
+              
+              {/* COUNTDOWN TIMER */}
+              <div className="mb-6">
+                <p className="text-neutral-400 text-lg mb-4">
+                  AI vám zavolá za:
+                </p>
+                <motion.div
+                  key={countdown}
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  className="inline-block"
+                >
+                  <div className="text-6xl md:text-7xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00D9FF] to-[#00B8D9] mb-2">
+                    {formatTime(countdown)}
+                  </div>
+                </motion.div>
+                <p className="text-neutral-500 text-sm">
+                  {countdown > 0 ? '⏱️ Odpočítávání...' : '📞 Měli bychom volat TEĎKA!'}
+                </p>
+              </div>
+
+              {/* API RESULT INFO */}
+              {callResult && (
+                <div className="bg-black/30 border border-white/10 rounded-xl p-4 mb-6">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-neutral-500 mb-1">Status:</p>
+                      <p className="text-green-400 font-semibold flex items-center gap-2">
+                        <Check size={16} />
+                        {callResult.success ? 'Úspěšně odesláno' : 'Chyba'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-neutral-500 mb-1">Voice call:</p>
+                      <p className="text-[#00D9FF] font-semibold">
+                        {callResult.voiceCallInitiated ? '✅ Připraven' : '⏳ Čeká na setup'}
+                      </p>
+                    </div>
+                  </div>
+                  {callResult.message && (
+                    <p className="text-neutral-400 text-xs mt-3 pt-3 border-t border-white/10">
+                      {callResult.message}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <p className="text-neutral-400 text-sm">
+                  💡 <strong>Tip:</strong> Připravte si otázky! AI mluví ve vašem jazyce.
+                </p>
+                
+                <button
+                  onClick={() => {
+                    setCalled(false);
+                    setCountdown(120);
+                    setCallResult(null);
+                  }}
+                  className="text-[#00D9FF] hover:text-white transition-colors text-sm"
+                >
+                  ← Zadat jiné číslo
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleVoiceCall} className="space-y-6">
