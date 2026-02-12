@@ -45,7 +45,7 @@ export default async function handler(req) {
         'Authorization': 'Bearer sk-emergent-bEcBa024324F8269f8',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'anthropic/claude-sonnet-4-5',
         messages: [
           {
             role: 'system',
