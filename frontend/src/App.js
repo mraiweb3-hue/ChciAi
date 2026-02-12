@@ -619,6 +619,170 @@ const useCases = [
   },
 ];
 
+// Benefits Section - 6 Critical Business Problems AI Solves
+
+const benefits = [
+  {
+    icon: Clock,
+    title: "Ztracený čas na telefonech",
+    problem: "10-15 hodin týdně trávíte odpovídáním na stále stejné otázky",
+    solution: "AI odpovídá okamžitě 24/7. Vy se věnujete práci, ne telefonům.",
+    impact: "Úspora 10+ hodin týdně = 2 celé pracovní dny",
+    color: "blue",
+    stats: "83% podnikatelů říká, že telefon je největší rušivý element"
+  },
+  {
+    icon: MessageSquare,
+    title: "Ztracené objednávky v noci/víkendy",
+    problem: "Klient píše v sobotu večer. V pondělí už si objednal u konkurence.",
+    solution: "AI odpovídá IHNED, přijímá objednávky, rezervuje termíny 24/7.",
+    impact: "+30% více objednávek jen z nočních hodin",
+    color: "purple",
+    stats: "68% lidí píže mimo pracovní dobu"
+  },
+  {
+    icon: Users,
+    title: "Zapomenuté follow-upy",
+    problem: "Slíbíte zavolat zpět. Zapomenete. Klient jde jinam.",
+    solution: "AI automaticky sleduje, připomíná, kontaktuje. Žádný lead nezmizí.",
+    impact: "+45% konverze z leadů na platící klienty",
+    color: "green",
+    stats: "80% leadů vyžaduje 5+ follow-upů"
+  },
+  {
+    icon: Clock,
+    title: "Chaos v rezervacích",
+    problem: "Double-booking, zapomenuté termíny, no-show klienti.",
+    solution: "AI spravuje kalendář, posílá připomínky, potvrzuje termíny.",
+    impact: "-60% no-show, +100% organizace",
+    color: "orange",
+    stats: "Průměrný no-show rate je 23%"
+  },
+  {
+    icon: TrendingDown,
+    title: "Nízká návratnost klientů",
+    problem: "Klient přijde jednou a zmizí. Vy nevíte proč.",
+    solution: "AI posílá follow-up, speciální nabídky, připomíná služby.",
+    impact: "+50% opakovaných návštěv",
+    color: "red",
+    stats: "Získat nového klienta je 5x dražší než udržet stávajícího"
+  },
+  {
+    icon: CircleDollarSign,
+    title: "Peníze zůstávají na stole",
+    problem: "Klient by chtěl i další služby, ale vy nemáte čas nabízet.",
+    solution: "AI aktivně nabízí doplňkové služby, balíčky, up-selly.",
+    impact: "+35% průměrná hodnota objednávky",
+    color: "yellow",
+    stats: "70% klientů by utratilo více, kdyby jim to někdo nabídl"
+  },
+];
+
+const BenefitsSection = () => {
+  return (
+    <section className="py-24 md:py-32 relative">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4">
+            6 věcí které vás stojí peníze
+            <br />
+            <span className="text-[#00D9FF]">a vy to možná ani nevíte</span>
+          </h2>
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            Každá z těchto situací vás stojí <strong className="text-white">10 000 - 50 000 Kč měsíčně</strong> v ztracených příjmech.
+            AI to vyřeší za zlomek ceny.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {benefits.map((benefit, index) => (
+            <motion.div
+              key={benefit.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#00D9FF]/30 transition-all group"
+            >
+              {/* Icon */}
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <benefit.icon size={28} className="text-red-400" />
+              </div>
+
+              {/* Title */}
+              <h3 className="font-heading font-semibold text-xl text-white mb-3">
+                {benefit.title}
+              </h3>
+
+              {/* Problem */}
+              <div className="mb-4">
+                <div className="flex items-start gap-2 mb-2">
+                  <X size={16} className="text-red-400 flex-shrink-0 mt-1" />
+                  <p className="text-neutral-400 text-sm leading-relaxed">
+                    {benefit.problem}
+                  </p>
+                </div>
+              </div>
+
+              {/* Solution */}
+              <div className="mb-4 pb-4 border-b border-white/10">
+                <div className="flex items-start gap-2 mb-2">
+                  <Check size={16} className="text-[#00D9FF] flex-shrink-0 mt-1" />
+                  <p className="text-neutral-300 text-sm leading-relaxed">
+                    {benefit.solution}
+                  </p>
+                </div>
+              </div>
+
+              {/* Impact */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <TrendingUp size={16} className="text-green-400" />
+                  <span className="text-green-400 font-semibold text-sm">
+                    {benefit.impact}
+                  </span>
+                </div>
+                <p className="text-neutral-600 text-xs italic">
+                  {benefit.stats}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 text-center"
+        >
+          <div className="bg-gradient-to-r from-red-500/10 via-[#00D9FF]/10 to-green-500/10 border border-[#00D9FF]/20 rounded-2xl p-8 max-w-3xl mx-auto">
+            <h3 className="font-heading font-bold text-2xl text-white mb-4">
+              Kolik z těchto 6 problémů máte VY?
+            </h3>
+            <p className="text-neutral-300 mb-6">
+              I kdyby AI vyřešil jen 2 z nich, vrátí se vám investice během <strong className="text-[#00D9FF]">1. měsíce</strong>.
+            </p>
+            <a
+              href="#voice-demo"
+              className="inline-flex items-center gap-2 bg-[#00D9FF] text-black px-8 py-4 rounded-full font-semibold hover:bg-[#00B8D9] transition-all hover:scale-105"
+            >
+              <PhoneCall size={20} />
+              AI mi zavolá za 30 sekund - chci slyšet jak to funguje
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 const UseCasesSection = () => {
   return (
     <section className="py-24 md:py-32 relative bg-gradient-to-b from-transparent via-[#00D9FF]/5 to-transparent">
@@ -2248,6 +2412,7 @@ const Home = () => {
       <HeroSection />
       <VibeCodingSection />
       <OpenClawSection />
+      <BenefitsSection />
       <UseCasesSection />
       <ServicesSection />
       <PricingSection />
