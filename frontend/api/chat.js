@@ -1,51 +1,42 @@
-// Vercel Edge Function - Chat API Proxy
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(req) {
+// Vercel Serverless Function - Chat API
+export default async function handler(req, res) {
   // CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
-  };
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Handle OPTIONS (preflight)
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers });
+    return res.status(200).end();
   }
 
   // Only allow POST
   if (req.method !== 'POST') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      { status: 405, headers }
-    );
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // Parse request
-    const body = await req.json();
-    const { message, language = 'cs', session_id } = body;
+    const { message, language = 'cs', session_id } = req.body;
+    const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
     if (!message) {
-      return new Response(
-        JSON.stringify({ error: 'Message is required' }),
-        { status: 400, headers }
-      );
+      return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Call Emergent LLM API
-    const response = await fetch('https://api.emergent.sh/v1/chat/completions', {
+    if (!GROQ_API_KEY) {
+      console.error('GROQ_API_KEY not found in environment');
+      return res.status(500).json({ error: 'API configuration error' });
+    }
+
+    // Call Groq API (OpenAI-compatible)
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-emergent-bEcBa024324F8269f8',
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -85,28 +76,24 @@ DŮLEŽITÉ:
     });
 
     if (!response.ok) {
-      throw new Error(`LLM API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Groq API Error:', response.status, errorText);
+      throw new Error(`Groq API error: ${response.status}`);
     }
 
     const data = await response.json();
     const aiResponse = data.choices[0]?.message?.content || 'Omlouvám se, něco se pokazilo.';
 
-    return new Response(
-      JSON.stringify({
-        response: aiResponse,
-        session_id: session_id || `session-${Date.now()}`,
-      }),
-      { status: 200, headers }
-    );
+    return res.status(200).json({
+      response: aiResponse,
+      session_id: session_id || `session-${Date.now()}`,
+    });
 
   } catch (error) {
-    console.error('Chat API Error:', error);
-    return new Response(
-      JSON.stringify({ 
-        error: 'Internal server error',
-        message: error.message 
-      }),
-      { status: 500, headers }
-    );
+    console.error('Chat API Error:', error.message);
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message 
+    });
   }
 }
