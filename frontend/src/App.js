@@ -1106,7 +1106,356 @@ const CallbackSection = () => {
   );
 };
 
-// Contact Section
+// ============================================
+// AI VOICE CALL SECTION - KILLER FEATURE! 🎤
+// ============================================
+const VoiceCallSection = () => {
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [calling, setCalling] = useState(false);
+  const [called, setCalled] = useState(false);
+  const [language, setLanguage] = useState("cs");
+
+  const handleVoiceCall = async (e) => {
+    e.preventDefault();
+    if (!phone || phone.length < 9) {
+      alert("Prosím zadejte platný telefon");
+      return;
+    }
+
+    setCalling(true);
+    try {
+      const response = await axios.post(`${API}/contact`, {
+        name: name || "Zájemce",
+        phone,
+        email: "",
+        company: "",
+        message: `Požadavek na demo hovor (jazyk: ${language})`,
+        language
+      });
+      
+      if (response.data.success) {
+        setCalled(true);
+        setPhone("");
+        setName("");
+      }
+    } catch (error) {
+      console.error("Voice call error:", error);
+      alert("Něco se pokazilo. Zkuste to prosím znovu.");
+    }
+    setCalling(false);
+  };
+
+  const languages = [
+    { code: 'cs', name: 'Čeština', flag: '🇨🇿' },
+    { code: 'sk', name: 'Slovenčina', flag: '🇸🇰' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+  ];
+
+  return (
+    <section id="voice-demo" className="py-24 md:py-32 relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-[#00D9FF]/5 to-black" />
+      
+      <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          {/* Icon with pulse animation */}
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00D9FF] to-[#00B8D9] flex items-center justify-center mx-auto mb-6"
+          >
+            <PhoneCall size={40} className="text-black" />
+          </motion.div>
+
+          <h2 className="font-heading font-bold text-4xl md:text-6xl text-white mb-4">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D9FF] to-white">
+              AI vám zavolá
+            </span>
+            <br />
+            za 2 minuty!
+          </h2>
+          
+          <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto mb-2">
+            Vyzkoušejte náš AI asistent zdarma. Stačí zadat telefon.
+          </p>
+          
+          <div className="flex items-center justify-center gap-4 text-sm text-neutral-500">
+            <div className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              <span>Zdarma</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              <span>Bez závazků</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check size={16} className="text-green-400" />
+              <span>24/7</span>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12"
+        >
+          {called ? (
+            <div className="text-center py-12">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6"
+              >
+                <PhoneCall size={48} className="text-green-400 animate-pulse" />
+              </motion.div>
+              <h3 className="font-heading text-2xl md:text-3xl text-white mb-4">
+                Voláme vám! 📞
+              </h3>
+              <p className="text-neutral-400 text-lg mb-2">
+                Náš AI asistent vás kontaktuje během <strong className="text-[#00D9FF]">2 minut</strong>.
+              </p>
+              <p className="text-neutral-500 text-sm mb-6">
+                Připravte si otázky! AI mluví ve vašem jazyce.
+              </p>
+              <button
+                onClick={() => setCalled(false)}
+                className="text-[#00D9FF] hover:text-white transition-colors text-sm"
+              >
+                ← Zadat jiné číslo
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleVoiceCall} className="space-y-6">
+              {/* Language selector */}
+              <div>
+                <label className="block text-sm text-neutral-400 mb-3">
+                  Jazyk hovoru:
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => setLanguage(lang.code)}
+                      className={`py-3 px-4 rounded-xl border transition-all ${
+                        language === lang.code
+                          ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
+                          : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
+                      }`}
+                    >
+                      <span className="text-2xl mb-1 block">{lang.flag}</span>
+                      <span className="text-xs">{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phone input - MAIN CTA */}
+              <div>
+                <label className="block text-sm text-neutral-400 mb-2">
+                  Váš telefon <span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <PhoneCall size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                  <input
+                    type="tel"
+                    placeholder="+420 123 456 789"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="w-full bg-black/50 border border-white/10 rounded-xl h-14 pl-12 pr-4 text-white text-lg placeholder:text-neutral-600 focus:border-[#00D9FF] focus:ring-2 focus:ring-[#00D9FF]/20 outline-none transition-all"
+                    autoFocus
+                  />
+                </div>
+              </div>
+
+              {/* Optional name */}
+              <div>
+                <label className="block text-sm text-neutral-400 mb-2">
+                  Jméno (nepovinné)
+                </label>
+                <div className="relative">
+                  <User size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" />
+                  <input
+                    type="text"
+                    placeholder="Jak vám máme říkat?"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-black/50 border border-white/10 rounded-xl h-12 pl-12 pr-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                type="submit"
+                disabled={calling || !phone}
+                className="w-full bg-gradient-to-r from-[#00D9FF] to-[#00B8D9] hover:from-[#00B8D9] hover:to-[#00D9FF] text-black font-heading font-bold text-lg py-4 px-8 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
+              >
+                {calling ? (
+                  <>
+                    <RefreshCw size={24} className="animate-spin" />
+                    Připravujeme hovor...
+                  </>
+                ) : (
+                  <>
+                    <PhoneCall size={24} className="group-hover:animate-pulse" />
+                    AI mi zavolá TEĎ!
+                  </>
+                )}
+              </button>
+
+              <p className="text-center text-neutral-500 text-xs">
+                Zavoláním souhlasíte se zpracováním telefonního čísla. Žádný spam, slibujeme! 🤝
+              </p>
+            </form>
+          )}
+        </motion.div>
+
+        {/* Social proof */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-12 text-center"
+        >
+          <div className="flex items-center justify-center gap-2 text-neutral-500 text-sm">
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
+            <span className="ml-2">98% spokojených zákazníků s demo hovorem</span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// FLOATING VOICE BUTTON - Always visible! 🎤
+// ============================================
+const FloatingVoiceButton = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [calling, setCalling] = useState(false);
+
+  const handleQuickCall = async (e) => {
+    e.preventDefault();
+    if (!phone || phone.length < 9) return;
+
+    setCalling(true);
+    try {
+      await axios.post(`${API}/contact`, {
+        name: "Quick Call Request",
+        phone,
+        email: "",
+        company: "",
+        message: "Quick voice demo request",
+        language: "cs"
+      });
+      alert("✅ Skvělé! Voláme vám během 2 minut!");
+      setIsOpen(false);
+      setPhone("");
+    } catch (error) {
+      alert("Něco se pokazilo. Zkuste to znovu.");
+    }
+    setCalling(false);
+  };
+
+  return (
+    <>
+      {/* Floating button */}
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 bg-gradient-to-r from-[#00D9FF] to-[#00B8D9] text-black font-semibold px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 hover:shadow-[#00D9FF]/50"
+      >
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <PhoneCall size={24} />
+        </motion.div>
+        <span className="hidden md:inline">Demo hovor</span>
+      </motion.button>
+
+      {/* Quick popup */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-44 right-6 md:bottom-24 md:right-8 z-50 bg-[#0A0A0A] border border-white/20 rounded-2xl p-6 shadow-2xl w-80"
+          >
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-3 right-3 text-neutral-500 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+            
+            <h4 className="font-heading text-lg text-white mb-2">
+              Rychlý demo hovor
+            </h4>
+            <p className="text-neutral-400 text-sm mb-4">
+              Zadejte telefon a voláme za 2 minuty!
+            </p>
+            
+            <form onSubmit={handleQuickCall} className="space-y-3">
+              <input
+                type="tel"
+                placeholder="+420 123 456 789"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 rounded-lg h-11 px-4 text-white placeholder:text-neutral-600 focus:border-[#00D9FF] outline-none"
+                autoFocus
+              />
+              <button
+                type="submit"
+                disabled={calling || !phone}
+                className="w-full bg-[#00D9FF] hover:bg-[#00B8D9] text-black font-semibold py-2.5 rounded-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {calling ? (
+                  <>
+                    <RefreshCw size={18} className="animate-spin" />
+                    Připravuji...
+                  </>
+                ) : (
+                  <>
+                    <PhoneCall size={18} />
+                    Zavolat mi!
+                  </>
+                )}
+              </button>
+            </form>
+            
+            <div className="mt-3 flex items-center gap-2 text-xs text-neutral-500">
+              <Clock size={14} />
+              <span>Hovor do 2 minut</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+// Contact Section (HIDDEN - keeping code for later)
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -1503,9 +1852,11 @@ const Home = () => {
       <PricingSection />
       <FAQSection />
       <CallbackSection />
-      <ContactSection />
+      {/* <ContactSection /> - TEMPORARILY HIDDEN - VOICE CALL PRIORITY */}
+      <VoiceCallSection />
       <Footer />
       <ChatWidget />
+      <FloatingVoiceButton />
     </div>
   );
 };
