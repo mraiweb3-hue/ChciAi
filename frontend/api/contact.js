@@ -32,7 +32,8 @@ export default async function handler(req) {
       email, 
       company, 
       message, 
-      language = 'cs' 
+      language = 'cs',
+      voiceGender = 'female'
     } = body;
 
     // Validation
@@ -54,6 +55,8 @@ export default async function handler(req) {
       company: company || 'N/A',
       message: message || 'N/A',
       language,
+      voiceGender,
+      voiceDescription: voiceGender === 'female' ? 'Ženský hlas (přátelský)' : 'Mužský hlas (profesionální)',
       timestamp: new Date().toISOString(),
     });
 
@@ -75,6 +78,8 @@ export default async function handler(req) {
       voiceCallInitiated: isVoiceCallRequest,
       estimatedCallTime: isVoiceCallRequest ? '2 minutes' : null,
       language,
+      voiceGender,
+      voiceDescription: voiceGender === 'female' ? 'Ženský hlas' : 'Mužský hlas',
       timestamp: new Date().toISOString(),
     };
 

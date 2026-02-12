@@ -944,6 +944,7 @@ const CallbackSection = () => {
     name: "",
     phone: "",
     language: "cs",
+    voiceGender: "female",
   });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -1076,6 +1077,46 @@ const CallbackSection = () => {
                 </p>
               </div>
 
+              {/* Voice Gender selector */}
+              <div>
+                <label className="block text-neutral-400 text-sm mb-3">
+                  <Mic size={14} className="inline mr-2" />
+                  Hlas AI asistenta:
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, voiceGender: 'female' })}
+                    className={`py-3 px-4 rounded-xl border transition-all flex items-center gap-2 ${
+                      formData.voiceGender === 'female'
+                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
+                        : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
+                    }`}
+                  >
+                    <User size={18} />
+                    <div className="text-left text-sm">
+                      <div>Ženský</div>
+                      <div className="text-xs opacity-70">Přátelský</div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, voiceGender: 'male' })}
+                    className={`py-3 px-4 rounded-xl border transition-all flex items-center gap-2 ${
+                      formData.voiceGender === 'male'
+                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
+                        : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
+                    }`}
+                  >
+                    <User size={18} />
+                    <div className="text-left text-sm">
+                      <div>Mužský</div>
+                      <div className="text-xs opacity-70">Profesionální</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={sending}
@@ -1115,6 +1156,7 @@ const VoiceCallSection = () => {
   const [calling, setCalling] = useState(false);
   const [called, setCalled] = useState(false);
   const [language, setLanguage] = useState("cs");
+  const [voiceGender, setVoiceGender] = useState("female"); // "male" or "female"
   const [countdown, setCountdown] = useState(120); // 2 minutes in seconds
   const [callResult, setCallResult] = useState(null); // API response
 
@@ -1149,8 +1191,9 @@ const VoiceCallSection = () => {
         phone,
         email: "",
         company: "",
-        message: `Požadavek na demo hovor (jazyk: ${language})`,
-        language
+        message: `Požadavek na demo hovor (jazyk: ${language}, hlas: ${voiceGender === 'female' ? 'ženský' : 'mužský'})`,
+        language,
+        voiceGender
       });
       
       if (response.data.success) {
@@ -1329,6 +1372,46 @@ const VoiceCallSection = () => {
                       <span className="text-xs">{lang.name}</span>
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Voice Gender selector */}
+              <div>
+                <label className="block text-sm text-neutral-400 mb-3">
+                  <Mic size={14} className="inline mr-2" />
+                  Hlas AI asistenta:
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setVoiceGender('female')}
+                    className={`py-4 px-4 rounded-xl border transition-all flex items-center justify-center gap-3 ${
+                      voiceGender === 'female'
+                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
+                        : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
+                    }`}
+                  >
+                    <User size={20} />
+                    <div className="text-left">
+                      <div className="font-semibold">Ženský hlas</div>
+                      <div className="text-xs opacity-70">Přátelský, teplý</div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVoiceGender('male')}
+                    className={`py-4 px-4 rounded-xl border transition-all flex items-center justify-center gap-3 ${
+                      voiceGender === 'male'
+                        ? 'bg-[#00D9FF] border-[#00D9FF] text-black font-semibold'
+                        : 'bg-black/50 border-white/10 text-neutral-400 hover:border-white/30'
+                    }`}
+                  >
+                    <User size={20} />
+                    <div className="text-left">
+                      <div className="font-semibold">Mužský hlas</div>
+                      <div className="text-xs opacity-70">Profesionální, jasný</div>
+                    </div>
+                  </button>
                 </div>
               </div>
 

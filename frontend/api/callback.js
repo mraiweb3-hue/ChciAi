@@ -26,7 +26,7 @@ export default async function handler(req) {
 
   try {
     const body = await req.json();
-    const { name, phone, language = 'cs' } = body;
+    const { name, phone, language = 'cs', voiceGender = 'female' } = body;
 
     // Validation
     if (!phone || phone.length < 9) {
@@ -44,6 +44,8 @@ export default async function handler(req) {
       name: name || 'Anonymous',
       phone,
       language,
+      voiceGender,
+      voiceDescription: voiceGender === 'female' ? 'Ženský hlas (přátelský, teplý)' : 'Mužský hlas (profesionální, jasný)',
       timestamp: new Date().toISOString(),
     });
 
@@ -61,6 +63,8 @@ export default async function handler(req) {
         voiceCallInitiated: true,
         estimatedCallTime: '2 minutes',
         language,
+        voiceGender,
+        voiceDescription: voiceGender === 'female' ? 'Ženský hlas' : 'Mužský hlas',
       }), 
       { status: 200, headers }
     );
