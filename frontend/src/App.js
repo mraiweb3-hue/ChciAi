@@ -485,6 +485,99 @@ const Footer = () => {
   );
 };
 
+// OpenClaw Section
+const OpenClawSection = () => {
+  return (
+    <section id="openclaw" style={{ padding: '100px 40px', background: '#030303' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <h2 style={{ color: '#00D9FF', fontSize: '3rem', textAlign: 'center', marginBottom: '20px' }}>
+          OpenClaw - Vas Vlastni AI Asistent
+        </h2>
+        <p style={{ color: '#888', fontSize: '1.2rem', textAlign: 'center', marginBottom: '60px', maxWidth: '800px', margin: '0 auto 60px' }}>
+          Bezpecny AI asistent jako Clawdbot. Vlastni instance pro vasi firmu.
+        </p>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
+          {[
+            { title: 'Self-Hosted', desc: 'Data zustavaji u vas' },
+            { title: 'Customizovatelny', desc: 'Prizpusobte si ho na miru' },
+            { title: 'Open-Source', desc: 'Plna transparentnost kodu' },
+            { title: 'GDPR Ready', desc: 'Bezpecnost a compliance' }
+          ].map((feature, i) => (
+            <div key={i} style={{
+              background: '#0f0f0f',
+              padding: '30px',
+              borderRadius: '15px',
+              border: '2px solid rgba(0, 217, 255, 0.2)',
+              textAlign: 'center'
+            }}>
+              <h3 style={{ color: '#00D9FF', fontSize: '1.3rem', marginBottom: '10px' }}>
+                {feature.title}
+              </h3>
+              <p style={{ color: '#aaa', fontSize: '1rem' }}>{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Vibe Coding Section
+const VibeCodingSection = () => {
+  const courses = [
+    { title: 'Online Kurz', price: '1 490 Kc', desc: '2 hodiny video, Certifikat' },
+    { title: 'Workshop', price: '9 900 Kc', desc: 'Puldeni, Do 10 osob' },
+    { title: 'Enterprise', price: 'Na miru', desc: 'Custom program, Multi-day' }
+  ];
+
+  return (
+    <section id="vibe-coding" style={{ padding: '100px 40px', background: '#0a0a0a' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <h2 style={{ color: '#00D9FF', fontSize: '3rem', textAlign: 'center', marginBottom: '20px' }}>
+          Vibe Coding - Ovladnete AI
+        </h2>
+        <p style={{ color: '#888', fontSize: '1.2rem', textAlign: 'center', marginBottom: '60px', maxWidth: '800px', margin: '0 auto 60px' }}>
+          Naucte se efektivne pouzivat AI. Prompt engineering, workflow optimalizace.
+        </p>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+          {courses.map((course, i) => (
+            <div key={i} style={{
+              background: '#0f0f0f',
+              padding: '40px',
+              borderRadius: '20px',
+              border: '2px solid rgba(0, 217, 255, 0.2)',
+              textAlign: 'center'
+            }}>
+              <h3 style={{ color: '#00D9FF', fontSize: '1.5rem', marginBottom: '10px' }}>
+                {course.title}
+              </h3>
+              <div style={{ fontSize: '2.5rem', color: 'white', fontWeight: 'bold', margin: '20px 0' }}>
+                {course.price}
+              </div>
+              <p style={{ color: '#aaa', marginBottom: '30px' }}>{course.desc}</p>
+              <button style={{
+                background: '#00D9FF',
+                color: '#030303',
+                border: 'none',
+                padding: '15px 30px',
+                borderRadius: '10px',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                width: '100%'
+              }}>
+                Koupit nyni
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Simple Pricing Section
 const SimplePricingSection = () => {
   return (
@@ -531,6 +624,8 @@ const HomePage = () => {
         onOpenCallbackForm={() => setCallbackFormOpen(true)}
       />
       <ServicesSection />
+      <OpenClawSection />
+      <VibeCodingSection />
       <SimplePricingSection />
       <ContactSection />
       <Footer />
