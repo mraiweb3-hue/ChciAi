@@ -3,8 +3,6 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import SimpleAvatarSelector from "./components/SimpleAvatarSelector";
-import ModernFloatingAvatars from "./components/ModernFloatingAvatars";
 
 // Configure axios defaults
 axios.defaults.timeout = 30000; // 30 seconds
@@ -20,6 +18,7 @@ import {
   
   // Communication
   MessageCircle,
+  MessageSquare,
   Phone,
   PhoneCall,
   Mail,
@@ -42,6 +41,23 @@ import {
   RefreshCw,
   User,
   Globe,
+  
+  // Additional Icons
+  Star,
+  ArrowRight,
+  Circle,
+  Search,
+  HelpCircle,
+  Timer,
+  Building,
+  Headphones,
+  Laptop,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Lock,
+  CreditCard,
+  MicOff,
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
@@ -506,7 +522,7 @@ const services = [
 ];
 
 const integrationsIcons = [
-  { icon: MailIcon, name: "Email" },
+  { icon: Mail, name: "Email" },
   { icon: MessageSquare, name: "WhatsApp" },
   { icon: Instagram, name: "Instagram" },
   { icon: Facebook, name: "Facebook" },
@@ -1742,10 +1758,7 @@ const VoiceCallSection = () => {
                   <Mic size={14} className="inline mr-2" />
                   Vyberte si svého AI asistenta:
                 </label>
-                <SimpleAvatarSelector 
-                  selectedGender={voiceGender} 
-                  onSelect={setVoiceGender}
-                />
+                {/* Avatar selector temporarily disabled */}
               </div>
 
               {/* Time Slot selector */}
@@ -2385,9 +2398,7 @@ const Home = () => {
       <FAQSection />
       <VoiceCallSection />
       <Footer />
-      <ModernFloatingAvatars />
-      <ChatWidget />
-      <FloatingVoiceButton />
+      
     </div>
   );
 };
