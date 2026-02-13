@@ -2381,8 +2381,6 @@ const Home = () => {
       <VoiceCallSection />
       <Footer />
       
-      <ChatWidget />
-      <FloatingVoiceButton />
     </div>
   );
 };
