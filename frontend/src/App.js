@@ -485,6 +485,39 @@ const Footer = () => {
   );
 };
 
+// Simple Pricing Section
+const SimplePricingSection = () => {
+  return (
+    <section style={{ padding: '80px 40px', background: '#0a0a0a' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <h2 style={{ color: '#00D9FF', fontSize: '3rem', marginBottom: '20px' }}>
+          Cenove Balicky
+        </h2>
+        <p style={{ color: '#888', fontSize: '1.2rem', marginBottom: '40px' }}>
+          Vyberte si balicek pro vas byznys
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
+          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
+            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>STARTER</h3>
+            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>990 Kc</div>
+            <p style={{ color: '#aaa' }}>Pro OSVC</p>
+          </div>
+          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
+            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>GROWTH</h3>
+            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>1990 Kc</div>
+            <p style={{ color: '#aaa' }}>Rostouci byznys</p>
+          </div>
+          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
+            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>BUSINESS</h3>
+            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>3990 Kc</div>
+            <p style={{ color: '#aaa' }}>Male firmy</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Main Homepage
 const HomePage = () => {
   const [leadFormOpen, setLeadFormOpen] = useState(false);
@@ -521,36 +554,3 @@ function App() {
 }
 
 export default App;
-
-// Simple Pricing Section (TEST)
-const SimplePricingSection = () => {
-  return (
-    <section style={{ padding: '80px 40px', background: '#0a0a0a' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ color: '#00D9FF', fontSize: '3rem', marginBottom: '20px' }}>
-          Cenove Balicky
-        </h2>
-        <p style={{ color: '#888', fontSize: '1.2rem', marginBottom: '40px' }}>
-          Vyberte si balicek pro vas byznys
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
-          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
-            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>STARTER</h3>
-            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>990 Kc</div>
-            <p style={{ color: '#aaa' }}>Pro OSVC</p>
-          </div>
-          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
-            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>GROWTH</h3>
-            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>1990 Kc</div>
-            <p style={{ color: '#aaa' }}>Rostouci byznys</p>
-          </div>
-          <div style={{ background: '#0f0f0f', padding: '30px', borderRadius: '15px', border: '2px solid #00D9FF' }}>
-            <h3 style={{ color: '#00D9FF', fontSize: '1.5rem' }}>BUSINESS</h3>
-            <div style={{ fontSize: '2.5rem', color: 'white', margin: '20px 0' }}>3990 Kc</div>
-            <p style={{ color: '#aaa' }}>Male firmy</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
