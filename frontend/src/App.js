@@ -18,6 +18,7 @@ import {
   
   // Communication
   MessageCircle,
+  MessageSquare,
   Phone,
   PhoneCall,
   Mail,
@@ -40,6 +41,23 @@ import {
   RefreshCw,
   User,
   Globe,
+  
+  // Additional Icons
+  Star,
+  ArrowRight,
+  Circle,
+  Search,
+  HelpCircle,
+  Timer,
+  Building,
+  Headphones,
+  Laptop,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Lock,
+  CreditCard,
+  MicOff,
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
