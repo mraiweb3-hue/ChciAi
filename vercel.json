@@ -1,14 +1,14 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/:path(.*)",
       "has": [
         {
           "type": "host",
           "value": "chciai.cz"
         }
       ],
-      "destination": "https://www.chciai.cz/:path*",
+      "destination": "https://www.chciai.cz/:path",
       "permanent": true
     }
   ],
