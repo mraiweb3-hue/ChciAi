@@ -31,4 +31,4 @@ Disallow: /admin/
 Disallow: /api/private/
 
 # Sitemap
-Sitemap: https://chciai.cz/sitemap.xml
+Sitemap: https://www.chciai.cz/sitemap.xml
