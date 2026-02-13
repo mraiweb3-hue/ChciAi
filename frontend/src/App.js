@@ -3,8 +3,6 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import SimpleAvatarSelector from "./components/SimpleAvatarSelector";
-import ModernFloatingAvatars from "./components/ModernFloatingAvatars";
 
 // Configure axios defaults
 axios.defaults.timeout = 30000; // 30 seconds
@@ -1742,10 +1740,7 @@ const VoiceCallSection = () => {
                   <Mic size={14} className="inline mr-2" />
                   Vyberte si svého AI asistenta:
                 </label>
-                <SimpleAvatarSelector 
-                  selectedGender={voiceGender} 
-                  onSelect={setVoiceGender}
-                />
+                {/* Avatar selector temporarily disabled */}
               </div>
 
               {/* Time Slot selector */}
@@ -2385,7 +2380,7 @@ const Home = () => {
       <FAQSection />
       <VoiceCallSection />
       <Footer />
-      <ModernFloatingAvatars />
+      
       <ChatWidget />
       <FloatingVoiceButton />
     </div>
