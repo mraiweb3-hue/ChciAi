@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Menu, X, Mail, Phone, MessageSquare, Zap, Bot, Rocket } from "lucide-react";
 import "./App.css";
+import LeadForm from "./components/LeadForm";
+import CallbackForm from "./components/CallbackForm";
 
 // Navbar Component
 const Navbar = () => {
@@ -110,7 +112,7 @@ const Navbar = () => {
 };
 
 // Hero Section
-const HeroSection = () => {
+const HeroSection = ({ onOpenLeadForm, onOpenCallbackForm }) => {
   return (
     <section style={{
       padding: '120px 40px',
@@ -160,7 +162,9 @@ const HeroSection = () => {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-          <button style={{
+          <button 
+            onClick={onOpenLeadForm}
+            style={{
             background: '#00D9FF',
             color: '#030303',
             border: 'none',
@@ -179,7 +183,9 @@ const HeroSection = () => {
             Začít zdarma
           </button>
 
-          <button style={{
+          <button 
+            onClick={onOpenCallbackForm}
+            style={{
             background: 'transparent',
             color: 'white',
             border: '2px solid #00D9FF',
@@ -481,13 +487,23 @@ const Footer = () => {
 
 // Main Homepage
 const HomePage = () => {
+  const [leadFormOpen, setLeadFormOpen] = useState(false);
+  const [callbackFormOpen, setCallbackFormOpen] = useState(false);
+
   return (
     <div style={{ background: '#030303', minHeight: '100vh' }}>
       <Navbar />
-      <HeroSection />
+      <HeroSection 
+        onOpenLeadForm={() => setLeadFormOpen(true)}
+        onOpenCallbackForm={() => setCallbackFormOpen(true)}
+      />
       <ServicesSection />
       <ContactSection />
       <Footer />
+      
+      {/* Forms */}
+      <LeadForm isOpen={leadFormOpen} onClose={() => setLeadFormOpen(false)} />
+      <CallbackForm isOpen={callbackFormOpen} onClose={() => setCallbackFormOpen(false)} />
     </div>
   );
 };
