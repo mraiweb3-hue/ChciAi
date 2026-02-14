@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Sections - ChciAI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #030303; color: white; font-family: sans-serif; }
+        section { padding: 80px 40px; }
+        .alt { background: #0a0a0a; }
+        h2 { color: #00D9FF; font-size: 3rem; text-align: center; margin-bottom: 20px; }
+        p { color: #888; font-size: 1.2rem; text-align: center; margin-bottom: 60px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .card { background: #0f0f0f; padding: 30px; border-radius: 15px; border: 2px solid #00D9FF; text-align: center; }
+        .card h3 { color: #00D9FF; font-size: 1.5rem; margin-bottom: 10px; }
+        .card .price { font-size: 2.5rem; color: white; margin: 20px 0; }
+        button { background: #00D9FF; color: #030303; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <!-- OpenClaw -->
+    <section>
+        <h2>OpenClaw - Vas Vlastni AI Asistent</h2>
+        <p>Bezpecny AI asistent jako Clawdbot. Vlastni instance pro vasi firmu.</p>
+        <div class="grid">
+            <div class="card"><h3>Self-Hosted</h3><p>Data zustavaji u vas</p></div>
+            <div class="card"><h3>Customizovatelny</h3><p>Prizpusobte si ho na miru</p></div>
+            <div class="card"><h3>Open-Source</h3><p>Plna transparentnost kodu</p></div>
+            <div class="card"><h3>GDPR Ready</h3><p>Bezpecnost a compliance</p></div>
+        </div>
+    </section>
+
+    <!-- Vibe Coding -->
+    <section class="alt">
+        <h2>Vibe Coding - Ovladnete AI</h2>
+        <p>Naucte se efektivne pouzivat AI. Prompt engineering, workflow optimalizace.</p>
+        <div class="grid">
+            <div class="card">
+                <h3>Online Kurz</h3>
+                <div class="price">1 490 Kc</div>
+                <p>2 hodiny video, Certifikat</p>
+                <button>Koupit nyni</button>
+            </div>
+            <div class="card">
+                <h3>Workshop</h3>
+                <div class="price">9 900 Kc</div>
+                <p>Puldeni, Do 10 osob</p>
+                <button>Koupit nyni</button>
+            </div>
+            <div class="card">
+                <h3>Enterprise</h3>
+                <div class="price">Na miru</div>
+                <p>Custom program, Multi-day</p>
+                <button>Koupit nyni</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section>
+        <h2>Cenove Balicky</h2>
+        <p>Vyberte si balicek pro vas byznys</p>
+        <div class="grid">
+            <div class="card">
+                <h3>STARTER</h3>
+                <div class="price">990 Kc</div>
+                <p>Pro OSVC</p>
+                <button>Vybrat</button>
+            </div>
+            <div class="card">
+                <h3>GROWTH</h3>
+                <div class="price">1 990 Kc</div>
+                <p>Rostouci byznys</p>
+                <button>Vybrat</button>
+            </div>
+            <div class="card">
+                <h3>BUSINESS</h3>
+                <div class="price">3 990 Kc</div>
+                <p>Male firmy</p>
+                <button>Vybrat</button>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
