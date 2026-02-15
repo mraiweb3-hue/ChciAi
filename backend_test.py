@@ -274,7 +274,7 @@ class ChciAIAPITester:
 
 def main():
     """Main test execution"""
-    tester = OpenClawAPITester()
+    tester = ChciAIAPITester()
     
     try:
         success = tester.run_all_tests()
