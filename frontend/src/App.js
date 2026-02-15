@@ -244,6 +244,7 @@ const CallbackModal = ({ isOpen, onClose }) => {
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [callType, setCallType] = useState('ai'); // 'ai' or 'human'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -251,16 +252,19 @@ const CallbackModal = ({ isOpen, onClose }) => {
     setSubmitStatus(null);
 
     try {
-      const response = await axios.post(`${API}/callback`, { phone, name });
+      // Use AI call endpoint for AI calls, callback for human calls
+      const endpoint = callType === 'ai' ? `${API}/ai-call` : `${API}/callback`;
+      const response = await axios.post(endpoint, { phone, name });
       setSubmitStatus({ type: 'success', message: response.data.message });
       setPhone('');
       setName('');
       setTimeout(() => {
         onClose();
         setSubmitStatus(null);
+        setCallType('ai');
       }, 3000);
     } catch (error) {
-      console.error('Callback error:', error);
+      console.error('Call request error:', error);
       setSubmitStatus({ 
         type: 'error', 
         message: 'Nepodařilo se odeslat. Zkuste to prosím znovu.' 
@@ -284,7 +288,33 @@ const CallbackModal = ({ isOpen, onClose }) => {
         </div>
         
         <h2>Nechte si zavolat</h2>
-        <p className="callback-desc">Vyplňte telefon a budeme vás kontaktovat</p>
+        <p className="callback-desc">Vyplňte telefon a my vás kontaktujeme</p>
+        
+        {/* Call type selector */}
+        <div className="call-type-selector" data-testid="call-type-selector">
+          <button 
+            className={`call-type-btn ${callType === 'ai' ? 'active' : ''}`}
+            onClick={() => setCallType('ai')}
+            type="button"
+            data-testid="call-type-ai"
+          >
+            🤖 AI Asistent
+          </button>
+          <button 
+            className={`call-type-btn ${callType === 'human' ? 'active' : ''}`}
+            onClick={() => setCallType('human')}
+            type="button"
+            data-testid="call-type-human"
+          >
+            👤 Lidský operátor
+          </button>
+        </div>
+        
+        <p className="call-type-desc">
+          {callType === 'ai' 
+            ? 'AI asistent vám zavolá okamžitě a zodpoví vaše dotazy.' 
+            : 'Náš tým vás kontaktuje v pracovní době.'}
+        </p>
         
         {submitStatus ? (
           <div className={`submit-status ${submitStatus.type}`} data-testid="callback-status">
