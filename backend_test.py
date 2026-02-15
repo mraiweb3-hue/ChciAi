@@ -196,6 +196,43 @@ class OpenClawAPITester:
             self.log_test("Chat History", False, f"Error: {str(e)}")
             return False
 
+    def test_ai_call_endpoint(self):
+        """Test /api/ai-call endpoint"""
+        try:
+            # Test AI call request
+            test_data = {
+                "phone": "+420111222333",
+                "name": "Test AI Call User"
+            }
+            
+            response = requests.post(
+                f"{self.api_url}/ai-call",
+                json=test_data,
+                headers={"Content-Type": "application/json"},
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "status" in data and "id" in data and "message" in data:
+                    # Should be "pending" since Retell.ai is not fully configured
+                    if data["status"] in ["pending", "success"]:
+                        self.log_test("AI Call Request", True, f"AI call saved with ID: {data['id']}, Status: {data['status']}")
+                        return True
+                    else:
+                        self.log_test("AI Call Request", False, f"Unexpected status: {data['status']}")
+                        return False
+                else:
+                    self.log_test("AI Call Request", False, f"Invalid response: {data}")
+                    return False
+            else:
+                self.log_test("AI Call Request", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("AI Call Request", False, f"Error: {str(e)}")
+            return False
+
     def test_root_endpoint(self):
         """Test /api/ root endpoint"""
         try:
