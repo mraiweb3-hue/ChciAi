@@ -1,10 +1,7 @@
-# OpenClaw - PRD (Product Requirements Document)
+# ChciAI / OpenClaw - PRD
 
 ## Original Problem Statement
-Uživatel chtěl zprovoznit funkce na webu chciai.cz:
-1. Odesílání formulářů
-2. Požadavek na hovor od AI asistenta
-3. AI Chat asistent
+Uživatel chtěl opravit a zprovoznit aplikaci z GitHubu https://github.com/mraiweb3-hue/ChciAi
 
 ## Architecture
 
@@ -12,82 +9,46 @@ Uživatel chtěl zprovoznit funkce na webu chciai.cz:
 - **Frontend**: React.js + Tailwind CSS
 - **Backend**: FastAPI (Python)
 - **Database**: MongoDB
-- **AI Chat**: OpenAI GPT-4o (via Emergent LLM key)
-- **Emails**: Resend API
-- **AI Calls**: Retell.ai (prepared for integration)
+- **AI Chat**: Claude Sonnet 4.5 (via Emergent LLM key) s Gemini fallback
+- **Auth**: JWT tokens + bcrypt
 
 ### Key Files
-- `/app/backend/server.py` - FastAPI backend s API endpoints
-- `/app/frontend/src/App.js` - React frontend komponenty
-- `/app/frontend/src/App.css` - Styling
+- `/app/backend/server.py` - Main FastAPI server
+- `/app/backend/auth.py` - JWT authentication
+- `/app/backend/ai_service.py` - AI chat integration
+- `/app/backend/models.py` - Pydantic models
+- `/app/frontend/src/pages/LandingPage.js` - Marketing landing page
+- `/app/frontend/src/contexts/AuthContext.js` - Auth state management
 
-## User Personas
-1. **Podnikatel** - hledá AI automatizaci pro svůj byznys
-2. **Návštěvník** - chce zjistit více o službách OpenClaw
-3. **Zájemce** - chce kontaktovat firmu nebo si nechat zavolat
+## Core Features (Implemented)
+- [x] Landing page s callback formulářem
+- [x] Meeting request formulář
+- [x] User registration & login
+- [x] JWT authentication
+- [x] Dashboard (protected routes)
+- [x] Chatbot management CRUD
+- [x] Widget chat API s AI odpověďmi
+- [x] Leads collection
+- [x] Conversations history
+- [x] GDPR compliance endpoints
 
-## Core Requirements (Static)
-- [x] Landing page s popisem služeb OpenClaw
-- [x] AI Chat asistent (česky)
-- [x] Kontaktní formuláře
-- [x] Žádost o zavolání (AI/Lidský operátor)
-- [x] Responzivní design
-- [x] Dark theme UI
+## What's Working (2026-02-15)
+- ✅ Landing page plně funkční
+- ✅ Callback formulář ukládá do DB
+- ✅ Auth (register/login) funguje
+- ✅ JWT tokens validace
+- ✅ AI chat service (Claude + Gemini fallback)
+- ✅ Dashboard protected routes
 
-## What's Been Implemented
-
-### 2025-02-15
-- ✅ Kompletní landing page OpenClaw
-- ✅ AI Chat widget (GPT-4o, česky)
-- ✅ Kontaktní formulář s ukládáním do DB
-- ✅ Callback modal s výběrem AI/Human
-- ✅ AI Call endpoint (/api/ai-call)
-- ✅ Email notifikace (vyžaduje ověření domény)
-- ✅ Backend API endpoints (health, chat, contact, callback, ai-call)
-
-## Current Status
-
-### Funkční (100%)
-- AI Chat asistent
-- Všechny formuláře (ukládání do MongoDB)
-- Callback modal s AI/Human výběrem
-- Všechna API
-
-### Vyžaduje konfiguraci
-- **Emaily**: Ověření domény chciai.cz v Resend
-- **AI Hovory**: Vytvoření agenta v Retell.ai dashboard
-
-## Prioritized Backlog
-
-### P0 (Critical)
-- [PENDING] Ověření domény v Resend pro funkční emaily
-
-### P1 (High)
-- [PENDING] Konfigurace Retell.ai agenta pro AI hovory
-- [PENDING] Přidání telefonního čísla v Retell.ai
-
-### P2 (Medium)
-- [ ] Analytics a tracking
-- [ ] Admin dashboard pro správu kontaktů
-- [ ] Historie hovorů z Retell.ai
-
-### P3 (Low)
-- [ ] Multi-language support
-- [ ] A/B testing landing page
-- [ ] SEO optimalizace
-
-## Next Tasks
-1. Ověřit doménu chciai.cz v Resend (DNS záznamy)
-2. Vytvořit agenta v Retell.ai dashboard
-3. Získat telefonní číslo od Retell.ai
-4. Aktualizovat .env s RETELL_AGENT_ID a RETELL_FROM_NUMBER
-
-## Environment Variables
+## Environment Variables Required
 ```
-RESEND_API_KEY=re_***
-CONTACT_EMAIL=kontakt@chciai.cz
-EMERGENT_LLM_KEY=sk-emergent-***
-RETELL_API_KEY=key_***
-RETELL_AGENT_ID= (čeká na konfiguraci)
-RETELL_FROM_NUMBER= (čeká na konfiguraci)
+MONGO_URL=mongodb://localhost:27017
+DB_NAME=chciai_database
+EMERGENT_LLM_KEY=sk-emergent-xxx
+JWT_SECRET=your-secret-key
 ```
+
+## Next Steps
+1. Deploy na produkční server
+2. Ověřit doménu v Resend pro emaily
+3. Nastavit Retell.ai pro AI hovory
