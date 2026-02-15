@@ -253,6 +253,115 @@ async def request_callback(request: CallbackRequest):
         logger.error(f"Failed to process callback request: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Nepodařilo se odeslat požadavek: {str(e)}")
 
+# AI Phone Call Endpoint (Retell.ai)
+@api_router.post("/ai-call", response_model=AICallResponse)
+async def initiate_ai_call(request: AICallRequest):
+    """Initiate an AI phone call using Retell.ai"""
+    try:
+        call_id = str(uuid.uuid4())
+        
+        # Store call request in MongoDB
+        call_data = {
+            "id": call_id,
+            "phone": request.phone,
+            "name": request.name,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "status": "pending",
+            "type": "ai_call_request"
+        }
+        await db.ai_calls.insert_one(call_data)
+        
+        # Check if Retell is configured
+        if not retell_client or not RETELL_AGENT_ID or not RETELL_FROM_NUMBER:
+            logger.warning("Retell.ai not fully configured - storing request only")
+            # Send notification email about call request
+            try:
+                html_content = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 10px; color: white;">
+                        <h1 style="margin: 0 0 20px 0; font-size: 24px;">🤖 Žádost o AI hovor</h1>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px;">
+                            <p style="margin: 5px 0; font-size: 18px;"><strong>Telefon:</strong> {request.phone}</p>
+                            <p style="margin: 5px 0;"><strong>Jméno:</strong> {request.name or 'Neuvedeno'}</p>
+                        </div>
+                        
+                        <p style="margin-top: 20px; font-size: 12px; color: #888;">Požadavek: {datetime.now(timezone.utc).strftime('%d.%m.%Y %H:%M')} UTC</p>
+                        <p style="color: #ffcc00; margin-top: 10px;">⚠️ AI hovor nebyl automaticky spuštěn - vyžaduje konfiguraci Retell.ai agenta</p>
+                    </div>
+                </body>
+                </html>
+                """
+                params = {
+                    "from": SENDER_EMAIL,
+                    "to": [CONTACT_EMAIL],
+                    "subject": "🤖 Žádost o AI hovor - OpenClaw",
+                    "html": html_content
+                }
+                await asyncio.to_thread(resend.Emails.send, params)
+            except Exception as email_error:
+                logger.warning(f"Email sending failed: {str(email_error)}")
+            
+            return AICallResponse(
+                id=call_id,
+                status="pending",
+                message="Děkujeme! Vaše žádost o AI hovor byla zaznamenána. Budeme vás kontaktovat.",
+                call_id=None
+            )
+        
+        # Format phone number to E.164 format
+        phone = request.phone.strip()
+        if not phone.startswith('+'):
+            # Assume Czech number if no country code
+            phone = '+420' + phone.replace(' ', '').replace('-', '')
+        
+        # Initiate call via Retell.ai
+        try:
+            call_response = await asyncio.to_thread(
+                retell_client.call.create_phone_call,
+                from_number=RETELL_FROM_NUMBER,
+                to_number=phone,
+                agent_id=RETELL_AGENT_ID
+            )
+            
+            retell_call_id = call_response.call_id
+            
+            # Update call status in DB
+            await db.ai_calls.update_one(
+                {"id": call_id},
+                {"$set": {
+                    "status": "initiated",
+                    "retell_call_id": retell_call_id
+                }}
+            )
+            
+            logger.info(f"AI call initiated: {retell_call_id}")
+            
+            return AICallResponse(
+                id=call_id,
+                status="success",
+                message="Hovor byl zahájen. OpenClaw vám právě volá!",
+                call_id=retell_call_id
+            )
+            
+        except Exception as retell_error:
+            logger.error(f"Retell.ai call failed: {str(retell_error)}")
+            await db.ai_calls.update_one(
+                {"id": call_id},
+                {"$set": {"status": "failed", "error": str(retell_error)}}
+            )
+            return AICallResponse(
+                id=call_id,
+                status="pending",
+                message="Děkujeme! Vaše žádost byla zaznamenána. Budeme vás kontaktovat co nejdříve.",
+                call_id=None
+            )
+        
+    except Exception as e:
+        logger.error(f"Failed to process AI call request: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Nepodařilo se zpracovat požadavek: {str(e)}")
+
 # AI Chat Endpoints
 SYSTEM_MESSAGE = """Jsi OpenClaw, přátelský AI asistent české firmy zaměřené na AI automatizaci a digitální asistenty pro podnikatele.
 
