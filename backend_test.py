@@ -232,25 +232,23 @@ class ChciAIAPITester:
 
     def run_all_tests(self):
         """Run all backend tests"""
-        print("🚀 Starting OpenClaw Backend API Tests")
+        print("🚀 Starting ChciAI Backend API Tests")
         print(f"Testing against: {self.base_url}")
         print("=" * 60)
         
         # Test basic connectivity first
-        self.test_root_endpoint()
         self.test_health_endpoint()
         
-        # Test core functionality
-        self.test_contact_form_endpoint()
-        self.test_callback_endpoint()
+        # Test authentication flow
+        print("🔐 Testing Authentication...")
+        self.test_auth_register()
+        self.test_auth_login()
+        self.test_auth_me()
         
-        # Test AI chat (this might take longer)
-        print("🤖 Testing AI Chat (this may take 10-30 seconds)...")
-        self.test_chat_endpoint()
-        self.test_chat_history_endpoint()
-        
-        # Test AI call endpoint
-        self.test_ai_call_endpoint()
+        # Test contact forms
+        print("📞 Testing Contact Forms...")
+        self.test_contact_callback()
+        self.test_meeting_request()
         
         # Print summary
         print("=" * 60)
