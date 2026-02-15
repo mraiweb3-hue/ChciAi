@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 import asyncio
 import resend
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+from retell import Retell
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -28,6 +29,12 @@ CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'kontakt@chciai.cz')
 
 # LLM Key
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+
+# Retell.ai setup
+RETELL_API_KEY = os.environ.get('RETELL_API_KEY')
+RETELL_AGENT_ID = os.environ.get('RETELL_AGENT_ID')
+RETELL_FROM_NUMBER = os.environ.get('RETELL_FROM_NUMBER')
+retell_client = Retell(api_key=RETELL_API_KEY) if RETELL_API_KEY else None
 
 # Create the main app
 app = FastAPI()
