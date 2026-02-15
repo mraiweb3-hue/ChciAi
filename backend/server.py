@@ -71,6 +71,16 @@ class CallbackRequest(BaseModel):
     phone: str
     name: Optional[str] = None
 
+class AICallRequest(BaseModel):
+    phone: str
+    name: Optional[str] = None
+
+class AICallResponse(BaseModel):
+    id: str
+    status: str
+    message: str
+    call_id: Optional[str] = None
+
 class ChatMessage(BaseModel):
     session_id: str
     message: str
