@@ -1,6 +1,6 @@
 {
-  "total_tests": 6,
-  "passed_tests": 6,
+  "total_tests": 7,
+  "passed_tests": 7,
   "failed_tests": 0,
   "success_rate": 100.0,
   "test_results": [
@@ -9,43 +9,50 @@
       "success": true,
       "details": "Message: OpenClaw API is running",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:20.329278"
+      "timestamp": "2026-02-15T12:24:08.701123"
     },
     {
       "test_name": "Health Check",
       "success": true,
       "details": "Status: healthy",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:20.594821"
+      "timestamp": "2026-02-15T12:24:08.807158"
     },
     {
       "test_name": "Contact Form",
       "success": true,
-      "details": "Form submitted with ID: 3bfd082e-fe5f-4883-994e-6264c3bdaadf",
+      "details": "Form submitted with ID: d0d64f99-325e-46c0-adba-409eb6ecbe53",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:21.039743"
+      "timestamp": "2026-02-15T12:24:09.167061"
     },
     {
       "test_name": "Callback Request",
       "success": true,
-      "details": "Callback saved with ID: 3ca65161-8f7a-4bc5-980a-021440a799a5",
+      "details": "Callback saved with ID: a4cea614-e84f-449c-b947-c056a6da59ab",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:21.377595"
+      "timestamp": "2026-02-15T12:24:09.481322"
     },
     {
       "test_name": "AI Chat",
       "success": true,
-      "details": "AI responded: Ahoj! OpenClaw je digit\u00e1ln\u00ed zam\u011bstnanec, kter\u00fd m\u016f\u017ee prov\u00e1d\u011bt r\u016fzn\u00e9 \u010dinnosti v digit\u00e1ln\u00edm sv\u011bt\u011b z\u00e1kaz...",
+      "details": "AI responded: Ahoj! Jsme OpenClaw, digit\u00e1ln\u00ed asistenti pro podnikatele. Pom\u00e1h\u00e1me automatizovat rutinn\u00ed \u00fakoly jako ...",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:24.215951"
+      "timestamp": "2026-02-15T12:24:11.314399"
     },
     {
       "test_name": "Chat History",
       "success": true,
       "details": "Retrieved 2 messages",
       "response_data": null,
-      "timestamp": "2026-02-15T12:22:26.120334"
+      "timestamp": "2026-02-15T12:24:11.414381"
+    },
+    {
+      "test_name": "AI Call Request",
+      "success": true,
+      "details": "AI call saved with ID: af53cb4c-2bc4-48e4-bcf3-b8309772f7dd, Status: pending",
+      "response_data": null,
+      "timestamp": "2026-02-15T12:24:11.727590"
     }
   ],
-  "timestamp": "2026-02-15T12:22:26.120984"
+  "timestamp": "2026-02-15T12:24:11.728218"
 }
