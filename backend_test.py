@@ -65,60 +65,17 @@ class ChciAIAPITester:
             self.log_test("Health Check", False, f"Connection error: {str(e)}")
             return False
 
-    def test_chat_endpoint(self):
-        """Test /api/chat endpoint"""
+    def test_auth_register(self):
+        """Test /api/auth/register endpoint"""
         try:
-            # Test Czech AI chat
-            test_message = "Ahoj, co umíte?"
-            payload = {
-                "session_id": self.session_id,
-                "message": test_message
-            }
-            
-            response = requests.post(
-                f"{self.api_url}/chat", 
-                json=payload,
-                headers={"Content-Type": "application/json"},
-                timeout=30  # AI responses can take time
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "response" in data and "session_id" in data:
-                    # Check if response is in Czech (basic check)
-                    ai_response = data["response"]
-                    if len(ai_response) > 10:  # Reasonable response length
-                        self.log_test("AI Chat", True, f"AI responded: {ai_response[:100]}...")
-                        return True
-                    else:
-                        self.log_test("AI Chat", False, f"Response too short: {ai_response}")
-                        return False
-                else:
-                    self.log_test("AI Chat", False, f"Invalid response format: {data}")
-                    return False
-            else:
-                self.log_test("AI Chat", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("AI Chat", False, f"Error: {str(e)}")
-            return False
-
-    def test_contact_form_endpoint(self):
-        """Test /api/contact endpoint"""
-        try:
-            # Test contact form submission
             test_data = {
-                "name": "Test User",
-                "email": "test@example.com",
-                "phone": "+420123456789",
-                "company": "Test Company",
-                "message": "This is a test message from automated testing.",
-                "form_type": "contact"
+                "email": self.test_user_email,
+                "password": self.test_user_password,
+                "company_name": "Test Company Ltd"
             }
             
             response = requests.post(
-                f"{self.api_url}/contact",
+                f"{self.api_url}/auth/register",
                 json=test_data,
                 headers={"Content-Type": "application/json"},
                 timeout=15
@@ -126,31 +83,31 @@ class ChciAIAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "status" in data and data["status"] == "success" and "id" in data:
-                    self.log_test("Contact Form", True, f"Form submitted with ID: {data['id']}")
+                if "token" in data and "client" in data:
+                    self.auth_token = data["token"]
+                    self.log_test("Auth Register", True, f"User registered with ID: {data['client']['id']}")
                     return True
                 else:
-                    self.log_test("Contact Form", False, f"Invalid response: {data}")
+                    self.log_test("Auth Register", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("Contact Form", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Auth Register", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("Contact Form", False, f"Error: {str(e)}")
+            self.log_test("Auth Register", False, f"Error: {str(e)}")
             return False
 
-    def test_callback_endpoint(self):
-        """Test /api/callback endpoint"""
+    def test_auth_login(self):
+        """Test /api/auth/login endpoint"""
         try:
-            # Test callback request
             test_data = {
-                "phone": "+420987654321",
-                "name": "Test Callback User"
+                "email": self.test_user_email,
+                "password": self.test_user_password
             }
             
             response = requests.post(
-                f"{self.api_url}/callback",
+                f"{self.api_url}/auth/login",
                 json=test_data,
                 headers={"Content-Type": "application/json"},
                 timeout=15
@@ -158,57 +115,67 @@ class ChciAIAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "status" in data and data["status"] == "success" and "id" in data:
-                    self.log_test("Callback Request", True, f"Callback saved with ID: {data['id']}")
+                if "token" in data and "client" in data:
+                    self.auth_token = data["token"]
+                    self.log_test("Auth Login", True, f"Login successful for: {data['client']['email']}")
                     return True
                 else:
-                    self.log_test("Callback Request", False, f"Invalid response: {data}")
+                    self.log_test("Auth Login", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("Callback Request", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Auth Login", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("Callback Request", False, f"Error: {str(e)}")
+            self.log_test("Auth Login", False, f"Error: {str(e)}")
             return False
 
-    def test_chat_history_endpoint(self):
-        """Test /api/chat/history endpoint"""
+    def test_auth_me(self):
+        """Test /api/auth/me endpoint"""
+        if not self.auth_token:
+            self.log_test("Auth Me", False, "No auth token available")
+            return False
+            
         try:
-            # Test getting chat history for our session
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
             response = requests.get(
-                f"{self.api_url}/chat/history/{self.session_id}",
+                f"{self.api_url}/auth/me",
+                headers=headers,
                 timeout=10
             )
             
             if response.status_code == 200:
                 data = response.json()
-                if "session_id" in data and "messages" in data:
-                    message_count = len(data["messages"])
-                    self.log_test("Chat History", True, f"Retrieved {message_count} messages")
+                if "id" in data and "email" in data:
+                    self.log_test("Auth Me", True, f"User data retrieved for: {data['email']}")
                     return True
                 else:
-                    self.log_test("Chat History", False, f"Invalid response format: {data}")
+                    self.log_test("Auth Me", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("Chat History", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Auth Me", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("Chat History", False, f"Error: {str(e)}")
+            self.log_test("Auth Me", False, f"Error: {str(e)}")
             return False
 
-    def test_ai_call_endpoint(self):
-        """Test /api/ai-call endpoint"""
+    def test_contact_callback(self):
+        """Test /api/contact/callback endpoint"""
         try:
-            # Test AI call request
             test_data = {
-                "phone": "+420111222333",
-                "name": "Test AI Call User"
+                "phone": "+420123456789",
+                "name": "Test User",
+                "email": "test@example.com",
+                "type": "callback"
             }
             
             response = requests.post(
-                f"{self.api_url}/ai-call",
+                f"{self.api_url}/contact/callback",
                 json=test_data,
                 headers={"Content-Type": "application/json"},
                 timeout=15
@@ -216,44 +183,51 @@ class ChciAIAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "status" in data and "id" in data and "message" in data:
-                    # Should be "pending" since Retell.ai is not fully configured
-                    if data["status"] in ["pending", "success"]:
-                        self.log_test("AI Call Request", True, f"AI call saved with ID: {data['id']}, Status: {data['status']}")
-                        return True
-                    else:
-                        self.log_test("AI Call Request", False, f"Unexpected status: {data['status']}")
-                        return False
+                if "id" in data and "phone" in data:
+                    self.log_test("Contact Callback", True, f"Callback saved with ID: {data['id']}")
+                    return True
                 else:
-                    self.log_test("AI Call Request", False, f"Invalid response: {data}")
+                    self.log_test("Contact Callback", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("AI Call Request", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Contact Callback", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("AI Call Request", False, f"Error: {str(e)}")
+            self.log_test("Contact Callback", False, f"Error: {str(e)}")
             return False
 
-    def test_root_endpoint(self):
-        """Test /api/ root endpoint"""
+    def test_meeting_request(self):
+        """Test /api/contact/callback endpoint for meeting"""
         try:
-            response = requests.get(f"{self.api_url}/", timeout=10)
+            test_data = {
+                "phone": "+420987654321",
+                "name": "Test Meeting User",
+                "email": "meeting@example.com",
+                "type": "meeting"
+            }
+            
+            response = requests.post(
+                f"{self.api_url}/contact/callback",
+                json=test_data,
+                headers={"Content-Type": "application/json"},
+                timeout=15
+            )
             
             if response.status_code == 200:
                 data = response.json()
-                if "message" in data:
-                    self.log_test("API Root", True, f"Message: {data['message']}")
+                if "id" in data and "phone" in data:
+                    self.log_test("Meeting Request", True, f"Meeting request saved with ID: {data['id']}")
                     return True
                 else:
-                    self.log_test("API Root", False, f"Invalid response: {data}")
+                    self.log_test("Meeting Request", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("API Root", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Meeting Request", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("API Root", False, f"Error: {str(e)}")
+            self.log_test("Meeting Request", False, f"Error: {str(e)}")
             return False
 
     def run_all_tests(self):
