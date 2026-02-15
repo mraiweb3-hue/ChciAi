@@ -148,27 +148,35 @@ async def submit_contact_form(request: ContactFormRequest):
         </html>
         """
         
-        # Send email via Resend
-        params = {
-            "from": SENDER_EMAIL,
-            "to": [CONTACT_EMAIL],
-            "subject": subject,
-            "html": html_content,
-            "reply_to": request.email
-        }
-        
-        email_result = await asyncio.to_thread(resend.Emails.send, params)
-        logger.info(f"Email sent successfully: {email_result}")
+        # Try to send email via Resend
+        email_sent = False
+        try:
+            params = {
+                "from": SENDER_EMAIL,
+                "to": [CONTACT_EMAIL],
+                "subject": subject,
+                "html": html_content,
+                "reply_to": request.email
+            }
+            email_result = await asyncio.to_thread(resend.Emails.send, params)
+            logger.info(f"Email sent successfully: {email_result}")
+            email_sent = True
+        except Exception as email_error:
+            logger.warning(f"Email sending failed (form saved to DB): {str(email_error)}")
+            # Update form status to indicate email not sent
+            await db.contact_forms.update_one(
+                {"id": form_id},
+                {"$set": {"email_sent": False, "email_error": str(email_error)}}
+            )
         
         return ContactFormResponse(
             id=form_id,
             status="success",
-            message="Děkujeme! Vaše zpráva byla odeslána. Ozveme se vám co nejdříve."
+            message="Děkujeme! Vaše zpráva byla přijata. Ozveme se vám co nejdříve."
         )
         
     except Exception as e:
         logger.error(f"Failed to process contact form: {str(e)}")
-        # Still save to DB even if email fails
         raise HTTPException(status_code=500, detail=f"Nepodařilo se odeslat zprávu: {str(e)}")
 
 # Callback Request Endpoint
