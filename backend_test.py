@@ -273,6 +273,9 @@ class OpenClawAPITester:
         self.test_chat_endpoint()
         self.test_chat_history_endpoint()
         
+        # Test AI call endpoint
+        self.test_ai_call_endpoint()
+        
         # Print summary
         print("=" * 60)
         print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} tests passed")
