@@ -196,32 +196,35 @@ async def request_callback(request: CallbackRequest):
         }
         await db.callback_requests.insert_one(callback_data)
         
-        # Send notification email
-        html_content = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 10px; color: white;">
-                <h1 style="margin: 0 0 20px 0; font-size: 24px;">📞 Žádost o zavolání</h1>
-                
-                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px;">
-                    <p style="margin: 5px 0; font-size: 18px;"><strong>Telefon:</strong> {request.phone}</p>
-                    <p style="margin: 5px 0;"><strong>Jméno:</strong> {request.name or 'Neuvedeno'}</p>
+        # Try to send notification email
+        try:
+            html_content = f"""
+            <html>
+            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 10px; color: white;">
+                    <h1 style="margin: 0 0 20px 0; font-size: 24px;">📞 Žádost o zavolání</h1>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px;">
+                        <p style="margin: 5px 0; font-size: 18px;"><strong>Telefon:</strong> {request.phone}</p>
+                        <p style="margin: 5px 0;"><strong>Jméno:</strong> {request.name or 'Neuvedeno'}</p>
+                    </div>
+                    
+                    <p style="margin-top: 20px; font-size: 12px; color: #888;">Požadavek: {datetime.now(timezone.utc).strftime('%d.%m.%Y %H:%M')} UTC</p>
                 </div>
-                
-                <p style="margin-top: 20px; font-size: 12px; color: #888;">Požadavek: {datetime.now(timezone.utc).strftime('%d.%m.%Y %H:%M')} UTC</p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        params = {
-            "from": SENDER_EMAIL,
-            "to": [CONTACT_EMAIL],
-            "subject": "📞 Nová žádost o zavolání - OpenClaw",
-            "html": html_content
-        }
-        
-        await asyncio.to_thread(resend.Emails.send, params)
+            </body>
+            </html>
+            """
+            
+            params = {
+                "from": SENDER_EMAIL,
+                "to": [CONTACT_EMAIL],
+                "subject": "📞 Nová žádost o zavolání - OpenClaw",
+                "html": html_content
+            }
+            
+            await asyncio.to_thread(resend.Emails.send, params)
+        except Exception as email_error:
+            logger.warning(f"Email sending failed for callback (saved to DB): {str(email_error)}")
         
         return ContactFormResponse(
             id=form_id,
