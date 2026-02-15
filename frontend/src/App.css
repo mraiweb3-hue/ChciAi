@@ -847,8 +847,45 @@ body {
 }
 
 .modal-content.callback-modal {
-  max-width: 400px;
+  max-width: 420px;
   text-align: center;
+}
+
+/* Call Type Selector */
+.call-type-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.call-type-btn {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.call-type-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.call-type-btn.active {
+  background: rgba(0, 217, 255, 0.1);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.call-type-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  min-height: 40px;
 }
 
 .modal-close {
