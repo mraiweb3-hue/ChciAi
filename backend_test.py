@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OpenClaw Backend API Testing Suite
+ChciAI Backend API Testing Suite
 Tests all backend endpoints for functionality and integration
 """
 
@@ -10,14 +10,16 @@ import json
 from datetime import datetime
 import uuid
 
-class OpenClawAPITester:
+class ChciAIAPITester:
     def __init__(self, base_url="https://aplikacni-zmeny.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
         self.test_results = []
-        self.session_id = f"test_session_{uuid.uuid4().hex[:8]}"
+        self.auth_token = None
+        self.test_user_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
+        self.test_user_password = "TestPass123!"
 
     def log_test(self, name, success, details="", response_data=None):
         """Log test result"""
