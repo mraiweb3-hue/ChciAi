@@ -1,0 +1,51 @@
+{
+  "total_tests": 6,
+  "passed_tests": 6,
+  "failed_tests": 0,
+  "success_rate": 100.0,
+  "test_results": [
+    {
+      "test_name": "Health Check",
+      "success": true,
+      "details": "Status: healthy",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:11.765134"
+    },
+    {
+      "test_name": "Auth Register",
+      "success": true,
+      "details": "User registered with ID: bbe38b7c-0cb3-4855-bdd9-9034686bec9d",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:12.100500"
+    },
+    {
+      "test_name": "Auth Login",
+      "success": true,
+      "details": "Login successful for: test_7bd2e1c5@example.com",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:12.435643"
+    },
+    {
+      "test_name": "Auth Me",
+      "success": true,
+      "details": "User data retrieved for: test_7bd2e1c5@example.com",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:12.536380"
+    },
+    {
+      "test_name": "Contact Callback",
+      "success": true,
+      "details": "Callback saved with ID: 218c81d1-455f-4af4-8bc2-e1488e6ddd02",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:12.653924"
+    },
+    {
+      "test_name": "Meeting Request",
+      "success": true,
+      "details": "Meeting request saved with ID: e20cc5e8-fd9f-40bd-bc9e-2393d14e92cf",
+      "response_data": null,
+      "timestamp": "2026-02-15T13:17:13.081179"
+    }
+  ],
+  "timestamp": "2026-02-15T13:17:13.081815"
+}
