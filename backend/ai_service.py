@@ -1,6 +1,6 @@
 import os
 import logging
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from openai import AsyncOpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -20,44 +20,40 @@ async def get_ai_response(
     language: str = "cs",
     session_id: str = "default"
 ) -> str:
-    api_key = os.environ.get('EMERGENT_LLM_KEY')
+    api_key = os.environ.get('OPENAI_API_KEY')
     if not api_key:
-        logger.error("EMERGENT_LLM_KEY not configured")
+        logger.error("OPENAI_API_KEY not configured")
         return "Sluzba je docasne nedostupna." if language == "cs" else "Service temporarily unavailable."
 
     if not system_prompt:
         system_prompt = DEFAULT_SYSTEM_PROMPT_CS if language == "cs" else DEFAULT_SYSTEM_PROMPT_EN
 
     try:
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=session_id,
-            system_message=system_prompt
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
-
-        context_parts = []
+        client = AsyncOpenAI(api_key=api_key)
+        
+        # Build messages array
+        messages = [{"role": "system", "content": system_prompt}]
+        
+        # Add conversation history (last 10 messages)
         for msg in conversation_history[-10:]:
-            role_label = "Customer" if msg['role'] == 'user' else "Assistant"
-            context_parts.append(f"{role_label}: {msg['content']}")
-
-        full_message = "\n".join(context_parts + [f"Customer: {message}"]) if context_parts else message
-
-        user_message = UserMessage(text=full_message)
-        response = await chat.send_message(user_message)
-        return response
+            messages.append({
+                "role": msg['role'],
+                "content": msg['content']
+            })
+        
+        # Add current message
+        messages.append({"role": "user", "content": message})
+        
+        # Call OpenAI API
+        response = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            max_tokens=500,
+            temperature=0.7
+        )
+        
+        return response.choices[0].message.content
 
     except Exception as e:
-        logger.warning(f"Claude failed, trying Gemini fallback: {e}")
-        try:
-            chat = LlmChat(
-                api_key=api_key,
-                session_id=f"fb-{session_id}",
-                system_message=system_prompt
-            ).with_model("gemini", "gemini-3-flash-preview")
-
-            user_message = UserMessage(text=message)
-            response = await chat.send_message(user_message)
-            return response
-        except Exception as e2:
-            logger.error(f"All AI providers failed: {e2}")
-            return "Omlouvame se, sluzba je docasne nedostupna." if language == "cs" else "Sorry, service is temporarily unavailable."
+        logger.error(f"OpenAI API failed: {e}")
+        return "Omlouvame se, sluzba je docasne nedostupna." if language == "cs" else "Sorry, service is temporarily unavailable."
