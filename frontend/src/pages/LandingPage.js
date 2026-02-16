@@ -461,7 +461,7 @@ export default function LandingPage() {
       {/* Stats */}
       <StatsSection />
 
-      {/* ===== CO JE CHCI AI ===== */}
+      {/* ===== CO JE OPENCLAW ===== */}
       <section 
         ref={el => sectionRefs.current['what'] = el} 
         className={`py-16 md:py-24 px-4 sm:px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
@@ -470,21 +470,21 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <RevealSection>
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-              Poznejte Clawixe
+              Co je OpenClaw?
             </h2>
             <p className={`text-base md:text-xl mb-8 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-              Váš nový AI kolega, který nikdy nespí a komunikuje ve vašem jazyce.
+              Váš vlastní AI zaměstnanec s digitálními "rukama". Pojmenujte ho jak chcete.
             </p>
           </RevealSection>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[
-              { icon: '💬', title: 'Chat 24/7', desc: 'Odpovídá zákazníkům okamžitě, kdykoliv' },
+              { icon: '🤖', title: 'Váš AI zaměstnanec', desc: 'Přejmenujte si ho, nastavte osobnost' },
+              { icon: '💬', title: 'Chat 24/7', desc: 'Odpovídá zákazníkům okamžitě' },
               { icon: '📞', title: 'Volání klientům', desc: 'Aktivně kontaktuje a komunikuje' },
               { icon: '🌍', title: '6 jazyků', desc: 'CZ, EN, DE, SV, VI, UK' },
               { icon: '🔒', title: 'Etický přístup', desc: 'SMS potvrzení před každým hovorem' },
-              { icon: '⚡', title: 'Rychlý start', desc: 'Začněte za 30 sekund' },
-              { icon: '📊', title: 'Analytika', desc: 'Přehled o všech konverzacích' },
+              { icon: '🎨', title: 'Plná personalizace', desc: 'Tone of voice, role, chování' },
             ].map((item, i) => (
               <RevealSection key={i} delay={i * 0.1}>
                 <GlassCard className="p-5 md:p-6 h-full">
