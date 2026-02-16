@@ -47,7 +47,7 @@ const STEPS = [
     num: 6,
     phase: 'SPUŠTĚNÍ',
     title: 'První automatizace',
-    description: 'Vybereme jeden konkrétní problém, vytvoříme řešení, otestujeme a nasadíme do provozu.',
+    description: 'Vybereme jeden konkrétní problém, vytvoříme řešení s vaším OpenClaw asistentem a nasadíme.',
     icon: '🚀',
     color: 'from-red-500 to-orange-500'
   },
@@ -55,7 +55,7 @@ const STEPS = [
     num: 7,
     phase: 'RŮST',
     title: 'Samostatný růst',
-    description: 'Sdílíte nové problémy, AI generuje návrhy, společně automatizujete. My zůstáváme jako konzultanti.',
+    description: 'Váš OpenClaw se učí a roste. My zůstáváme jako konzultanti pro složitější úkoly.',
     icon: '📈',
     color: 'from-orange-500 to-yellow-500'
   }
