@@ -65,3 +65,32 @@ class ProfileUpdate(BaseModel):
 class PasswordChange(BaseModel):
     current_password: str
     new_password: str = Field(min_length=8)
+
+# ===== Clawix Callback =====
+class ClawixCallbackRequest(BaseModel):
+    name: str = Field(min_length=1)
+    phone: str = Field(min_length=9)
+    language: str = Field(default="cs")  # cs, en, de, sv, vi, uk
+    call_time: str = Field(default="30s")  # 30s, 5m, 30m, tomorrow
+    website: Optional[str] = None
+    consent_sms: bool = True
+    consent_call: bool = True
+
+class ClawixCallbackResponse(BaseModel):
+    id: str
+    status: str
+    confirmation_code: str
+    scheduled_time: str
+
+class ClawixCallbackCancel(BaseModel):
+    callback_id: str
+    confirmation_code: str
+    action: str  # cancel, reschedule
+    new_time: Optional[str] = None
+
+# ===== Contact Request =====
+class ContactRequest(BaseModel):
+    phone: str
+    type: str = "callback"
+    name: Optional[str] = None
+    email: Optional[str] = None
