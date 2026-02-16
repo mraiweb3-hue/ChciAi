@@ -503,47 +503,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== JAK TO FUNGUJE ===== */}
-      <section 
-        ref={el => sectionRefs.current['how'] = el} 
-        className="py-16 md:py-24 px-4 sm:px-6"
-        data-testid="how-section"
-      >
-        <div className="max-w-4xl mx-auto">
-          <RevealSection>
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-8 md:mb-12 text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-              Jak to funguje
-            </h2>
-          </RevealSection>
-          
-          <div className="space-y-6 md:space-y-8">
-            {[
-              { num: '1', title: 'Vyplňte formulář', desc: 'Zadejte jméno, telefon a preferovaný jazyk' },
-              { num: '2', title: 'Obdržíte SMS', desc: 'Potvrzení s možností změnit čas nebo odmítnout' },
-              { num: '3', title: 'Clawix zavolá', desc: 'V požadovaném čase vám zavolá AI asistent' },
-              { num: '4', title: 'Nastavte si službu', desc: 'Společně nastavíme chatbota pro vaše potřeby' },
-            ].map((step, i) => (
-              <RevealSection key={i} delay={i * 0.15}>
-                <GlassCard className="p-5 md:p-6" hover={false}>
-                  <div className="flex items-start gap-4 md:gap-6">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg md:text-xl shrink-0">
-                      {step.num}
-                    </div>
-                    <div>
-                      <h3 className={`font-bold text-lg md:text-xl mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                        {step.title}
-                      </h3>
-                      <p className={`text-sm md:text-base ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                        {step.desc}
-                      </p>
-                    </div>
-                  </div>
-                </GlassCard>
-              </RevealSection>
-            ))}
-          </div>
-        </div>
+      {/* ===== JAK SPOLUPRÁCE PROBÍHÁ - 7 KROKŮ ===== */}
+      <section ref={el => sectionRefs.current['how'] = el}>
+        <ProcessSteps theme={theme} />
       </section>
+
+      {/* ===== BEZPEČNOST ===== */}
+      <SecuritySection theme={theme} />
 
       {/* FAQ Section */}
       <FAQSection sectionRef={el => sectionRefs.current['faq'] = el} />
