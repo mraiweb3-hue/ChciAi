@@ -7,7 +7,7 @@ const STEPS = [
     num: 1,
     phase: 'PŘITAŽENÍ',
     title: 'První kontakt s Clawixem',
-    description: 'Komunikujete s Clawixem (chat nebo hlas). Zjistí obor, hlavní problém a nabídne variantu.',
+    description: 'Náš AI asistent Clawix zjistí váš obor, hlavní problém a nabídne správnou variantu spolupráce.',
     icon: '💬',
     color: 'from-cyan-500 to-blue-500'
   },
@@ -15,23 +15,23 @@ const STEPS = [
     num: 2,
     phase: 'DIAGNOSTIKA',
     title: 'AI Audit',
-    description: 'Osobní 15-30 min analýza. Identifikujeme opakující se procesy, ztráty času a navrhneme automatizační scénář.',
+    description: 'Osobní 15-30 min analýza. Identifikujeme procesy vhodné k automatizaci pomocí OpenClaw.',
     icon: '🔍',
     color: 'from-blue-500 to-indigo-500'
   },
   {
     num: 3,
     phase: 'NASAZENÍ',
-    title: 'Bezpečné nasazení OpenClaw',
-    description: 'Vytvoření instance, nastavení bezpečnosti, přístupů a testovací workflow.',
+    title: 'Instalace OpenClaw',
+    description: 'Vytvoření vaší instance OpenClaw, nastavení bezpečnosti a přístupů.',
     icon: '🛡️',
     color: 'from-indigo-500 to-purple-500'
   },
   {
     num: 4,
     phase: 'PERSONALIZACE',
-    title: 'Vytvoření AI partnera',
-    description: 'Zvolíte jméno, nastavíte tone of voice a role (prodej, podpora, interní). Pomocí vibe codingu.',
+    title: 'Pojmenování vašeho AI',
+    description: 'Zvolíte jméno pro svého OpenClaw asistenta, nastavíte osobnost a role.',
     icon: '🎨',
     color: 'from-purple-500 to-pink-500'
   },
@@ -39,7 +39,7 @@ const STEPS = [
     num: 5,
     phase: 'VZDĚLÁVÁNÍ',
     title: 'Vibe Coding školení',
-    description: 'Naučíte se zadávat cíle, definovat problémy, generovat workflow a iterovat. Tady vzniká hodnota.',
+    description: 'Naučíte se komunikovat s AI - zadávat cíle, generovat workflow, iterovat.',
     icon: '🎓',
     color: 'from-pink-500 to-red-500'
   },
