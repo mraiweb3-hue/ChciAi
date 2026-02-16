@@ -140,17 +140,8 @@ function Nav({ onScrollTo }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-baseline gap-1 group" data-testid="nav-logo">
-            <motion.span
-              className={`text-xl font-extrabold tracking-tight ${
-                theme === 'dark' ? 'text-white' : 'text-slate-900'
-              }`}
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-                Chci AI
-              </span>
-            </motion.span>
+          <Link to="/" className="flex items-center" data-testid="nav-logo">
+            <NavLogo3D theme={theme} />
           </Link>
 
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
@@ -192,7 +183,7 @@ function Nav({ onScrollTo }) {
               whileTap={{ scale: 0.95 }}
               data-testid="nav-get-started-btn"
             >
-              Vyzkoušet
+              Vytvořit OpenClaw
             </motion.button>
           </div>
 
