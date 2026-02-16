@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 class CHCIAIAPITester:
-    def __init__(self, base_url="https://chciai-upgrade.preview.emergentagent.com"):
+    def __init__(self, base_url="https://aitrans-agency.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None
