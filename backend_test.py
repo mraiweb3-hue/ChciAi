@@ -272,7 +272,11 @@ class ChciAIAPITester:
         # Test contact forms
         print("📞 Testing Contact Forms...")
         self.test_contact_callback()
-        self.test_meeting_request()
+        self.test_clawix_callback()
+        
+        # Test SEO endpoints
+        print("🔍 Testing SEO Endpoints...")
+        self.test_seo_structured_data()
         
         # Print summary
         print("=" * 60)
