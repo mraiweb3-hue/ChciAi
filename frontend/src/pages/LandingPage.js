@@ -10,7 +10,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import TypewriterText from '@/components/TypewriterText';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import FloatingCTA from '@/components/FloatingCTA';
-import SEOHead from '@/components/SEOHead';
+// import SEOHead from '@/components/SEOHead'; // Temporarily disabled
 
 // Lazy load Robot3D for performance
 const Robot3D = lazy(() => import('@/components/Robot3D'));
