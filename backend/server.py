@@ -15,7 +15,8 @@ from collections import defaultdict
 from models import (
     RegisterRequest, LoginRequest, ChatbotCreate, ChatbotUpdate,
     WidgetInitRequest, WidgetChatRequest, WidgetLeadCreate,
-    GDPRConsentRequest, ProfileUpdate, PasswordChange
+    GDPRConsentRequest, ProfileUpdate, PasswordChange,
+    ClawixCallbackRequest, ClawixCallbackCancel, ContactRequest
 )
 from auth import hash_password, verify_password, create_token, get_current_client
 from ai_service import get_ai_response
