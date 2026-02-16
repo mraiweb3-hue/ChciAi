@@ -417,7 +417,7 @@ export default function LandingPage() {
     <div className={`min-h-screen transition-colors duration-300 ${
       theme === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'
     }`} data-testid="landing-page">
-      <SEOHead />
+      {/* SEOHead temporarily disabled */}
       <ScrollProgress />
       <AnimatedBackground theme={theme} />
       <Nav onScrollTo={scrollTo} />
