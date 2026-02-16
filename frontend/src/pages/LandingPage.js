@@ -504,8 +504,8 @@ export default function LandingPage() {
       )}
 
       {/* ===== VARIANT SELECTOR ===== */}
-      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2.5 bg-white shadow-xl rounded-full px-4 py-2.5 border border-slate-200" data-testid="variant-selector">
-        <span className="text-xs text-slate-400 font-medium">Design</span>
+      <div className="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2.5 bg-white shadow-xl rounded-full px-2.5 py-4 border border-slate-200" data-testid="variant-selector">
+        <span className="text-xs text-slate-400 font-medium writing-mode-vertical" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>Design</span>
         {VARIANTS.map((variant, i) => (
           <button
             key={i}
