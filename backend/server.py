@@ -464,6 +464,222 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
+# ===== CLAWIX CALLBACK SYSTEM =====
+def generate_confirmation_code():
+    """Generate 6-digit confirmation code"""
+    import random
+    return ''.join([str(random.randint(0, 9)) for _ in range(6)])
+
+def calculate_scheduled_time(call_time: str) -> str:
+    """Calculate scheduled time based on call_time option"""
+    from datetime import timedelta
+    now = datetime.now(timezone.utc)
+    if call_time == "30s":
+        scheduled = now + timedelta(seconds=30)
+    elif call_time == "5m":
+        scheduled = now + timedelta(minutes=5)
+    elif call_time == "30m":
+        scheduled = now + timedelta(minutes=30)
+    elif call_time == "tomorrow":
+        scheduled = now + timedelta(days=1)
+        scheduled = scheduled.replace(hour=10, minute=0, second=0)
+    else:
+        scheduled = now + timedelta(seconds=30)
+    return scheduled.isoformat()
+
+@api_router.post("/clawix/callback")
+async def create_clawix_callback(data: ClawixCallbackRequest, request: Request):
+    """Create a callback request for Clawix AI assistant"""
+    ip = get_client_ip(request)
+    if not check_rate_limit(f"clawix:{ip}", 5):
+        raise HTTPException(status_code=429, detail="Příliš mnoho požadavků. Zkuste to za chvíli.")
+    
+    callback_id = str(uuid.uuid4())
+    confirmation_code = generate_confirmation_code()
+    scheduled_time = calculate_scheduled_time(data.call_time)
+    now = datetime.now(timezone.utc).isoformat()
+    
+    doc = {
+        "id": callback_id,
+        "name": data.name,
+        "phone": data.phone,
+        "language": data.language,
+        "call_time": data.call_time,
+        "scheduled_time": scheduled_time,
+        "website": data.website,
+        "consent_sms": data.consent_sms,
+        "consent_call": data.consent_call,
+        "confirmation_code": confirmation_code,
+        "status": "pending",  # pending, confirmed, cancelled, completed, rescheduled
+        "created_at": now,
+        "updated_at": now,
+        "ip_address": ip,
+        "sms_sent": False,
+        "call_attempted": False,
+    }
+    
+    await db.clawix_callbacks.insert_one(doc)
+    
+    # Log for SMS sending (would integrate with SMS provider)
+    logger.info(f"Clawix callback created: {callback_id} for {data.phone}, scheduled: {scheduled_time}")
+    
+    return {
+        "id": callback_id,
+        "status": "pending",
+        "confirmation_code": confirmation_code,
+        "scheduled_time": scheduled_time,
+        "message": f"Děkujeme {data.name}! Clawix vám zavolá v požadovaném čase. Před hovorem obdržíte SMS s možností potvrzení nebo změny termínu."
+    }
+
+@api_router.post("/clawix/callback/action")
+async def clawix_callback_action(data: ClawixCallbackCancel, request: Request):
+    """Handle callback cancellation or rescheduling"""
+    callback = await db.clawix_callbacks.find_one(
+        {"id": data.callback_id, "confirmation_code": data.confirmation_code},
+        {"_id": 0}
+    )
+    
+    if not callback:
+        raise HTTPException(status_code=404, detail="Callback nenalezen nebo neplatný kód")
+    
+    if callback["status"] in ["completed", "cancelled"]:
+        raise HTTPException(status_code=400, detail="Tento callback již nelze upravit")
+    
+    now = datetime.now(timezone.utc).isoformat()
+    
+    if data.action == "cancel":
+        await db.clawix_callbacks.update_one(
+            {"id": data.callback_id},
+            {"$set": {"status": "cancelled", "updated_at": now}}
+        )
+        return {"message": "Hovor byl zrušen. Děkujeme za zpětnou vazbu.", "status": "cancelled"}
+    
+    elif data.action == "reschedule":
+        if not data.new_time:
+            raise HTTPException(status_code=400, detail="Pro přeplánování je nutné zadat nový čas")
+        new_scheduled = calculate_scheduled_time(data.new_time)
+        await db.clawix_callbacks.update_one(
+            {"id": data.callback_id},
+            {"$set": {
+                "status": "rescheduled",
+                "call_time": data.new_time,
+                "scheduled_time": new_scheduled,
+                "updated_at": now
+            }}
+        )
+        return {"message": f"Hovor byl přeplánován.", "status": "rescheduled", "new_time": new_scheduled}
+    
+    elif data.action == "confirm":
+        await db.clawix_callbacks.update_one(
+            {"id": data.callback_id},
+            {"$set": {"status": "confirmed", "updated_at": now}}
+        )
+        return {"message": "Hovor byl potvrzen. Clawix vám brzy zavolá.", "status": "confirmed"}
+    
+    raise HTTPException(status_code=400, detail="Neplatná akce")
+
+@api_router.get("/clawix/callback/{callback_id}")
+async def get_clawix_callback(callback_id: str, code: str):
+    """Get callback status (requires confirmation code for security)"""
+    callback = await db.clawix_callbacks.find_one(
+        {"id": callback_id, "confirmation_code": code},
+        {"_id": 0, "ip_address": 0}
+    )
+    if not callback:
+        raise HTTPException(status_code=404, detail="Callback nenalezen")
+    return callback
+
+# ===== SEO STRUCTURED DATA =====
+@api_router.get("/seo/structured-data")
+async def get_structured_data():
+    """Return JSON-LD structured data for SEO"""
+    return {
+        "service": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Chci AI - Digitální AI zaměstnanec",
+            "description": "AI asistent pro automatizaci komunikace, zákaznického servisu a marketingu",
+            "provider": {
+                "@type": "Organization",
+                "name": "Chci AI",
+                "url": "https://chciai.cz"
+            },
+            "areaServed": "CZ",
+            "availableLanguage": ["cs", "en", "de", "sv", "vi", "uk"]
+        },
+        "organization": {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Chci AI",
+            "url": "https://chciai.cz",
+            "logo": "https://chciai.cz/logo.png",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+420-XXX-XXX-XXX",
+                "contactType": "customer service",
+                "availableLanguage": ["cs", "en"]
+            }
+        },
+        "faq": {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Co je Chci AI?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Chci AI je platforma pro vytváření AI zaměstnanců, kteří automatizují komunikaci se zákazníky."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Jak funguje Clawix?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Clawix je náš AI asistent, který může komunikovat s vašimi klienty přes chat nebo telefonní hovory."
+                    }
+                }
+            ]
+        }
+    }
+
+# ===== CONTENT SECTIONS (MongoDB dynamic) =====
+@api_router.get("/content/sections")
+async def get_content_sections():
+    """Get dynamic content sections from database"""
+    sections = await db.content_sections.find({}, {"_id": 0}).to_list(100)
+    if not sections:
+        # Return default sections if none in DB
+        return [
+            {
+                "section_id": "hero",
+                "title": "AI zaměstnanec pro malé a střední firmy",
+                "description": "Automatizujte komunikaci, získejte více klientů",
+                "robot_message": "Váš AI zaměstnanec nikdy nespí.",
+                "seo_title": "Chci AI - Digitální AI zaměstnanec",
+                "seo_description": "Vytvořte si AI zaměstnance pro automatizaci komunikace"
+            },
+            {
+                "section_id": "how_it_works",
+                "title": "Jak to funguje",
+                "description": "Jednoduché nastavení, okamžité výsledky",
+                "robot_message": "Automatizujeme komunikaci za vás.",
+                "seo_title": "Jak funguje AI asistent",
+                "seo_description": "Zjistěte jak náš AI asistent pomáhá firmám"
+            },
+            {
+                "section_id": "contact",
+                "title": "Kontaktujte nás",
+                "description": "Začněte ještě dnes",
+                "robot_message": "Začněme ještě dnes.",
+                "seo_title": "Kontakt - Chci AI",
+                "seo_description": "Kontaktujte nás pro více informací"
+            }
+        ]
+    return sections
+
+
 app.include_router(api_router)
 
 app.add_middleware(
