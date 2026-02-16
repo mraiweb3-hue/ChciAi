@@ -423,19 +423,13 @@ export default function LandingPage() {
 
       {/* Robot positions - right side */}
       <div className="fixed right-4 md:right-8 top-32 z-40 hidden lg:block" data-testid="robot-container-top">
-        <Suspense fallback={<div className="w-40 h-40 animate-pulse bg-slate-500/20 rounded-full" />}>
-          <Robot3D position="top" message={ROBOT_MESSAGES.top} theme={theme} scrollY={scrollY} />
-        </Suspense>
+        <Robot3D position="top" message={ROBOT_MESSAGES.top} theme={theme} scrollY={scrollY} />
       </div>
       <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block" data-testid="robot-container-middle">
-        <Suspense fallback={<div className="w-40 h-40 animate-pulse bg-slate-500/20 rounded-full" />}>
-          <Robot3D position="middle" message={ROBOT_MESSAGES.middle} theme={theme} scrollY={scrollY} />
-        </Suspense>
+        <Robot3D position="middle" message={ROBOT_MESSAGES.middle} theme={theme} scrollY={scrollY} />
       </div>
       <div className="fixed right-4 md:right-8 bottom-32 z-40 hidden lg:block" data-testid="robot-container-bottom">
-        <Suspense fallback={<div className="w-40 h-40 animate-pulse bg-slate-500/20 rounded-full" />}>
-          <Robot3D position="bottom" message={ROBOT_MESSAGES.bottom} theme={theme} scrollY={scrollY} />
-        </Suspense>
+        <Robot3D position="bottom" message={ROBOT_MESSAGES.bottom} theme={theme} scrollY={scrollY} />
       </div>
 
       {/* ===== HERO ===== */}
