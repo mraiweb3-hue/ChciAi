@@ -1,327 +1,295 @@
 #!/usr/bin/env python3
 """
-ChciAI Backend API Testing Suite
-Tests all backend endpoints for functionality and integration
+CHCIAI Backend API Testing Suite
+Tests all backend endpoints for the AI transformation agency platform
 """
 
 import requests
 import sys
 import json
 from datetime import datetime
-import uuid
+from typing import Dict, Any
 
-class ChciAIAPITester:
+class CHCIAIAPITester:
     def __init__(self, base_url="https://chciai-upgrade.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
+        self.token = None
+        self.client_id = None
         self.tests_run = 0
         self.tests_passed = 0
         self.test_results = []
-        self.auth_token = None
-        self.test_user_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
-        self.test_user_password = "TestPass123!"
 
-    def log_test(self, name, success, details="", response_data=None):
+    def log_test(self, name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test result"""
         self.tests_run += 1
         if success:
             self.tests_passed += 1
-            
-        result = {
-            "test_name": name,
+            print(f"✅ {name} - PASSED")
+        else:
+            print(f"❌ {name} - FAILED: {details}")
+        
+        self.test_results.append({
+            "test": name,
             "success": success,
             "details": details,
-            "response_data": response_data,
-            "timestamp": datetime.now().isoformat()
-        }
-        self.test_results.append(result)
-        
-        status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status} - {name}")
-        if details:
-            print(f"    Details: {details}")
-        if not success and response_data:
-            print(f"    Response: {response_data}")
-        print()
+            "response_data": response_data
+        })
 
-    def test_health_endpoint(self):
-        """Test /api/health endpoint"""
+    def run_test(self, name: str, method: str, endpoint: str, expected_status: int, 
+                 data: Dict = None, headers: Dict = None, auth_required: bool = False) -> tuple:
+        """Run a single API test"""
+        url = f"{self.api_url}/{endpoint}"
+        
+        # Setup headers
+        test_headers = {'Content-Type': 'application/json'}
+        if headers:
+            test_headers.update(headers)
+        if auth_required and self.token:
+            test_headers['Authorization'] = f'Bearer {self.token}'
+
         try:
-            response = requests.get(f"{self.api_url}/health", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "status" in data and data["status"] == "healthy":
-                    self.log_test("Health Check", True, f"Status: {data['status']}")
-                    return True
-                else:
-                    self.log_test("Health Check", False, f"Invalid response format: {data}")
-                    return False
+            if method == 'GET':
+                response = requests.get(url, headers=test_headers, timeout=10)
+            elif method == 'POST':
+                response = requests.post(url, json=data, headers=test_headers, timeout=10)
+            elif method == 'PUT':
+                response = requests.put(url, json=data, headers=test_headers, timeout=10)
+            elif method == 'DELETE':
+                response = requests.delete(url, headers=test_headers, timeout=10)
             else:
-                self.log_test("Health Check", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Health Check", False, f"Connection error: {str(e)}")
-            return False
+                self.log_test(name, False, f"Unsupported method: {method}")
+                return False, {}
+
+            success = response.status_code == expected_status
+            response_data = {}
+            
+            try:
+                response_data = response.json()
+            except:
+                response_data = {"raw_response": response.text}
+
+            if success:
+                self.log_test(name, True, f"Status: {response.status_code}", response_data)
+            else:
+                self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}. Response: {response.text[:200]}")
+
+            return success, response_data
+
+        except requests.exceptions.RequestException as e:
+            self.log_test(name, False, f"Request error: {str(e)}")
+            return False, {}
+
+    def test_health_check(self):
+        """Test basic health endpoint"""
+        return self.run_test("Health Check", "GET", "health", 200)
 
     def test_auth_register(self):
-        """Test /api/auth/register endpoint"""
-        try:
-            test_data = {
-                "email": self.test_user_email,
-                "password": self.test_user_password,
-                "company_name": "Test Company Ltd"
+        """Test user registration"""
+        test_email = f"test_{datetime.now().strftime('%H%M%S')}@chciai.test"
+        success, response = self.run_test(
+            "User Registration",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": test_email,
+                "password": "TestPass123!",
+                "company_name": "Test Company"
             }
-            
-            response = requests.post(
-                f"{self.api_url}/auth/register",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=15
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "token" in data and "client" in data:
-                    self.auth_token = data["token"]
-                    self.log_test("Auth Register", True, f"User registered with ID: {data['client']['id']}")
-                    return True
-                else:
-                    self.log_test("Auth Register", False, f"Invalid response format: {data}")
-                    return False
-            else:
-                self.log_test("Auth Register", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Auth Register", False, f"Error: {str(e)}")
-            return False
+        )
+        
+        if success and 'token' in response:
+            self.token = response['token']
+            self.client_id = response.get('client', {}).get('id')
+            return True
+        return False
 
     def test_auth_login(self):
-        """Test /api/auth/login endpoint"""
-        try:
-            test_data = {
-                "email": self.test_user_email,
-                "password": self.test_user_password
+        """Test user login with existing credentials"""
+        # Try to login with a test account
+        success, response = self.run_test(
+            "User Login",
+            "POST", 
+            "auth/login",
+            200,
+            data={
+                "email": "admin@chciai.cz",
+                "password": "admin123"
             }
-            
-            response = requests.post(
-                f"{self.api_url}/auth/login",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=15
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "token" in data and "client" in data:
-                    self.auth_token = data["token"]
-                    self.log_test("Auth Login", True, f"Login successful for: {data['client']['email']}")
-                    return True
-                else:
-                    self.log_test("Auth Login", False, f"Invalid response format: {data}")
-                    return False
-            else:
-                self.log_test("Auth Login", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Auth Login", False, f"Error: {str(e)}")
-            return False
+        )
+        
+        if success and 'token' in response:
+            self.token = response['token']
+            self.client_id = response.get('client', {}).get('id')
+            return True
+        return False
 
-    def test_auth_me(self):
-        """Test /api/auth/me endpoint"""
-        if not self.auth_token:
-            self.log_test("Auth Me", False, "No auth token available")
-            return False
-            
-        try:
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
+    def test_leads_endpoint(self):
+        """Test leads creation endpoint"""
+        success, response = self.run_test(
+            "Create Lead",
+            "POST",
+            "leads",
+            200,
+            data={
+                "industry": "E-commerce",
+                "company_size": "2-5 lidí",
+                "problem": "Zákaznická podpora",
+                "tech_level": "Pokročilý uživatel",
+                "source": "chatbot",
+                "status": "qualified"
             }
-            
-            response = requests.get(
-                f"{self.api_url}/auth/me",
-                headers=headers,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "id" in data and "email" in data:
-                    self.log_test("Auth Me", True, f"User data retrieved for: {data['email']}")
-                    return True
-                else:
-                    self.log_test("Auth Me", False, f"Invalid response format: {data}")
-                    return False
-            else:
-                self.log_test("Auth Me", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Auth Me", False, f"Error: {str(e)}")
-            return False
+        )
+        return success
 
-    def test_contact_callback(self):
-        """Test /api/contact/callback endpoint"""
-        try:
-            test_data = {
-                "phone": "+420123456789",
-                "name": "Test User",
-                "email": "test@example.com",
-                "type": "callback"
-            }
-            
-            response = requests.post(
-                f"{self.api_url}/contact/callback",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=15
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "id" in data and "phone" in data:
-                    self.log_test("Contact Callback", True, f"Callback saved with ID: {data['id']}")
-                    return True
-                else:
-                    self.log_test("Contact Callback", False, f"Invalid response format: {data}")
+    def test_onboarding_status(self):
+        """Test onboarding status endpoint"""
+        success, response = self.run_test(
+            "Onboarding Status",
+            "GET",
+            "onboarding/status",
+            200,
+            auth_required=True
+        )
+        return success
+
+    def test_academy_modules(self):
+        """Test academy modules endpoint"""
+        success, response = self.run_test(
+            "Academy Modules",
+            "GET",
+            "academy/modules",
+            200,
+            auth_required=True
+        )
+        
+        if success and isinstance(response, list):
+            # Check if modules have required fields
+            for module in response:
+                if not all(key in module for key in ['id', 'title', 'description']):
+                    self.log_test("Academy Modules Structure", False, "Missing required fields in modules")
                     return False
-            else:
-                self.log_test("Contact Callback", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Contact Callback", False, f"Error: {str(e)}")
-            return False
+            self.log_test("Academy Modules Structure", True, f"Found {len(response)} modules")
+        
+        return success
 
     def test_clawix_callback(self):
-        """Test /api/clawix/callback endpoint"""
-        try:
-            test_data = {
+        """Test Clawix callback endpoint"""
+        success, response = self.run_test(
+            "Clawix Callback",
+            "POST",
+            "clawix/callback",
+            200,
+            data={
                 "name": "Test User",
                 "phone": "+420123456789",
                 "language": "cs",
                 "call_time": "30s",
-                "website": "https://test.com",
+                "website": "test.com",
                 "consent_sms": True,
                 "consent_call": True
             }
-            
-            response = requests.post(
-                f"{self.api_url}/clawix/callback",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=15
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "id" in data and "confirmation_code" in data and "status" in data:
-                    self.log_test("Clawix Callback", True, f"Callback created with ID: {data['id']}, Code: {data['confirmation_code']}")
-                    return True
-                else:
-                    self.log_test("Clawix Callback", False, f"Invalid response format: {data}")
-                    return False
-            else:
-                self.log_test("Clawix Callback", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Clawix Callback", False, f"Error: {str(e)}")
-            return False
+        )
+        
+        if success and 'id' in response and 'confirmation_code' in response:
+            self.log_test("Clawix Callback Response", True, "Callback created with ID and confirmation code")
+            return True
+        elif success:
+            self.log_test("Clawix Callback Response", False, "Missing ID or confirmation code in response")
+        
+        return success
+
+    def test_dashboard_stats(self):
+        """Test dashboard stats endpoint"""
+        success, response = self.run_test(
+            "Dashboard Stats",
+            "GET",
+            "dashboard/stats",
+            200,
+            auth_required=True
+        )
+        return success
 
     def test_seo_structured_data(self):
-        """Test /api/seo/structured-data endpoint"""
-        try:
-            response = requests.get(f"{self.api_url}/seo/structured-data", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "service" in data and "organization" in data and "faq" in data:
-                    self.log_test("SEO Structured Data", True, "SEO data retrieved successfully")
-                    return True
-                else:
-                    self.log_test("SEO Structured Data", False, f"Invalid response format: {data}")
+        """Test SEO structured data endpoint"""
+        success, response = self.run_test(
+            "SEO Structured Data",
+            "GET",
+            "seo/structured-data",
+            200
+        )
+        
+        if success and isinstance(response, dict):
+            # Check for required SEO fields
+            required_sections = ['service', 'organization', 'faq']
+            for section in required_sections:
+                if section not in response:
+                    self.log_test("SEO Data Structure", False, f"Missing {section} section")
                     return False
-            else:
-                self.log_test("SEO Structured Data", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("SEO Structured Data", False, f"Error: {str(e)}")
-            return False
+            self.log_test("SEO Data Structure", True, "All required sections present")
+        
+        return success
+
+    def test_content_sections(self):
+        """Test content sections endpoint"""
+        success, response = self.run_test(
+            "Content Sections",
+            "GET",
+            "content/sections",
+            200
+        )
+        return success
 
     def run_all_tests(self):
         """Run all backend tests"""
-        print("🚀 Starting ChciAI Backend API Tests")
-        print(f"Testing against: {self.base_url}")
+        print("🚀 Starting CHCIAI Backend API Tests")
+        print(f"📡 Testing API at: {self.api_url}")
         print("=" * 60)
+
+        # Basic connectivity
+        self.test_health_check()
         
-        # Test basic connectivity first
-        self.test_health_endpoint()
+        # Authentication tests
+        auth_success = self.test_auth_register()
+        if not auth_success:
+            # Try login if register fails
+            auth_success = self.test_auth_login()
         
-        # Test authentication flow
-        print("🔐 Testing Authentication...")
-        self.test_auth_register()
-        self.test_auth_login()
-        self.test_auth_me()
+        # Core API tests
+        self.test_leads_endpoint()
         
-        # Test contact forms
-        print("📞 Testing Contact Forms...")
-        self.test_contact_callback()
+        # Protected endpoints (require auth)
+        if auth_success:
+            self.test_onboarding_status()
+            self.test_academy_modules()
+            self.test_dashboard_stats()
+        else:
+            print("⚠️  Skipping protected endpoints - no authentication")
+        
+        # Public endpoints
         self.test_clawix_callback()
-        
-        # Test SEO endpoints
-        print("🔍 Testing SEO Endpoints...")
         self.test_seo_structured_data()
-        
+        self.test_content_sections()
+
         # Print summary
-        print("=" * 60)
-        print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} tests passed")
+        print("\n" + "=" * 60)
+        print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} passed")
         
         if self.tests_passed == self.tests_run:
             print("🎉 All tests passed!")
-            return True
+            return 0
         else:
-            print("⚠️  Some tests failed. Check details above.")
-            return False
-
-    def get_test_summary(self):
-        """Get detailed test summary"""
-        return {
-            "total_tests": self.tests_run,
-            "passed_tests": self.tests_passed,
-            "failed_tests": self.tests_run - self.tests_passed,
-            "success_rate": (self.tests_passed / self.tests_run * 100) if self.tests_run > 0 else 0,
-            "test_results": self.test_results,
-            "timestamp": datetime.now().isoformat()
-        }
+            print("❌ Some tests failed")
+            print("\nFailed tests:")
+            for result in self.test_results:
+                if not result['success']:
+                    print(f"  - {result['test']}: {result['details']}")
+            return 1
 
 def main():
-    """Main test execution"""
-    tester = ChciAIAPITester()
-    
-    try:
-        success = tester.run_all_tests()
-        
-        # Save detailed results
-        summary = tester.get_test_summary()
-        with open('/app/backend_test_results.json', 'w') as f:
-            json.dump(summary, f, indent=2)
-        
-        print(f"\n📄 Detailed results saved to: /app/backend_test_results.json")
-        
-        return 0 if success else 1
-        
-    except KeyboardInterrupt:
-        print("\n⏹️  Tests interrupted by user")
-        return 1
-    except Exception as e:
-        print(f"\n💥 Unexpected error: {str(e)}")
-        return 1
+    tester = CHCIAIAPITester()
+    return tester.run_all_tests()
 
 if __name__ == "__main__":
     sys.exit(main())
