@@ -55,13 +55,17 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-          <Toaster position="top-right" richColors />
-        </BrowserRouter>
-      </AuthProvider>
-    </LanguageProvider>
+    <HelmetProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <AppRoutes />
+              <Toaster position="top-right" richColors />
+            </BrowserRouter>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
