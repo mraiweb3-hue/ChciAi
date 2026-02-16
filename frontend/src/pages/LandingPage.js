@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Suspense, lazy } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -10,10 +10,8 @@ import ScrollProgress from '@/components/ScrollProgress';
 import TypewriterText from '@/components/TypewriterText';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import FloatingCTA from '@/components/FloatingCTA';
+import Robot3D from '@/components/Robot3D';
 // import SEOHead from '@/components/SEOHead'; // Temporarily disabled
-
-// Lazy load Robot3D for performance
-const Robot3D = lazy(() => import('@/components/Robot3D'));
 
 // Robot messages for different sections
 const ROBOT_MESSAGES = {
