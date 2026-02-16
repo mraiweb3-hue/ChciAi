@@ -375,9 +375,9 @@ export default function LandingPage() {
   };
 
   const headlineTexts = [
-    'AI zaměstnanec pro malé a střední firmy',
+    'Digitální zaměstnanec s rukama',
+    'Váš vlastní AI asistent OpenClaw',
     'Automatizace komunikace 24/7',
-    'Váš digitální kolega Clawix',
     '6 jazyků, neomezené možnosti',
   ];
 
@@ -400,10 +400,18 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              {/* 3D Logo */}
-              <div className="mb-6 md:mb-8">
-                <Logo3D theme={theme} size="large" />
-              </div>
+              {/* Headline */}
+              <h1 className={`text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6 ${
+                theme === 'dark' ? 'text-white' : 'text-slate-900'
+              }`}>
+                <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                  OpenClaw
+                </span>
+                <br />
+                <span className="text-2xl sm:text-3xl md:text-4xl font-semibold">
+                  AI asistent s rukama
+                </span>
+              </h1>
 
               <h2 className={`text-xl sm:text-2xl md:text-3xl font-semibold mb-6 md:mb-8 leading-snug ${
                 theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
@@ -414,10 +422,10 @@ export default function LandingPage() {
               <div className={`space-y-2 text-base md:text-lg mb-8 md:mb-10 ${
                 theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
               }`}>
-                <p>Clawix je váš AI asistent, který nikdy nespí.</p>
-                <p>Komunikuje s klienty v 6 jazycích.</p>
+                <p>Vytvořte si vlastního AI zaměstnance.</p>
+                <p>Pojmenujte ho. Nastavte. Nechte pracovat.</p>
                 <p className={`font-semibold pt-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                  Začněte za 30 sekund.
+                  Clawix vám s tím pomůže.
                 </p>
               </div>
 
@@ -430,7 +438,7 @@ export default function LandingPage() {
                   data-testid="hero-cta-try"
                 >
                   <span className="flex items-center justify-center gap-2">
-                    Vyzkoušet
+                    Vytvořit OpenClaw
                     <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>→</motion.span>
                   </span>
                 </motion.button>
@@ -446,7 +454,7 @@ export default function LandingPage() {
                   whileTap={{ scale: 0.95 }}
                   data-testid="hero-cta-callback"
                 >
-                  Nechte si zavolat od Clawixe
+                  Clawix mi zavolá
                 </motion.button>
               </div>
             </motion.div>
