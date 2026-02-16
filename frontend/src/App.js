@@ -13,6 +13,8 @@ import ChatbotsPage from "@/pages/ChatbotsPage";
 import ConversationsPage from "@/pages/ConversationsPage";
 import LeadsPage from "@/pages/LeadsPage";
 import SettingsPage from "@/pages/SettingsPage";
+import ClientOnboardingPage from "@/pages/ClientOnboardingPage";
+import AcademyPage from "@/pages/AcademyPage";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
