@@ -111,10 +111,16 @@ Clawix je profesionální digitální zaměstnanec společnosti CHCIAI.
 - **Online varianta**: 990 Kč - Video školení, dokumentace, online podpora
 - **Osobní instalace**: 4.990 Kč - AI Audit, kompletní nastavení, Vibe Coding školení
 
+## Recent Updates (Feb 2025)
+- ✅ Fixed GitHub Actions CI/CD workflow (`/.github/workflows/deploy.yml`)
+  - Changed cache from `npm` to `yarn`
+  - Changed `cache-dependency-path` from `frontend/package-lock.json` to `frontend/yarn.lock`
+  - Set Node.js version to `20` (compatible with @craco/craco)
+
 ## Next Tasks (Prioritized Backlog)
 
 ### P0 (Critical)
-- None currently
+- ✅ CI/CD workflow fix - COMPLETED
 
 ### P1 (High)
 - SMS provider integration (Twilio) for callback notifications
