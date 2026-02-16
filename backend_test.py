@@ -197,18 +197,21 @@ class ChciAIAPITester:
             self.log_test("Contact Callback", False, f"Error: {str(e)}")
             return False
 
-    def test_meeting_request(self):
-        """Test /api/contact/callback endpoint for meeting"""
+    def test_clawix_callback(self):
+        """Test /api/clawix/callback endpoint"""
         try:
             test_data = {
-                "phone": "+420987654321",
-                "name": "Test Meeting User",
-                "email": "meeting@example.com",
-                "type": "meeting"
+                "name": "Test User",
+                "phone": "+420123456789",
+                "language": "cs",
+                "call_time": "30s",
+                "website": "https://test.com",
+                "consent_sms": True,
+                "consent_call": True
             }
             
             response = requests.post(
-                f"{self.api_url}/contact/callback",
+                f"{self.api_url}/clawix/callback",
                 json=test_data,
                 headers={"Content-Type": "application/json"},
                 timeout=15
@@ -216,18 +219,39 @@ class ChciAIAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "id" in data and "phone" in data:
-                    self.log_test("Meeting Request", True, f"Meeting request saved with ID: {data['id']}")
+                if "id" in data and "confirmation_code" in data and "status" in data:
+                    self.log_test("Clawix Callback", True, f"Callback created with ID: {data['id']}, Code: {data['confirmation_code']}")
                     return True
                 else:
-                    self.log_test("Meeting Request", False, f"Invalid response format: {data}")
+                    self.log_test("Clawix Callback", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_test("Meeting Request", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Clawix Callback", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except Exception as e:
-            self.log_test("Meeting Request", False, f"Error: {str(e)}")
+            self.log_test("Clawix Callback", False, f"Error: {str(e)}")
+            return False
+
+    def test_seo_structured_data(self):
+        """Test /api/seo/structured-data endpoint"""
+        try:
+            response = requests.get(f"{self.api_url}/seo/structured-data", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "service" in data and "organization" in data and "faq" in data:
+                    self.log_test("SEO Structured Data", True, "SEO data retrieved successfully")
+                    return True
+                else:
+                    self.log_test("SEO Structured Data", False, f"Invalid response format: {data}")
+                    return False
+            else:
+                self.log_test("SEO Structured Data", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("SEO Structured Data", False, f"Error: {str(e)}")
             return False
 
     def run_all_tests(self):
