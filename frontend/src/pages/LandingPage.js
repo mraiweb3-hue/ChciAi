@@ -280,24 +280,24 @@ function FAQSection({ sectionRef }) {
   
   const faqs = [
     {
-      q: 'Co je Chci AI a jak funguje?',
-      a: 'Chci AI je platforma pro vytváření AI zaměstnanců. Clawix, náš AI asistent, může komunikovat s vašimi zákazníky přes chat nebo telefonní hovory v 6 jazycích.'
+      q: 'Co je OpenClaw a jak funguje?',
+      a: 'OpenClaw je váš vlastní AI zaměstnanec s digitálními "rukama". Můžete si ho pojmenovat jak chcete, nastavit osobnost a nechat ho pracovat - chat, volání, automatizace.'
     },
     {
-      q: 'Je služba bezpečná?',
-      a: 'Ano, bezpečnost je naše priorita. Dbáme na etiku a soukromí - před každým hovorem posíláme SMS s možností odmítnutí. Vy máte plnou kontrolu.'
+      q: 'Kdo je Clawix?',
+      a: 'Clawix je náš interní AI asistent agentury Chci AI. Pomůže vám s nastavením vašeho vlastního OpenClaw asistenta a provede vás celým procesem.'
     },
     {
-      q: 'V jakých jazycích Clawix komunikuje?',
-      a: 'Clawix ovládá 6 jazyků: čeština, angličtina, němčina, švédština, vietnamština a ukrajinština. Automaticky rozpozná jazyk zákazníka.'
+      q: 'V jakých jazycích OpenClaw komunikuje?',
+      a: 'OpenClaw ovládá 6 jazyků: čeština, angličtina, němčina, švédština, vietnamština a ukrajinština. Automaticky rozpozná jazyk zákazníka.'
     },
     {
       q: 'Jak rychle mohu začít?',
-      a: 'Nastavení trvá jen pár minut. Stačí vyplnit formulář a Clawix vám zavolá - můžete začít do 30 sekund!'
+      a: 'Nastavení trvá jen pár minut. Stačí vyplnit formulář a Clawix vám zavolá - pomůže vám vytvořit vlastního OpenClaw asistenta.'
     },
     {
-      q: 'Pro koho je Chci AI vhodný?',
-      a: 'Pro podnikatele a firmy, kteří chtějí automatizovat komunikaci, zlepšit zákaznický servis a růst bez najímání dalších lidí.'
+      q: 'Je služba bezpečná?',
+      a: 'Ano, bezpečnost je naše priorita. Před každým hovorem posíláme SMS s možností odmítnutí. Vaše data zůstávají vaše - máte plnou kontrolu.'
     },
   ];
 
