@@ -9,7 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import ScrollProgress from '@/components/ScrollProgress';
 import TypewriterText from '@/components/TypewriterText';
 import AnimatedCounter from '@/components/AnimatedCounter';
-import Logo3D from '@/components/Logo3D';
+import NavLogo3D from '@/components/NavLogo3D';
 import ClawixCallbackForm from '@/components/ClawixCallbackForm';
 import ChatbotWidget from '@/components/ChatbotWidget';
 import ProcessSteps from '@/components/ProcessSteps';
