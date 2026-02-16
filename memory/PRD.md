@@ -1,54 +1,50 @@
-# ChciAI / OpenClaw - PRD
+# ChciAi / OpenClaw - PRD
 
 ## Original Problem Statement
-Uživatel chtěl opravit a zprovoznit aplikaci z GitHubu https://github.com/mraiweb3-hue/ChciAi
+User requested changes to www.chciai.cz website:
+1. Remove "Made with Emergent" badge from the bottom right corner
+2. Move the design variant selector from bottom left corner to the left side, vertically centered
 
 ## Architecture
-
-### Tech Stack
-- **Frontend**: React.js + Tailwind CSS
+- **Frontend**: React.js with Tailwind CSS
 - **Backend**: FastAPI (Python)
 - **Database**: MongoDB
-- **AI Chat**: Claude Sonnet 4.5 (via Emergent LLM key) s Gemini fallback
-- **Auth**: JWT tokens + bcrypt
+- **Deployment**: Vercel (chciai-new.vercel.app)
 
-### Key Files
-- `/app/backend/server.py` - Main FastAPI server
-- `/app/backend/auth.py` - JWT authentication
-- `/app/backend/ai_service.py` - AI chat integration
-- `/app/backend/models.py` - Pydantic models
-- `/app/frontend/src/pages/LandingPage.js` - Marketing landing page
-- `/app/frontend/src/contexts/AuthContext.js` - Auth state management
+## User Personas
+- Czech business owners looking for AI-powered digital assistant
+- Entrepreneurs wanting automation for customer service, marketing, SEO
 
-## Core Features (Implemented)
-- [x] Landing page s callback formulářem
-- [x] Meeting request formulář
-- [x] User registration & login
-- [x] JWT authentication
-- [x] Dashboard (protected routes)
-- [x] Chatbot management CRUD
-- [x] Widget chat API s AI odpověďmi
-- [x] Leads collection
-- [x] Conversations history
-- [x] GDPR compliance endpoints
+## Core Requirements
+- Landing page showcasing OpenClaw AI assistant features
+- User authentication system
+- Dashboard for managing chatbots, conversations, leads
+- Callback request functionality
+- Design variant selector for different color themes
 
-## What's Working (2026-02-15)
-- ✅ Landing page plně funkční
-- ✅ Callback formulář ukládá do DB
-- ✅ Auth (register/login) funguje
-- ✅ JWT tokens validace
-- ✅ AI chat service (Claude + Gemini fallback)
-- ✅ Dashboard protected routes
+## What's Been Implemented
+### Jan 15, 2026
+- ✅ Removed "Made with Emergent" badge from index.html
+- ✅ Moved design variant selector to left side, vertically centered
+- ✅ Changed variant selector layout from horizontal to vertical
 
-## Environment Variables Required
-```
-MONGO_URL=mongodb://localhost:27017
-DB_NAME=chciai_database
-EMERGENT_LLM_KEY=sk-emergent-xxx
-JWT_SECRET=your-secret-key
-```
+## Files Modified
+- `/app/frontend/public/index.html` - Removed Emergent badge
+- `/app/frontend/src/pages/LandingPage.js` - Repositioned variant selector
 
-## Next Steps
-1. Deploy na produkční server
-2. Ověřit doménu v Resend pro emaily
-3. Nastavit Retell.ai pro AI hovory
+## Prioritized Backlog
+### P0 (Critical)
+- None currently
+
+### P1 (High)
+- SEO optimization for better visibility
+- Performance optimization
+
+### P2 (Medium)
+- Additional color themes
+- Improved mobile responsiveness
+- Analytics integration
+
+## Next Tasks
+- User feedback on current changes
+- Any additional content/information changes requested by user
