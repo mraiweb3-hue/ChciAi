@@ -86,7 +86,7 @@ class CHCIAIAPITester:
 
     def test_auth_register(self):
         """Test user registration"""
-        test_email = f"test_{datetime.now().strftime('%H%M%S')}@chciai.test"
+        test_email = f"test_{datetime.now().strftime('%H%M%S')}@example.com"
         success, response = self.run_test(
             "User Registration",
             "POST",
