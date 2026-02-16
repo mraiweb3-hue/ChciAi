@@ -12,6 +12,8 @@ import AnimatedCounter from '@/components/AnimatedCounter';
 import Logo3D from '@/components/Logo3D';
 import ClawixCallbackForm from '@/components/ClawixCallbackForm';
 import ChatbotWidget from '@/components/ChatbotWidget';
+import ProcessSteps from '@/components/ProcessSteps';
+import SecuritySection from '@/components/SecuritySection';
 
 // Animated background component
 function AnimatedBackground({ theme }) {
