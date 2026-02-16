@@ -1,112 +1,134 @@
 # Chci AI - PRD (Product Requirements Document)
 
 ## Original Problem Statement
-Complete redesign of www.chciai.cz with:
-1. Remove robots from right side, add 3D "Chci Ai" logo with rotation and glow
-2. Blue "Vyzkoušet" button that opens chatbot
-3. Clawix callback form with:
-   - Name, phone, website (optional)
-   - Language selection (CZ, EN, DE, SV, VI, UK)
-   - Call time options (30s, 5min, 30min, tomorrow)
-   - SMS consent with cancel/reschedule options
-4. Chatbot widget in bottom right corner
-5. Dark/Light mode
-6. Full responsivity for all devices
-7. SEO optimization
+Build CHCIAI as AI transformation agency with:
+1. 7-step collaboration model (PŘITAŽENÍ → DIAGNOSTIKA → NASAZENÍ → PERSONALIZACE → VZDĚLÁVÁNÍ → SPUŠTĚNÍ → RŮST)
+2. Clawix as professional sales AI assistant with qualification logic
+3. Client onboarding dashboard
+4. Academy with video modules
+5. Security-first approach with trust badges
+6. Multi-tenant SaaS-ready architecture
+
+## Clawix System Prompt
+Clawix je profesionální digitální zaměstnanec společnosti CHCIAI.
+- Klidný, profesionální, srozumitelný, sebevědomý
+- Zjišťuje: obor, velikost firmy, hlavní problém, technickou úroveň
+- Nabízí varianty: Online (990 Kč) / Osobní instalace (4.990 Kč)
+- Buduje důvěru a dlouhodobý vztah
 
 ## Architecture
 - **Frontend**: React.js with Tailwind CSS, Framer Motion
 - **Backend**: FastAPI (Python)
 - **Database**: MongoDB
-- **Key Libraries**: framer-motion, react-intersection-observer
+- **Multi-tenant ready**: Separate instances, separate databases
 
 ## User Personas
-1. **Small Business Owners** - Want to automate customer communication
-2. **Entrepreneurs** - Looking for 24/7 AI assistant
-3. **Multi-language Businesses** - Need support in multiple languages
-
-## Core Requirements
-- [x] Modern futuristic AI-themed landing page
-- [x] Clawix AI assistant branding
-- [x] Dark/Light mode switching
-- [x] 6 language support (CZ, EN, DE, SV, VI, UK)
-- [x] Ethical approach - SMS confirmation before calls
-- [x] Mobile-first responsive design
+1. **Podnikatel začátečník** - Technicky méně zdatný, potřebuje osobní variantu
+2. **Technicky zdatný podnikatel** - Zvládne online variantu sám
+3. **Rostoucí firma** - Potřebuje škálovat automatizaci
 
 ## What's Been Implemented
 
-### Jan 15, 2026 - Session 1
-- ✅ Removed "Made with Emergent" badge
-- ✅ Moved design variant selector to left side
+### Landing Page Sections
+- ✅ Hero s 3D logem "Chci AI" a typewriter efektem
+- ✅ Statistiky (500+ klientů, 1200+ AI, 24/7, 98%)
+- ✅ "Poznejte Clawixe" - 6 feature cards
+- ✅ "Jak spolupráce probíhá" - 7-krokový vizuální proces
+- ✅ "Bezpečnost na prvním místě" - 6 security features + trust badges
+- ✅ FAQ sekce - 5 otázek s accordion
+- ✅ Ceník - Základ vs Růst
 
-### Jan 16, 2026 - Session 2 (Major Redesign)
-- ✅ Removed robots from right side
-- ✅ Created 3D "Chci Ai" logo with:
-  - Gradient effect (cyan → blue → purple)
-  - Mouse-tracking 3D rotation
-  - Glow effect
-  - Floating particles
-- ✅ Clawix Callback Form with:
-  - 2-step wizard flow
-  - Name, phone, website fields
-  - 6 language selection with flags
-  - 4 call time options
-  - SMS and call consent checkboxes
-  - Confirmation code on success
-- ✅ Chatbot Widget:
-  - Clawix branding
-  - Welcome message
-  - Quick replies
-  - Real-time chat UI
-  - Typing indicator
-- ✅ Backend Clawix API:
-  - POST /api/clawix/callback
-  - POST /api/clawix/callback/action (cancel/reschedule)
-  - GET /api/clawix/callback/:id
-- ✅ SEO endpoints:
-  - GET /api/seo/structured-data
-  - GET /api/content/sections
-- ✅ Full responsivity (mobile, tablet, desktop)
+### Clawix Chatbot
+- ✅ Profesionální úvodní zpráva
+- ✅ Kvalifikační flow (obor, velikost, problém, tech úroveň)
+- ✅ Automatická doporučení variant
+- ✅ Response handling pro různé dotazy
+- ✅ Lead ukládání do MongoDB
 
-## Files Created/Modified
-### Frontend
-- `/app/frontend/src/components/Logo3D.js` - 3D animated logo
-- `/app/frontend/src/components/ClawixCallbackForm.js` - Callback wizard
-- `/app/frontend/src/components/ChatbotWidget.js` - Chat widget
-- `/app/frontend/src/pages/LandingPage.js` - Complete redesign
+### Backend Endpoints
+- ✅ `POST /api/clawix/callback` - Callback request
+- ✅ `POST /api/clawix/callback/action` - Cancel/Reschedule
+- ✅ `POST /api/leads` - Create qualified lead
+- ✅ `GET /api/leads` - List leads (admin)
+- ✅ `POST /api/onboarding/start` - Start onboarding
+- ✅ `GET /api/onboarding/status` - Get status
+- ✅ `PUT /api/onboarding/update` - Update progress
+- ✅ `GET /api/academy/modules` - Get modules
+- ✅ `POST /api/academy/progress/{id}` - Mark complete
+- ✅ `GET /api/admin/stats` - Admin dashboard stats
+- ✅ `GET /api/seo/structured-data` - SEO JSON-LD
 
-### Backend
-- `/app/backend/server.py` - Added Clawix endpoints
-- `/app/backend/models.py` - Added Clawix models
+### Pages
+- ✅ `/` - Landing page
+- ✅ `/auth` - Login/Register
+- ✅ `/client-onboarding` - Onboarding dashboard
+- ✅ `/academy` - Learning modules
+- ✅ `/dashboard` - Main dashboard
+- ✅ `/chatbots` - Chatbot management
+- ✅ `/leads` - Leads management
 
-## API Endpoints
+### Security Features
+- End-to-end šifrování
+- Vlastnictví dat
+- Oddělené instance
+- Audit log
+- GDPR Compliance
+- Open Source základ
 
-### Clawix Callback
-- `POST /api/clawix/callback` - Create callback request
-  - Body: name, phone, language, call_time, website, consent_sms, consent_call
-  - Returns: id, confirmation_code, scheduled_time
-- `POST /api/clawix/callback/action` - Cancel/reschedule
-  - Body: callback_id, confirmation_code, action (cancel/reschedule/confirm)
-- `GET /api/clawix/callback/:id?code=XXX` - Get callback status
+## Files Structure
+```
+/frontend/src/
+├── components/
+│   ├── Logo3D.js
+│   ├── ClawixCallbackForm.js
+│   ├── ChatbotWidget.js (with qualification logic)
+│   ├── ProcessSteps.js (7-step process)
+│   ├── SecuritySection.js
+│   ├── ThemeToggle.js
+│   └── ...
+├── pages/
+│   ├── LandingPage.js
+│   ├── ClientOnboardingPage.js
+│   ├── AcademyPage.js
+│   └── ...
+└── contexts/
+    └── ThemeContext.js
 
-## Prioritized Backlog
+/backend/
+├── server.py (all endpoints)
+└── models.py
+```
+
+## MongoDB Collections
+- `clients` - User accounts
+- `leads` - Qualified leads from chatbot
+- `clawix_callbacks` - Callback requests
+- `onboarding` - Client onboarding progress
+- `academy_progress` - Module completion tracking
+- `content_sections` - Dynamic content
+
+## Pricing
+- **Online varianta**: 990 Kč - Video školení, dokumentace, online podpora
+- **Osobní instalace**: 4.990 Kč - AI Audit, kompletní nastavení, Vibe Coding školení
+
+## Next Tasks (Prioritized Backlog)
 
 ### P0 (Critical)
-- None currently - all core features implemented
+- None currently
 
 ### P1 (High)
-- Actual SMS integration (Twilio/etc)
-- Actual voice calling integration
-- Admin dashboard for callback management
+- SMS provider integration (Twilio) for callback notifications
+- Clawix voice service integration (when ready)
+- Video content for academy modules
 
 ### P2 (Medium)
-- Advanced chatbot with AI responses
-- More languages
-- Analytics dashboard
+- Admin dashboard for leads/callbacks management
 - Email notifications
+- Analytics dashboard
+- More academy modules
 
-## Next Tasks
-1. Integrate real SMS provider for notifications
-2. Connect Clawix voice service when ready
-3. Add more AI capabilities to chatbot
-4. Implement admin dashboard for callback management
+### P3 (Future SaaS)
+- Multi-tenant isolation
+- Subscription billing
+- Custom domains
+- White-label options
