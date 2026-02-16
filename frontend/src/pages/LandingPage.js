@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
@@ -9,27 +9,17 @@ import ThemeToggle from '@/components/ThemeToggle';
 import ScrollProgress from '@/components/ScrollProgress';
 import TypewriterText from '@/components/TypewriterText';
 import AnimatedCounter from '@/components/AnimatedCounter';
-import FloatingCTA from '@/components/FloatingCTA';
-import Robot3D from '@/components/Robot3D';
-// import SEOHead from '@/components/SEOHead'; // Temporarily disabled
-
-// Robot messages for different sections
-const ROBOT_MESSAGES = {
-  top: 'Ahoj! Jsem váš AI pomocník 👋',
-  middle: 'Mohu pracovat 24/7 bez přestávky!',
-  bottom: 'Pojďme spolupracovat! 🚀'
-};
+import Logo3D from '@/components/Logo3D';
+import ClawixCallbackForm from '@/components/ClawixCallbackForm';
+import ChatbotWidget from '@/components/ChatbotWidget';
 
 // Animated background component
 function AnimatedBackground({ theme }) {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {/* Gradient orbs */}
       <motion.div
         className={`absolute w-[800px] h-[800px] rounded-full ${
-          theme === 'dark'
-            ? 'bg-cyan-500/10'
-            : 'bg-cyan-500/5'
+          theme === 'dark' ? 'bg-cyan-500/10' : 'bg-cyan-500/5'
         }`}
         style={{ filter: 'blur(100px)' }}
         animate={{
@@ -40,9 +30,7 @@ function AnimatedBackground({ theme }) {
       />
       <motion.div
         className={`absolute right-0 bottom-0 w-[600px] h-[600px] rounded-full ${
-          theme === 'dark'
-            ? 'bg-purple-500/10'
-            : 'bg-purple-500/5'
+          theme === 'dark' ? 'bg-purple-500/10' : 'bg-purple-500/5'
         }`}
         style={{ filter: 'blur(100px)' }}
         animate={{
@@ -51,7 +39,6 @@ function AnimatedBackground({ theme }) {
         }}
         transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
       />
-      {/* Grid pattern */}
       <div className={`absolute inset-0 ${
         theme === 'dark'
           ? 'bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)]'
@@ -78,17 +65,36 @@ function RevealSection({ children, className = '', delay = 0 }) {
   );
 }
 
-// Glassmorphism card
+// Glassmorphism card with 3D tilt effect
 function GlassCard({ children, className = '', hover = true }) {
   const { theme } = useTheme();
-  
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current || !hover) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / 20;
+    const y = (e.clientY - rect.top - rect.height / 2) / 20;
+    setTilt({ x: -y, y: x });
+  };
+
+  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
+
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`rounded-2xl backdrop-blur-xl ${
         theme === 'dark'
           ? 'bg-slate-800/50 border border-slate-700/50'
           : 'bg-white/70 border border-slate-200/50'
       } ${hover ? 'hover:border-cyan-500/50 transition-colors duration-300' : ''} ${className}`}
+      style={{
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transition: 'transform 0.1s ease-out'
+      }}
       whileHover={hover ? { y: -5, scale: 1.02 } : {}}
       transition={{ duration: 0.3 }}
     >
@@ -111,8 +117,8 @@ function Nav({ onScrollTo }) {
   }, []);
 
   const links = [
-    { label: 'Co je OpenClaw', id: 'what' },
-    { label: 'Možnosti', id: 'capabilities' },
+    { label: 'Co je Chci AI', id: 'what' },
+    { label: 'Jak to funguje', id: 'how' },
     { label: 'FAQ', id: 'faq' },
     { label: 'Ceník', id: 'pricing' },
   ];
@@ -130,7 +136,7 @@ function Nav({ onScrollTo }) {
       }`}
       data-testid="main-navbar"
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-baseline gap-1 group" data-testid="nav-logo">
             <motion.span
@@ -140,13 +146,12 @@ function Nav({ onScrollTo }) {
               whileHover={{ scale: 1.05 }}
             >
               <span className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-                OPENCLAW
+                Chci AI
               </span>
             </motion.span>
-            <span className={`text-[10px] font-medium ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>™</span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {links.map(l => (
               <motion.button
                 key={l.id}
@@ -164,7 +169,7 @@ function Nav({ onScrollTo }) {
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <motion.button
               onClick={() => navigate('/auth')}
@@ -176,7 +181,7 @@ function Nav({ onScrollTo }) {
               whileHover={{ scale: 1.05 }}
               data-testid="nav-login-btn"
             >
-              Přihlásit se
+              Přihlásit
             </motion.button>
             <motion.button
               onClick={() => navigate('/auth')}
@@ -235,7 +240,7 @@ function Nav({ onScrollTo }) {
                 className="w-full text-sm font-medium text-white px-5 py-2.5 rounded-full mt-2 bg-gradient-to-r from-cyan-500 to-blue-500"
                 data-testid="mobile-get-started-btn"
               >
-                Vyzkoušet OpenClaw
+                Vyzkoušet
               </button>
             </div>
           </motion.div>
@@ -256,15 +261,15 @@ function StatsSection() {
   ];
 
   return (
-    <RevealSection className="py-16">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <RevealSection className="py-12 md:py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat, i) => (
-            <GlassCard key={i} className="p-6 text-center">
-              <div className={`text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent`}>
+            <GlassCard key={i} className="p-4 md:p-6 text-center">
+              <div className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </div>
-              <p className={`text-sm mt-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+              <p className={`text-xs md:text-sm mt-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
                 {stat.label}
               </p>
             </GlassCard>
@@ -282,50 +287,50 @@ function FAQSection({ sectionRef }) {
   
   const faqs = [
     {
-      q: 'Co je OpenClaw a jak funguje?',
-      a: 'OpenClaw je digitální AI zaměstnanec, který může pracovat ve vašem digitálním světě. Připojí se k vašim nástrojům (e-mail, web, CRM) a autonomně vykonává úkoly podle vašich instrukcí.'
+      q: 'Co je Chci AI a jak funguje?',
+      a: 'Chci AI je platforma pro vytváření AI zaměstnanců. Clawix, náš AI asistent, může komunikovat s vašimi zákazníky přes chat nebo telefonní hovory v 6 jazycích.'
     },
     {
-      q: 'Je OpenClaw bezpečný?',
-      a: 'Ano, bezpečnost je naše priorita. Vy rozhodujete, kam má OpenClaw přístup. Můžete ho kdykoli zastavit a máte plnou kontrolu nad jeho činností.'
+      q: 'Je služba bezpečná?',
+      a: 'Ano, bezpečnost je naše priorita. Dbáme na etiku a soukromí - před každým hovorem posíláme SMS s možností odmítnutí. Vy máte plnou kontrolu.'
+    },
+    {
+      q: 'V jakých jazycích Clawix komunikuje?',
+      a: 'Clawix ovládá 6 jazyků: čeština, angličtina, němčina, švédština, vietnamština a ukrajinština. Automaticky rozpozná jazyk zákazníka.'
     },
     {
       q: 'Jak rychle mohu začít?',
-      a: 'Nastavení trvá obvykle 1-2 dny. Společně nastavíme přístupy, určíme úkoly a spustíme vašeho AI zaměstnance.'
+      a: 'Nastavení trvá jen pár minut. Stačí vyplnit formulář a Clawix vám zavolá - můžete začít do 30 sekund!'
     },
     {
-      q: 'Mluví OpenClaw česky?',
-      a: 'Ano! OpenClaw plně ovládá češtinu - dokáže komunikovat se zákazníky, psát texty i volat v českém jazyce.'
-    },
-    {
-      q: 'Pro koho je OpenClaw vhodný?',
-      a: 'Pro podnikatele, kteří chtějí automatizovat rutinní úkoly, zlepšit zákaznický servis, nebo růst bez najímání dalších lidí.'
+      q: 'Pro koho je Chci AI vhodný?',
+      a: 'Pro podnikatele a firmy, kteří chtějí automatizovat komunikaci, zlepšit zákaznický servis a růst bez najímání dalších lidí.'
     },
   ];
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-28 px-6" data-testid="faq-section">
+    <section ref={sectionRef} className="py-16 md:py-24 px-4 sm:px-6" data-testid="faq-section">
       <div className="max-w-3xl mx-auto">
         <RevealSection>
-          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 ${
+          <h2 className={`text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12 ${
             theme === 'dark' ? 'text-white' : 'text-slate-900'
           }`}>
             Často kladené otázky
           </h2>
         </RevealSection>
         
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {faqs.map((faq, i) => (
             <RevealSection key={i} delay={i * 0.1}>
               <GlassCard className="overflow-hidden" hover={false}>
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                  className={`w-full p-5 text-left flex items-center justify-between ${
+                  className={`w-full p-4 md:p-5 text-left flex items-center justify-between ${
                     theme === 'dark' ? 'text-white' : 'text-slate-900'
                   }`}
                   data-testid={`faq-question-${i}`}
                 >
-                  <span className="font-semibold pr-4">{faq.q}</span>
+                  <span className="font-semibold pr-4 text-sm md:text-base">{faq.q}</span>
                   <motion.span
                     animate={{ rotate: openIndex === i ? 180 : 0 }}
                     className="text-cyan-500 shrink-0"
@@ -341,7 +346,7 @@ function FAQSection({ sectionRef }) {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <p className={`px-5 pb-5 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                      <p className={`px-4 md:px-5 pb-4 md:pb-5 text-sm md:text-base ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
                         {faq.a}
                       </p>
                     </motion.div>
@@ -360,264 +365,135 @@ function FAQSection({ sectionRef }) {
 export default function LandingPage() {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [phone, setPhone] = useState('');
-  const [phoneSending, setPhoneSending] = useState(false);
-  const [meetingForm, setMeetingForm] = useState({ name: '', email: '', phone: '' });
-  const [meetingOpen, setMeetingOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [showCallbackModal, setShowCallbackModal] = useState(false);
   const sectionRefs = useRef({});
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollTo = (id) => {
     sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const handleCallback = async (e) => {
-    e.preventDefault();
-    if (!phone.trim()) return;
-    setPhoneSending(true);
-    try {
-      await api.post('/contact/callback', { phone, type: 'callback' });
-      toast.success('Děkujeme! Brzy vám zavoláme.');
-      setPhone('');
-    } catch {
-      toast.error('Chyba. Zkuste to prosím znovu.');
-    } finally {
-      setPhoneSending(false);
-    }
-  };
-
-  const handleMeeting = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/contact/callback', { ...meetingForm, type: 'meeting' });
-      toast.success('Děkujeme! Ozveme se vám ohledně schůzky.');
-      setMeetingForm({ name: '', email: '', phone: '' });
-      setMeetingOpen(false);
-    } catch {
-      toast.error('Chyba. Zkuste to prosím znovu.');
-    }
-  };
-
   const headlineTexts = [
-    'Digitální zaměstnanec s rukama.',
-    'Pracuje 24/7 bez přestávky.',
-    'Odpovídá zákazníkům okamžitě.',
-    'Pomáhá vašemu byznysu růst.',
+    'AI zaměstnanec pro malé a střední firmy',
+    'Automatizace komunikace 24/7',
+    'Váš digitální kolega Clawix',
+    '6 jazyků, neomezené možnosti',
   ];
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
       theme === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'
     }`} data-testid="landing-page">
-      {/* SEOHead temporarily disabled */}
       <ScrollProgress />
       <AnimatedBackground theme={theme} />
       <Nav onScrollTo={scrollTo} />
-      <FloatingCTA />
-
-      {/* Robot positions - right side */}
-      <div className="fixed right-4 md:right-8 top-32 z-40 hidden lg:block" data-testid="robot-container-top">
-        <Robot3D position="top" message={ROBOT_MESSAGES.top} theme={theme} scrollY={scrollY} />
-      </div>
-      <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block" data-testid="robot-container-middle">
-        <Robot3D position="middle" message={ROBOT_MESSAGES.middle} theme={theme} scrollY={scrollY} />
-      </div>
-      <div className="fixed right-4 md:right-8 bottom-32 z-40 hidden lg:block" data-testid="robot-container-bottom">
-        <Robot3D position="bottom" message={ROBOT_MESSAGES.bottom} theme={theme} scrollY={scrollY} />
-      </div>
+      <ChatbotWidget theme={theme} />
 
       {/* ===== HERO ===== */}
-      <section className="pt-28 pb-16 md:pt-40 md:pb-24 px-6 relative" data-testid="hero-section">
-        <div className="max-w-5xl mx-auto lg:pr-48">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* 3D Title effect */}
-            <h1 className="text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-tight leading-[1.05] mb-4">
-              <motion.span
-                className="inline-block bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                style={{
-                  textShadow: theme === 'dark' 
-                    ? '0 0 80px rgba(6,182,212,0.5)' 
-                    : '0 0 80px rgba(6,182,212,0.3)'
-                }}
-                animate={{ 
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                }}
-                transition={{ duration: 5, repeat: Infinity }}
-              >
-                OPENCLAW
-              </motion.span>
-              <span className={`text-2xl md:text-3xl align-top ml-1 ${theme === 'dark' ? 'text-slate-600' : 'text-slate-300'}`}>™</span>
-            </h1>
-            
-            <p className={`text-base md:text-lg tracking-wide mb-8 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-              Open Cloud AI Assistant with Hands (Tools)
-            </p>
+      <section className="pt-24 pb-12 md:pt-32 md:pb-20 px-4 sm:px-6 relative" data-testid="hero-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left side - Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {/* 3D Logo */}
+              <div className="mb-6 md:mb-8">
+                <Logo3D theme={theme} size="large" />
+              </div>
 
-            <h2 className={`text-2xl sm:text-3xl md:text-4xl font-semibold mb-8 leading-snug max-w-2xl ${
-              theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
-            }`}>
-              <TypewriterText texts={headlineTexts} className="text-cyan-500" />
-            </h2>
+              <h2 className={`text-xl sm:text-2xl md:text-3xl font-semibold mb-6 md:mb-8 leading-snug ${
+                theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
+              }`}>
+                <TypewriterText texts={headlineTexts} className="text-cyan-500" />
+              </h2>
 
-            <div className={`space-y-1 text-lg md:text-xl mb-10 leading-relaxed ${
-              theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
-            }`}>
-              <p>Ne jen odpovídat.</p>
-              <p>Ne jen reagovat.</p>
-              <p className={`font-semibold pt-3 text-xl md:text-2xl ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                Ale skutečně jednat.
-              </p>
-            </div>
+              <div className={`space-y-2 text-base md:text-lg mb-8 md:mb-10 ${
+                theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+              }`}>
+                <p>Clawix je váš AI asistent, který nikdy nespí.</p>
+                <p>Komunikuje s klienty v 6 jazycích.</p>
+                <p className={`font-semibold pt-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                  Začněte za 30 sekund.
+                </p>
+              </div>
 
-            <div className="flex flex-wrap gap-4" data-testid="hero-ctas">
-              <motion.button
-                onClick={() => navigate('/auth')}
-                className="px-8 py-4 rounded-full text-white font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/25"
-                whileHover={{ scale: 1.05, boxShadow: '0 25px 50px -12px rgba(6,182,212,0.5)' }}
-                whileTap={{ scale: 0.95 }}
-                data-testid="hero-cta-try"
-              >
-                <span className="flex items-center gap-2">
-                  Vyzkoušet OpenClaw
-                  <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>→</motion.span>
-                </span>
-              </motion.button>
-              
-              <motion.button
-                onClick={() => scrollTo('voice')}
-                className="px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/25"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                data-testid="hero-cta-call"
-              >
-                Nechat si zavolat
-              </motion.button>
-              
-              <motion.button
-                onClick={() => setMeetingOpen(true)}
-                className={`px-8 py-4 rounded-full font-semibold border-2 ${
-                  theme === 'dark'
-                    ? 'border-slate-600 text-white hover:border-cyan-500'
-                    : 'border-slate-300 text-slate-700 hover:border-cyan-500'
-                } transition-colors`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                data-testid="hero-cta-meeting"
-              >
-                Domluvit setkání
-              </motion.button>
-            </div>
-          </motion.div>
+              <div className="flex flex-col sm:flex-row gap-4" data-testid="hero-ctas">
+                <motion.button
+                  onClick={() => navigate('/auth')}
+                  className="px-8 py-4 rounded-full text-white font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/25 text-center"
+                  whileHover={{ scale: 1.05, boxShadow: '0 25px 50px -12px rgba(6,182,212,0.5)' }}
+                  whileTap={{ scale: 0.95 }}
+                  data-testid="hero-cta-try"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    Vyzkoušet
+                    <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>→</motion.span>
+                  </span>
+                </motion.button>
+                
+                <motion.button
+                  onClick={() => setShowCallbackModal(true)}
+                  className={`px-8 py-4 rounded-full font-semibold border-2 text-center ${
+                    theme === 'dark'
+                      ? 'border-slate-600 text-white hover:border-cyan-500'
+                      : 'border-slate-300 text-slate-700 hover:border-cyan-500'
+                  } transition-colors`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  data-testid="hero-cta-callback"
+                >
+                  Nechte si zavolat od Clawixe
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* Right side - Callback form */}
+            <RevealSection delay={0.3} className="hidden lg:block">
+              <ClawixCallbackForm theme={theme} />
+            </RevealSection>
+          </div>
         </div>
       </section>
 
       {/* Stats */}
       <StatsSection />
 
-      {/* ===== CO JE OPENCLAW ===== */}
+      {/* ===== CO JE CHCI AI ===== */}
       <section 
         ref={el => sectionRefs.current['what'] = el} 
-        className={`py-20 md:py-28 px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
+        className={`py-16 md:py-24 px-4 sm:px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
         data-testid="what-section"
       >
-        <div className="max-w-5xl mx-auto lg:pr-48">
+        <div className="max-w-5xl mx-auto">
           <RevealSection>
-            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent`}>
-              Představte si zaměstnance, který má ruce.
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+              Poznejte Clawixe
             </h2>
-            <div className={`space-y-1 text-lg md:text-xl mb-8 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-              <p>Ne fyzické.</p>
-              <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>Digitální.</p>
-            </div>
-          </RevealSection>
-          
-          <RevealSection delay={0.2}>
-            <p className={`text-lg mb-6 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>Ruce, které mohou:</p>
-            <div className="grid md:grid-cols-2 gap-3">
-              {[
-                'otevřít e-mail',
-                'odpovědět zákazníkovi',
-                'upravit web',
-                'přidat produkt',
-                'zkontrolovat objednávky',
-                'spustit reklamu',
-                'vytvořit marketingový obsah',
-                'zavolat klientovi',
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={`flex items-center gap-3 p-3 rounded-lg ${
-                    theme === 'dark' ? 'bg-slate-800/50' : 'bg-slate-100/50'
-                  }`}
-                >
-                  <span className="text-cyan-500">→</span>
-                  <span className={theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}>{item}</span>
-                </motion.div>
-              ))}
-            </div>
-          </RevealSection>
-
-          <RevealSection delay={0.4} className={`mt-10 pt-8 border-t ${theme === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}>
-            <p className={`text-xl md:text-2xl font-semibold mb-3 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-              A vy držíte klíče.
+            <p className={`text-base md:text-xl mb-8 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+              Váš nový AI kolega, který nikdy nespí a komunikuje ve vašem jazyce.
             </p>
-            <div className={`space-y-1 text-lg ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-              <p>Vy rozhodujete, kam má přístup.</p>
-              <p>Vy ho můžete kdykoli zastavit.</p>
-              <p className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Vy máte kontrolu.</p>
-            </div>
-          </RevealSection>
-        </div>
-      </section>
-
-      {/* ===== MOŽNOSTI ===== */}
-      <section 
-        ref={el => sectionRefs.current['capabilities'] = el} 
-        className="py-20 md:py-28 px-6"
-        data-testid="capabilities-section"
-      >
-        <div className="max-w-5xl mx-auto lg:pr-48">
-          <RevealSection>
-            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-12 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent`}>
-              Nejen reaguje. Přemýšlí.
-            </h2>
           </RevealSection>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[
-              { title: 'Web & SEO', items: ['Návrh úprav webu', 'SEO optimalizace', 'Analýza návštěvnosti'] },
-              { title: 'Marketing', items: ['Marketingové kampaně', 'Texty na reklamu', 'Obsah pro sociální sítě'] },
-              { title: 'Komunikace', items: ['Odpovědi zákazníkům', 'Volání klientům', 'E-mailová komunikace'] },
-              { title: 'Prodej', items: ['Sběr poptávek', 'Follow-up kontakty', 'Cenové nabídky'] },
-              { title: 'Analýza', items: ['Slabá místa byznysu', 'Nové příležitosti', 'Konkurenční analýza'] },
-              { title: 'Automatizace', items: ['Rutinní úkoly', 'Reporty', 'Integrace systémů'] },
-            ].map((cat, i) => (
+              { icon: '💬', title: 'Chat 24/7', desc: 'Odpovídá zákazníkům okamžitě, kdykoliv' },
+              { icon: '📞', title: 'Volání klientům', desc: 'Aktivně kontaktuje a komunikuje' },
+              { icon: '🌍', title: '6 jazyků', desc: 'CZ, EN, DE, SV, VI, UK' },
+              { icon: '🔒', title: 'Etický přístup', desc: 'SMS potvrzení před každým hovorem' },
+              { icon: '⚡', title: 'Rychlý start', desc: 'Začněte za 30 sekund' },
+              { icon: '📊', title: 'Analytika', desc: 'Přehled o všech konverzacích' },
+            ].map((item, i) => (
               <RevealSection key={i} delay={i * 0.1}>
-                <GlassCard className="p-6 h-full">
-                  <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                    {cat.title}
+                <GlassCard className="p-5 md:p-6 h-full">
+                  <span className="text-3xl md:text-4xl mb-3 block">{item.icon}</span>
+                  <h3 className={`font-bold text-base md:text-lg mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                    {item.title}
                   </h3>
-                  <ul className="space-y-2">
-                    {cat.items.map((item, j) => (
-                      <li key={j} className={`text-sm flex items-center gap-2 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                        <span className="text-cyan-500 text-xs">●</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                    {item.desc}
+                  </p>
                 </GlassCard>
               </RevealSection>
             ))}
@@ -625,57 +501,45 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== HLASOVÉ VOLÁNÍ ===== */}
+      {/* ===== JAK TO FUNGUJE ===== */}
       <section 
-        ref={el => sectionRefs.current['voice'] = el} 
-        className={`py-20 md:py-28 px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
-        data-testid="voice-section"
+        ref={el => sectionRefs.current['how'] = el} 
+        className="py-16 md:py-24 px-4 sm:px-6"
+        data-testid="how-section"
       >
         <div className="max-w-4xl mx-auto">
           <RevealSection>
-            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent`}>
-              Mluví česky a může volat
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-8 md:mb-12 text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+              Jak to funguje
             </h2>
-            <p className={`text-lg mb-8 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-              OpenClaw dokáže přirozeně mluvit česky. Může volat zákazníkům, potvrzovat objednávky a zjišťovat informace.
-            </p>
           </RevealSection>
-
-          <RevealSection delay={0.2}>
-            <GlassCard className="p-8 md:p-10" hover={false}>
-              <h3 className={`text-xl md:text-2xl font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                Vyzkoušejte to. Nechte si zavolat.
-              </h3>
-              <p className={`text-base mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                Vyplňte telefon a OpenClaw vám zavolá zpět.
-              </p>
-              <form onSubmit={handleCallback} className="flex flex-col sm:flex-row gap-3 max-w-lg">
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+420 xxx xxx xxx"
-                  className={`flex-1 px-5 py-3.5 rounded-full border text-base placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-                    theme === 'dark'
-                      ? 'bg-slate-800 border-slate-700 text-white'
-                      : 'bg-white border-slate-300 text-slate-800'
-                  }`}
-                  required
-                  data-testid="callback-phone-input"
-                />
-                <motion.button
-                  type="submit"
-                  disabled={phoneSending}
-                  className="px-8 py-3.5 rounded-full text-white font-medium bg-gradient-to-r from-emerald-500 to-green-500 disabled:opacity-50"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  data-testid="callback-submit-btn"
-                >
-                  {phoneSending ? 'Odesílám...' : 'Zavolat mi'}
-                </motion.button>
-              </form>
-            </GlassCard>
-          </RevealSection>
+          
+          <div className="space-y-6 md:space-y-8">
+            {[
+              { num: '1', title: 'Vyplňte formulář', desc: 'Zadejte jméno, telefon a preferovaný jazyk' },
+              { num: '2', title: 'Obdržíte SMS', desc: 'Potvrzení s možností změnit čas nebo odmítnout' },
+              { num: '3', title: 'Clawix zavolá', desc: 'V požadovaném čase vám zavolá AI asistent' },
+              { num: '4', title: 'Nastavte si službu', desc: 'Společně nastavíme chatbota pro vaše potřeby' },
+            ].map((step, i) => (
+              <RevealSection key={i} delay={i * 0.15}>
+                <GlassCard className="p-5 md:p-6" hover={false}>
+                  <div className="flex items-start gap-4 md:gap-6">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg md:text-xl shrink-0">
+                      {step.num}
+                    </div>
+                    <div>
+                      <h3 className={`font-bold text-lg md:text-xl mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                        {step.title}
+                      </h3>
+                      <p className={`text-sm md:text-base ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                        {step.desc}
+                      </p>
+                    </div>
+                  </div>
+                </GlassCard>
+              </RevealSection>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -685,12 +549,12 @@ export default function LandingPage() {
       {/* ===== CENÍK ===== */}
       <section 
         ref={el => sectionRefs.current['pricing'] = el} 
-        className={`py-20 md:py-28 px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
+        className={`py-16 md:py-24 px-4 sm:px-6 ${theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/50'}`}
         data-testid="pricing-section"
       >
         <div className="max-w-5xl mx-auto">
           <RevealSection>
-            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-12 text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent`}>
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-8 md:mb-12 text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
               Ceník
             </h2>
           </RevealSection>
@@ -698,18 +562,15 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Základ */}
             <RevealSection>
-              <GlassCard className="p-8 md:p-10 h-full" hover={false}>
-                <h3 className={`text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <GlassCard className="p-6 md:p-8 h-full" hover={false}>
+                <h3 className={`text-xl md:text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                   Základ
                 </h3>
-                <p className={`text-base mb-8 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                  Digitální asistent pro každodenní práci.
+                <p className={`text-sm md:text-base mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Pro začínající firmy
                 </p>
-                <p className={`text-sm font-semibold uppercase tracking-wider mb-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
-                  Obsahuje:
-                </p>
-                <ul className={`space-y-3 text-base mb-10 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                  {['osobní nastavení', 'chatbot na web', 'český hlasový modul', 'práce s e-mailem', 'sběr poptávek', 'základní automatizace', 'měsíční podpora'].map(f => (
+                <ul className={`space-y-3 text-sm md:text-base mb-8 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                  {['Chatbot na web', '1 jazyk', '100 konverzací/měsíc', 'Email podpora'].map(f => (
                     <li key={f} className="flex items-center gap-3">
                       <span className="text-cyan-500">✓</span>
                       {f}
@@ -718,16 +579,15 @@ export default function LandingPage() {
                 </ul>
                 <motion.button
                   onClick={() => navigate('/auth')}
-                  className={`w-full py-3.5 rounded-full font-medium ${
+                  className={`w-full py-3 rounded-xl font-medium ${
                     theme === 'dark'
                       ? 'bg-slate-700 text-white hover:bg-slate-600'
                       : 'bg-slate-200 text-slate-800 hover:bg-slate-300'
                   } transition-colors`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  data-testid="pricing-cta-zaklad"
                 >
-                  Začít se Základem
+                  Začít zdarma
                 </motion.button>
               </GlassCard>
             </RevealSection>
@@ -735,21 +595,18 @@ export default function LandingPage() {
             {/* Růst */}
             <RevealSection delay={0.1}>
               <div className="relative">
-                <div className="absolute -top-3 left-8 px-4 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-500 z-10">
+                <div className="absolute -top-3 left-6 px-4 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-500 z-10">
                   Doporučujeme
                 </div>
-                <GlassCard className="p-8 md:p-10 h-full border-2 border-cyan-500/50" hover={false}>
-                  <h3 className={`text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                <GlassCard className="p-6 md:p-8 h-full border-2 border-cyan-500/50" hover={false}>
+                  <h3 className={`text-xl md:text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                     Růst
                   </h3>
-                  <p className={`text-base mb-8 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                    Digitální zaměstnanec s plnými nástroji.
+                  <p className={`text-sm md:text-base mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                    Pro rostoucí firmy
                   </p>
-                  <p className={`text-sm font-semibold uppercase tracking-wider mb-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
-                    Obsahuje vše ze Základu +
-                  </p>
-                  <ul className={`space-y-3 text-base mb-10 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                    {['více přístupů (web, marketing, prodej)', 'práce s reklamou', 'SEO optimalizace', 'tvorba obsahu', 'pokročilé automatizace', 'strategické konzultace', 'rozšiřování funkcí'].map(f => (
+                  <ul className={`space-y-3 text-sm md:text-base mb-8 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                    {['Chatbot + hlasové volání', 'Všech 6 jazyků', 'Neomezené konverzace', 'Prioritní podpora', 'Analytika', 'SMS notifikace'].map(f => (
                       <li key={f} className="flex items-center gap-3">
                         <span className="text-emerald-500">✓</span>
                         {f}
@@ -757,13 +614,12 @@ export default function LandingPage() {
                     ))}
                   </ul>
                   <motion.button
-                    onClick={() => navigate('/auth')}
-                    className="w-full py-3.5 rounded-full font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/25"
+                    onClick={() => setShowCallbackModal(true)}
+                    className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/25"
                     whileHover={{ scale: 1.02, boxShadow: '0 20px 40px -10px rgba(6,182,212,0.4)' }}
                     whileTap={{ scale: 0.98 }}
-                    data-testid="pricing-cta-rust"
                   >
-                    Začít s Růstem
+                    Nechte si zavolat
                   </motion.button>
                 </GlassCard>
               </div>
@@ -773,44 +629,40 @@ export default function LandingPage() {
       </section>
 
       {/* ===== ZÁVĚREČNÁ SEKCE ===== */}
-      <section className="py-20 md:py-28 px-6 relative overflow-hidden" data-testid="final-cta-section">
+      <section className="py-16 md:py-24 px-4 sm:px-6 relative overflow-hidden" data-testid="final-cta-section">
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-10" />
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <RevealSection>
             <motion.h2 
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6"
+              className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6"
               animate={{ 
                 textShadow: ['0 0 20px rgba(255,255,255,0.3)', '0 0 40px rgba(255,255,255,0.5)', '0 0 20px rgba(255,255,255,0.3)']
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              OpenClaw™
+              Chci AI
             </motion.h2>
-            <div className="space-y-2 text-lg md:text-xl text-white/80 mb-10">
-              <p>Digitální asistent s rukama.</p>
-              <p>Vy rozhodujete, kam ho pustíte.</p>
-              <p className="font-semibold text-white">On pracuje.</p>
+            <div className="space-y-2 text-base md:text-xl text-white/80 mb-8 md:mb-10">
+              <p>Váš AI zaměstnanec čeká.</p>
+              <p className="font-semibold text-white">Začněte ještě dnes.</p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.button
                 onClick={() => navigate('/auth')}
-                className="px-8 py-4 rounded-full font-semibold bg-white text-blue-600 shadow-xl"
-                whileHover={{ scale: 1.05, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)' }}
-                whileTap={{ scale: 0.95 }}
-                data-testid="final-cta-try"
-              >
-                Vyzkoušejte ho
-              </motion.button>
-              <motion.button
-                onClick={() => scrollTo('voice')}
-                className="px-8 py-4 rounded-full font-semibold text-white border-2 border-white/40 hover:border-white transition-colors"
+                className="w-full sm:w-auto px-8 py-4 rounded-full font-semibold bg-white text-blue-600 shadow-xl"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                data-testid="final-cta-call"
               >
-                Nechte si zavolat
+                Vyzkoušet zdarma
+              </motion.button>
+              <motion.button
+                onClick={() => setShowCallbackModal(true)}
+                className="w-full sm:w-auto px-8 py-4 rounded-full font-semibold text-white border-2 border-white/40 hover:border-white transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Clawix mi zavolá
               </motion.button>
             </div>
           </RevealSection>
@@ -818,109 +670,42 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className={`py-12 px-6 border-t ${
+      <footer className={`py-8 md:py-12 px-4 sm:px-6 border-t ${
         theme === 'dark' ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'
       }`} data-testid="footer">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-baseline gap-1">
             <span className="text-lg font-extrabold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-              OPENCLAW
+              Chci AI
             </span>
-            <span className={`text-[9px] ${theme === 'dark' ? 'text-slate-600' : 'text-slate-400'}`}>™</span>
           </div>
-          <p className={`text-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
-            © {new Date().getFullYear()} OpenClaw s.r.o. Všechna práva vyhrazena. GDPR
+          <p className={`text-xs md:text-sm text-center ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
+            © {new Date().getFullYear()} Chci AI s.r.o. Všechna práva vyhrazena. GDPR
           </p>
         </div>
       </footer>
 
-      {/* ===== MEETING MODAL ===== */}
+      {/* ===== CALLBACK MODAL ===== */}
       <AnimatePresence>
-        {meetingOpen && (
+        {showCallbackModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm px-6"
-            onClick={() => setMeetingOpen(false)}
-            data-testid="meeting-modal"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setShowCallbackModal(false)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className={`rounded-2xl p-8 w-full max-w-md shadow-2xl relative ${
-                theme === 'dark'
-                  ? 'bg-slate-800 border border-slate-700'
-                  : 'bg-white'
-              }`}
               onClick={e => e.stopPropagation()}
             >
-              <button
-                onClick={() => setMeetingOpen(false)}
-                className={`absolute top-4 right-4 text-xl ${
-                  theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-slate-400 hover:text-slate-700'
-                }`}
-                data-testid="meeting-close-btn"
-              >
-                ✕
-              </button>
-              <h3 className={`text-xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                Domluvit osobní setkání
-              </h3>
-              <p className={`text-sm mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                Vyplňte údaje a ozveme se vám.
-              </p>
-              <form onSubmit={handleMeeting} className="space-y-4">
-                <input
-                  type="text"
-                  value={meetingForm.name}
-                  onChange={e => setMeetingForm(p => ({ ...p, name: e.target.value }))}
-                  placeholder="Jméno"
-                  className={`w-full px-4 py-3 rounded-lg border text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-                    theme === 'dark'
-                      ? 'bg-slate-700 border-slate-600 text-white'
-                      : 'bg-white border-slate-300 text-slate-800'
-                  }`}
-                  required
-                  data-testid="meeting-name-input"
-                />
-                <input
-                  type="email"
-                  value={meetingForm.email}
-                  onChange={e => setMeetingForm(p => ({ ...p, email: e.target.value }))}
-                  placeholder="E-mail"
-                  className={`w-full px-4 py-3 rounded-lg border text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-                    theme === 'dark'
-                      ? 'bg-slate-700 border-slate-600 text-white'
-                      : 'bg-white border-slate-300 text-slate-800'
-                  }`}
-                  required
-                  data-testid="meeting-email-input"
-                />
-                <input
-                  type="tel"
-                  value={meetingForm.phone}
-                  onChange={e => setMeetingForm(p => ({ ...p, phone: e.target.value }))}
-                  placeholder="Telefon"
-                  className={`w-full px-4 py-3 rounded-lg border text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-                    theme === 'dark'
-                      ? 'bg-slate-700 border-slate-600 text-white'
-                      : 'bg-white border-slate-300 text-slate-800'
-                  }`}
-                  required
-                  data-testid="meeting-phone-input"
-                />
-                <motion.button
-                  type="submit"
-                  className="w-full py-3.5 rounded-full text-white font-medium bg-gradient-to-r from-cyan-500 to-blue-500"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  data-testid="meeting-submit-btn"
-                >
-                  Odeslat
-                </motion.button>
-              </form>
+              <ClawixCallbackForm 
+                theme={theme} 
+                onClose={() => setShowCallbackModal(false)} 
+                isModal={true}
+              />
             </motion.div>
           </motion.div>
         )}
