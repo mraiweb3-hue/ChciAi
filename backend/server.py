@@ -680,6 +680,254 @@ async def get_content_sections():
     return sections
 
 
+# ===== LEADS MANAGEMENT =====
+@api_router.post("/leads")
+async def create_lead(request: Request):
+    """Create a qualified lead from chatbot"""
+    ip = get_client_ip(request)
+    if not check_rate_limit(f"lead:{ip}", 10):
+        raise HTTPException(status_code=429, detail="Příliš mnoho požadavků")
+    
+    data = await request.json()
+    now = datetime.now(timezone.utc).isoformat()
+    
+    lead_id = str(uuid.uuid4())
+    doc = {
+        "id": lead_id,
+        "industry": data.get("industry", ""),
+        "company_size": data.get("company_size", ""),
+        "problem": data.get("problem", ""),
+        "tech_level": data.get("tech_level", ""),
+        "source": data.get("source", "chatbot"),
+        "status": data.get("status", "new"),  # new, qualified, contacted, converted
+        "recommended_variant": "personal" if data.get("tech_level") in ["Začátečník", "Pokročilý uživatel"] else "online",
+        "created_at": now,
+        "updated_at": now,
+        "ip_address": ip,
+        "notes": []
+    }
+    
+    await db.leads.insert_one(doc)
+    logger.info(f"New lead created: {lead_id} from {data.get('source', 'unknown')}")
+    
+    return {k: v for k, v in doc.items() if k not in ["_id", "ip_address"]}
+
+@api_router.get("/leads")
+async def list_leads(client_id: str = Depends(get_current_client)):
+    """List all leads (admin only)"""
+    leads = await db.leads.find({}, {"_id": 0, "ip_address": 0}).sort("created_at", -1).to_list(500)
+    return leads
+
+@api_router.get("/leads/{lead_id}")
+async def get_lead(lead_id: str, client_id: str = Depends(get_current_client)):
+    """Get single lead details"""
+    lead = await db.leads.find_one({"id": lead_id}, {"_id": 0, "ip_address": 0})
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead nenalezen")
+    return lead
+
+@api_router.put("/leads/{lead_id}")
+async def update_lead(lead_id: str, request: Request, client_id: str = Depends(get_current_client)):
+    """Update lead status or notes"""
+    data = await request.json()
+    now = datetime.now(timezone.utc).isoformat()
+    
+    updates = {"updated_at": now}
+    if "status" in data:
+        updates["status"] = data["status"]
+    if "note" in data:
+        updates["$push"] = {"notes": {"text": data["note"], "timestamp": now}}
+    
+    if "$push" in updates:
+        push_update = updates.pop("$push")
+        await db.leads.update_one({"id": lead_id}, {"$set": updates, "$push": push_update})
+    else:
+        await db.leads.update_one({"id": lead_id}, {"$set": updates})
+    
+    return await db.leads.find_one({"id": lead_id}, {"_id": 0, "ip_address": 0})
+
+
+# ===== CLIENT ONBOARDING =====
+@api_router.post("/onboarding/start")
+async def start_onboarding(request: Request, client_id: str = Depends(get_current_client)):
+    """Start onboarding process for a client"""
+    data = await request.json()
+    now = datetime.now(timezone.utc).isoformat()
+    
+    onboarding_id = str(uuid.uuid4())
+    doc = {
+        "id": onboarding_id,
+        "client_id": client_id,
+        "status": "started",
+        "variant": data.get("variant", "personal"),  # personal or online
+        "checklist": {
+            "account_created": True,
+            "audit_scheduled": False,
+            "openclaw_installed": False,
+            "ai_partner_created": False,
+            "vibe_coding_completed": False,
+            "first_automation": False
+        },
+        "ai_partner": {
+            "name": None,
+            "tone": None,
+            "role": None
+        },
+        "access_credentials": [],
+        "training_materials": [],
+        "notes": [],
+        "created_at": now,
+        "updated_at": now
+    }
+    
+    await db.onboarding.insert_one(doc)
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+@api_router.get("/onboarding/status")
+async def get_onboarding_status(client_id: str = Depends(get_current_client)):
+    """Get onboarding status for current client"""
+    onboarding = await db.onboarding.find_one({"client_id": client_id}, {"_id": 0})
+    if not onboarding:
+        return {"status": "not_started", "message": "Onboarding ještě nezačal"}
+    return onboarding
+
+@api_router.put("/onboarding/update")
+async def update_onboarding(request: Request, client_id: str = Depends(get_current_client)):
+    """Update onboarding progress"""
+    data = await request.json()
+    now = datetime.now(timezone.utc).isoformat()
+    
+    updates = {"updated_at": now}
+    
+    if "checklist" in data:
+        for key, value in data["checklist"].items():
+            updates[f"checklist.{key}"] = value
+    
+    if "ai_partner" in data:
+        for key, value in data["ai_partner"].items():
+            updates[f"ai_partner.{key}"] = value
+    
+    if "note" in data:
+        await db.onboarding.update_one(
+            {"client_id": client_id},
+            {"$push": {"notes": {"text": data["note"], "timestamp": now}}}
+        )
+    
+    await db.onboarding.update_one({"client_id": client_id}, {"$set": updates})
+    return await db.onboarding.find_one({"client_id": client_id}, {"_id": 0})
+
+
+# ===== ACADEMY / MODULES =====
+@api_router.get("/academy/modules")
+async def get_academy_modules(client_id: str = Depends(get_current_client)):
+    """Get available academy modules"""
+    # Check if user has access (based on variant)
+    onboarding = await db.onboarding.find_one({"client_id": client_id})
+    
+    modules = [
+        {
+            "id": "intro",
+            "title": "Úvod do AI automatizace",
+            "description": "Základní koncepty a možnosti",
+            "duration": "15 min",
+            "type": "video",
+            "free": True
+        },
+        {
+            "id": "openclaw-basics",
+            "title": "OpenClaw základy",
+            "description": "Jak nastavit a používat OpenClaw",
+            "duration": "30 min",
+            "type": "video",
+            "free": False
+        },
+        {
+            "id": "vibe-coding-1",
+            "title": "Vibe Coding 101",
+            "description": "Jak komunikovat s AI",
+            "duration": "45 min",
+            "type": "video",
+            "free": False
+        },
+        {
+            "id": "vibe-coding-2",
+            "title": "Vibe Coding pokročilé",
+            "description": "Vytváření komplexních workflow",
+            "duration": "60 min",
+            "type": "video",
+            "free": False
+        },
+        {
+            "id": "automation-templates",
+            "title": "Automatizační šablony",
+            "description": "Připravené scénáře k použití",
+            "duration": "30 min",
+            "type": "pdf",
+            "free": False
+        }
+    ]
+    
+    # Add progress tracking
+    progress = await db.academy_progress.find_one({"client_id": client_id}) or {"completed": []}
+    
+    for module in modules:
+        module["completed"] = module["id"] in progress.get("completed", [])
+    
+    return modules
+
+@api_router.post("/academy/progress/{module_id}")
+async def update_module_progress(module_id: str, client_id: str = Depends(get_current_client)):
+    """Mark module as completed"""
+    now = datetime.now(timezone.utc).isoformat()
+    
+    await db.academy_progress.update_one(
+        {"client_id": client_id},
+        {
+            "$addToSet": {"completed": module_id},
+            "$set": {"updated_at": now}
+        },
+        upsert=True
+    )
+    
+    return {"message": f"Modul {module_id} označen jako dokončený"}
+
+
+# ===== ADMIN DASHBOARD STATS =====
+@api_router.get("/admin/stats")
+async def get_admin_stats(client_id: str = Depends(get_current_client)):
+    """Get admin dashboard statistics"""
+    # Count leads by status
+    total_leads = await db.leads.count_documents({})
+    qualified_leads = await db.leads.count_documents({"status": "qualified"})
+    converted_leads = await db.leads.count_documents({"status": "converted"})
+    
+    # Count callbacks
+    total_callbacks = await db.clawix_callbacks.count_documents({})
+    pending_callbacks = await db.clawix_callbacks.count_documents({"status": "pending"})
+    
+    # Count onboardings
+    total_onboardings = await db.onboarding.count_documents({})
+    completed_onboardings = await db.onboarding.count_documents({"checklist.first_automation": True})
+    
+    return {
+        "leads": {
+            "total": total_leads,
+            "qualified": qualified_leads,
+            "converted": converted_leads,
+            "conversion_rate": round(converted_leads / total_leads * 100, 1) if total_leads > 0 else 0
+        },
+        "callbacks": {
+            "total": total_callbacks,
+            "pending": pending_callbacks
+        },
+        "onboarding": {
+            "total": total_onboardings,
+            "completed": completed_onboardings,
+            "completion_rate": round(completed_onboardings / total_onboardings * 100, 1) if total_onboardings > 0 else 0
+        }
+    }
+
+
 app.include_router(api_router)
 
 app.add_middleware(
