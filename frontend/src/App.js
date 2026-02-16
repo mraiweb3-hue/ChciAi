@@ -50,6 +50,8 @@ function AppRoutes() {
       <Route path="/conversations" element={<ProtectedRoute><ConversationsPage /></ProtectedRoute>} />
       <Route path="/leads" element={<ProtectedRoute><LeadsPage /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      <Route path="/client-onboarding" element={<ProtectedRoute><ClientOnboardingPage /></ProtectedRoute>} />
+      <Route path="/academy" element={<ProtectedRoute><AcademyPage /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
