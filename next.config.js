@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Removed 'output: export' to enable API routes on Vercel
+  // Standalone mode for Render deployment
+  output: 'standalone',
   images: {
     unoptimized: true,
   },

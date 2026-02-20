@@ -17,6 +17,10 @@
   ],
   "author": "Martin & Aji",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "@vercel/blob": "^2.2.0",
