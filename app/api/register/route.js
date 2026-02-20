@@ -113,13 +113,19 @@ export async function POST(request) {
       console.log('⏭️ VPS installation disabled (set ENABLE_VPS_INSTALL=true)')
     }
 
-    // TODO: Poslat email s přihlašovacími údaji
+    // Poslat welcome email s přihlašovacími údaji
     try {
-      // await sendWelcomeEmail(clientData)
-      console.log('📧 Welcome email queued for:', email)
+      const { sendWelcomeEmail } = await import('@/lib/email-sender')
+      await sendWelcomeEmail({
+        email: savedClient.email,
+        firstName: savedClient.firstName,
+        openclawUrl: savedClient.openclawUrl,
+        trialEndsAt: savedClient.trialEndsAt,
+      })
+      console.log('✅ Welcome email sent to:', email)
     } catch (emailError) {
-      console.error('❌ Email error:', emailError)
-      // Continue anyway - client can login
+      console.error('⚠️ Email error (non-critical):', emailError)
+      // Continue anyway - client can still login
     }
 
     return NextResponse.json({
