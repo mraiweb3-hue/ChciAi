@@ -17,8 +17,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Variables
-INSTALL_DIR="/opt/chciai"
+INSTALL_DIR="/opt/chciai/infrastructure"
 DOMAIN="chciai.cz"
+VPS_IP=$(curl -s ifconfig.me || echo "your-vps-ip")
 
 echo "📋 Installation directory: $INSTALL_DIR"
 echo "🌐 Domain: $DOMAIN"
@@ -38,8 +39,7 @@ echo ""
 
 # Step 2: Create directory structure
 echo "📁 Step 2/8: Creating directory structure..."
-mkdir -p $INSTALL_DIR/{nginx/{conf.d,ssl},templates,scripts,tenants,backups}
-mkdir -p $INSTALL_DIR/templates
+mkdir -p $INSTALL_DIR/{nginx/{conf.d,ssl},templates,scripts,tenants,backups,portainer_data}
 
 echo "✅ Directory structure created"
 echo ""
@@ -59,6 +59,7 @@ ufw default allow outgoing
 ufw allow 22/tcp comment "SSH"
 ufw allow 80/tcp comment "HTTP"
 ufw allow 443/tcp comment "HTTPS"
+ufw allow 9000/tcp comment "Portainer"
 ufw reload
 
 echo "✅ Firewall configured"
@@ -83,6 +84,22 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
     networks:
       - chciai-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: chciai-portainer
+    ports:
+      - "9000:9000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer_data:/data
     restart: unless-stopped
     logging:
       driver: "json-file"
