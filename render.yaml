@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: chciai-cz
+    name: chciai-cz-nextjs
     env: node
     region: frankfurt
     plan: free
@@ -10,11 +10,8 @@ services:
       - key: NODE_ENV
         value: production
       - key: ENABLE_VPS_INSTALL
-        value: true
+        value: "true"
       - key: VPS_HOST
         value: 46.28.111.185
       - key: VPS_USER
         value: root
-      - key: NEXT_PUBLIC_SITE_URL
-        sync: false
-    autoDeploy: true
