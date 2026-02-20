@@ -1,0 +1,36 @@
+{
+  "type": "web_service",
+  "name": "chciai-cz",
+  "ownerId": "tea-d68uahpr0fns73frhngg",
+  "repo": "https://github.com/your-repo/chciai.cz",
+  "autoDeploy": "yes",
+  "branch": "main",
+  "buildCommand": "npm install && npm run build",
+  "startCommand": "npm start",
+  "envVars": [
+    {
+      "key": "NODE_ENV",
+      "value": "production"
+    },
+    {
+      "key": "ENABLE_VPS_INSTALL",
+      "value": "true"
+    },
+    {
+      "key": "VPS_HOST",
+      "value": "46.28.111.185"
+    },
+    {
+      "key": "VPS_USER",
+      "value": "root"
+    }
+  ],
+  "region": "frankfurt",
+  "plan": "free",
+  "rootDir": "./",
+  "healthCheckPath": "/",
+  "serviceDetails": {
+    "env": "node",
+    "buildPlan": "free"
+  }
+}

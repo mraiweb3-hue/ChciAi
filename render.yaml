@@ -1,21 +1,20 @@
 services:
   - type: web
-    name: chciai-backend
-    runtime: python
+    name: chciai-cz
+    env: node
     region: frankfurt
     plan: free
-    branch: main
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
-      - key: MONGO_URL
+      - key: NODE_ENV
+        value: production
+      - key: ENABLE_VPS_INSTALL
+        value: true
+      - key: VPS_HOST
+        value: 46.28.111.185
+      - key: VPS_USER
+        value: root
+      - key: NEXT_PUBLIC_SITE_URL
         sync: false
-      - key: DB_NAME
-        value: chciai_production
-      - key: EMERGENT_LLM_KEY
-        sync: false
-      - key: CORS_ORIGINS
-        value: https://chciai.cz,https://www.chciai.cz
-      - key: PYTHON_VERSION
-        value: 3.11.0
+    autoDeploy: true

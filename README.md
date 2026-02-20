@@ -1,172 +1,132 @@
-# ChciAI.cz - AI Asistent pro České Firmy 🤖
+# ChciAI.cz - Landing Page
 
-Moderní AI asistent postavený na React a FastAPI, specializovaný na automatizaci komunikace pro české firmy.
+Modern, animated landing page for AI transformation services targeting Czech small/medium businesses.
 
-## 🚀 Funkce
+## 🎯 Purpose
 
-- ✅ AI chatbot s GPT-4 integrací
-- ✅ Automatizace zákaznické podpory 24/7
-- ✅ Responzivní design (mobile-first)
-- ✅ PostHog analytics
-- ✅ SEO optimalizace
-- ✅ WhatsApp integrace (připraveno)
+Present our core service: deploying Clawdbot (OpenClawd) AI assistants for businesses, training teams, and providing long-term support.
 
-## 🛠️ Tech Stack
+## 🚀 Tech Stack
 
-### Frontend
-- React 18
-- Tailwind CSS
-- React Router
-- PostHog Analytics
-- Lucide Icons
+- **Next.js 15** - React framework with App Router
+- **Tailwind CSS** - Utility-first styling
+- **Framer Motion** - Smooth animations
+- **Static Export** - Deployable anywhere
 
-### Backend
-- FastAPI (Python)
-- OpenAI GPT-4
-- CORS middleware
-- Async/await architecture
-
-## 📋 Požadavky
-
-- Node.js 18+
-- Python 3.11+
-- OpenAI API klíč
-
-## 🔧 Instalace
-
-### 1. Naklonujte repozitář
+## 🏃 Quick Start
 
 ```bash
-git clone https://github.com/your-username/chciai-new.git
-cd chciai-new
-```
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
+# Install dependencies
 npm install
-# nebo
-yarn install
-```
 
-### 3. Backend Setup
+# Development server
+npm run dev
 
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### 4. Nastavení Environment Variables
-
-```bash
-# Zkopírujte .env.example
-cp .env.example backend/.env
-
-# Upravte backend/.env a přidejte své API klíče:
-OPENAI_API_KEY=sk-...
-```
-
-## 🚀 Spuštění
-
-### Development
-
-#### Frontend (Terminal 1)
-```bash
-cd frontend
-npm start
-# nebo
-yarn start
-```
-Otevře se na `http://localhost:3000`
-
-#### Backend (Terminal 2)
-```bash
-cd backend
-uvicorn server:app --reload --host 0.0.0.0 --port 8000
-```
-API běží na `http://localhost:8000`
-
-### Production Build
-
-```bash
-cd frontend
+# Build for production (static export)
 npm run build
-# Build je v ./build/
+# Output will be in /out directory
+
+# Preview production build
+npm start
 ```
 
-## 📁 Struktura Projektu
+## 📂 Structure
 
 ```
-chciai-new/
-├── frontend/                # React aplikace
-│   ├── public/             # Statické soubory
-│   │   ├── index.html
-│   │   ├── sitemap.xml
-│   │   └── robots.txt
-│   ├── src/
-│   │   ├── components/     # React komponenty
-│   │   ├── App.js          # Hlavní aplikace
-│   │   └── index.js        # Entry point
-│   └── package.json
-├── backend/                 # FastAPI server
-│   ├── server.py           # API endpoints
-│   └── requirements.txt
-├── memory/                  # Dokumentace
-│   └── PRD.md              # Product Requirements
-├── .env.example            # Environment variables template
-└── README.md               # Tento soubor
+app/
+├── components/          # React components
+│   ├── Hero.js         # Hero section with animated gradient
+│   ├── Services.js     # Services we offer
+│   ├── HowItWorks.js   # 4-step process
+│   ├── WhyUs.js        # Why choose us
+│   ├── CTA.js          # Call to action
+│   └── Footer.js       # Footer with contact
+├── styles/
+│   └── globals.css     # Global styles & Tailwind
+├── layout.js           # Root layout & metadata
+└── page.js             # Main page component
 ```
+
+## 🎨 Design
+
+- **Colors:** Black/white base with cyan (#00D9FF) accent
+- **Style:** Modern, tech-forward, professional
+- **Animations:** Smooth transitions, floating particles, gradient effects
+- **Responsive:** Mobile-first design
 
 ## 🌐 Deployment
 
-### Frontend na Vercel
-
+### Vercel (recommended)
 ```bash
-cd frontend
-vercel deploy
+npm install -g vercel
+vercel
 ```
 
-### Backend na Render/Railway
+### Netlify
+```bash
+npm run build
+# Deploy /out directory
+```
 
-1. Připojte GitHub repozitář
-2. Nastavte environment variables
-3. Deploy
+### Custom hosting
+```bash
+npm run build
+# Upload /out directory to any web server
+```
 
-## 📊 Analytics & Monitoring
+## 📝 Content Updates
 
-- **PostHog**: User behavior tracking
-- **Google Search Console**: SEO monitoring
-- Logs dostupné v konzoli
+Edit component files directly:
+- **Hero text:** `app/components/Hero.js`
+- **Services:** `app/components/Services.js`
+- **Contact info:** `app/components/Footer.js` & `app/components/CTA.js`
 
-## 📧 Kontakt & Podpora
+## 🔧 Customization
 
-- Web: [chciai.cz](https://chciai.cz)
-- Email: info@chciai.cz
-- Autoři: Martin & Aji
+### Colors
+Edit `tailwind.config.js`:
+```js
+colors: {
+  'ai-cyan': '#00D9FF',      // Accent color
+  'ai-dark': '#0A0E27',       // Dark background
+  'ai-gray': '#1A1F3A',       // Secondary background
+}
+```
 
-## 📝 Dokumentace
+### Animations
+All animations use Framer Motion. Adjust in component files.
 
-Další dokumentace v repozitáři:
+## 📊 SEO
 
-- `EMAIL-SETUP.md` - Nastavení emailu
-- `GOOGLE-SEARCH-CONSOLE.md` - SEO setup
-- `POSTHOG-ANALYTICS.md` - Analytics monitoring
-- `DEPLOYMENT-CHECKLIST.md` - Deployment checklist
+Metadata configured in `app/layout.js`:
+- Title, description, keywords
+- OpenGraph tags
+- Czech locale (cs_CZ)
 
-## 🔒 License
+## 📞 Contact Info
 
-Proprietary - ChciAI.cz
+Update these in:
+- `app/components/CTA.js` - main CTA buttons
+- `app/components/Footer.js` - footer contact section
 
-## 🎯 Roadmap
+Current placeholders:
+- Email: kontakt@chciai.cz
+- Phone: +420 123 456 789
 
-- [ ] WhatsApp bot integrace
-- [ ] Multi-language support
-- [ ] Advanced analytics dashboard
-- [ ] CRM integrace
-- [ ] Voice AI support
+## 🤖 AI Visibility Strategy
+
+To appear in AI model recommendations:
+1. ✅ Semantic HTML & structured data
+2. ✅ Clear service descriptions
+3. ✅ Keywords in metadata
+4. 🔜 Deploy and get indexed
+5. 🔜 Build backlinks from tech communities
+6. 🔜 Create case studies & tutorials
+
+## 📄 License
+
+Proprietary - ChciAI.cz (Martin & Aji)
 
 ---
 
-Made with ❤️ in Czech Republic 🇨🇿
-
+Built with 💙 by Aji & Martin
