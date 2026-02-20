@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Standalone mode for Render deployment
-  output: 'standalone',
+  // Standard mode works fine on Render
   images: {
     unoptimized: true,
   },
