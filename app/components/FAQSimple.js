@@ -17,11 +17,19 @@ export default function FAQSimple() {
     },
     {
       q: 'Kde běží můj AI agent?',
-      a: 'Na našem zabezpečeném VPS serveru v Česku. Starám se o hardware, aktualizace, zálohy a bezpečnost. Vy máte jen přístup k dashboardu.'
+      a: 'Máte dvě možnosti: (1) Managed - na našem zabezpečeném VPS serveru v Česku, nebo (2) Self-Hosted - na vašem vlastním VPS s plnou kontrolou.'
+    },
+    {
+      q: 'Jaký je rozdíl mezi Managed a Self-Hosted?',
+      a: 'Managed: Vše řešíme za vás. 499 Kč/měsíc, plug & play. Self-Hosted: Plný přístup k dashboardu, source code na vašem VPS, kompletní kontrola. Instalace zdarma, platíte jen VPS a API usage.'
     },
     {
       q: 'Můžu používat vlastní AI model?',
       a: 'Ano. OpenClaw podporuje OpenAI, Claude, místní modely (Ollama) i vlastní API. Nastavíte si v dashboardu.'
+    },
+    {
+      q: 'Co potřebuji pro Self-Hosted?',
+      a: 'Vlastní VPS (Hetzner/DigitalOcean ~150-300 Kč/měsíc) a OpenAI nebo Claude API key. My vám nainstalujeme a nastavíme vše během onboarding call zdarma.'
     },
     {
       q: 'Co když chci zrušit?',
@@ -29,7 +37,7 @@ export default function FAQSimple() {
     },
     {
       q: 'Dostanu podporu?',
-      a: 'Ano. Email i WhatsApp. Martin odpovídá do 24 hodin. Česky.'
+      a: 'Ano. Email i WhatsApp. Martin odpovídá do 24 hodin. Česky. Pro Self-Hosted klienty: email support + volitelný rozšířený balíček (od 2000 Kč/hod).'
     }
   ]
 
