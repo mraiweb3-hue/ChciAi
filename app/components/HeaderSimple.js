@@ -19,9 +19,6 @@ export default function HeaderSimple() {
           <a href="#cena" className="hover:text-blue-600 transition-colors">
             Cena
           </a>
-          <a href="#self-hosted" className="hover:text-purple-600 transition-colors">
-            Self-Hosted
-          </a>
           <a href="#faq" className="hover:text-blue-600 transition-colors">
             FAQ
           </a>

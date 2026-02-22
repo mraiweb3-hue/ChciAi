@@ -12,32 +12,32 @@ export default function FAQSimple() {
       a: 'Open-source AI agent platforma. Spravujte konverzace přes WhatsApp, Email, Web. Integrujte vlastní AI modely. Vše v jednom dashboardu.'
     },
     {
-      q: 'Potřebuji technické znalosti?',
-      a: 'Ne. My vám OpenClaw nainstalujeme, nastavíme a spustíme. Vy jen používáte dashboard - jako kdybyste používali email nebo sociální síť.'
+      q: 'Mám přístup k original OpenClaw dashboardu?',
+      a: 'ANO! Každý účet dostane přístup k plnému OpenClaw dashboardu - sessions, memory, tools, konfigurace. Máte kompletní kontrolu nad svým AI agentem.'
     },
     {
       q: 'Kde běží můj AI agent?',
-      a: 'Máte dvě možnosti: (1) Managed - na našem zabezpečeném VPS serveru v Česku, nebo (2) Self-Hosted - na vašem vlastním VPS s plnou kontrolou.'
-    },
-    {
-      q: 'Jaký je rozdíl mezi Managed a Self-Hosted?',
-      a: 'Managed: Vše řešíme za vás. 499 Kč/měsíc, plug & play. Self-Hosted: Plný přístup k dashboardu, source code na vašem VPS, kompletní kontrola. Instalace zdarma, platíte jen VPS a API usage.'
+      a: 'Na našem zabezpečeném Hetzner VPS serveru. Každý účet má vlastní izolovaný Docker kontejner se source code OpenClaw. My NEMÁME přístup k vašim datům.'
     },
     {
       q: 'Můžu používat vlastní AI model?',
-      a: 'Ano. OpenClaw podporuje OpenAI, Claude, místní modely (Ollama) i vlastní API. Nastavíte si v dashboardu.'
+      a: 'Ano. OpenClaw podporuje OpenAI, Claude, místní modely (Ollama) i vlastní API. Nastavíte si v dashboardu podle vašich potřeb.'
     },
     {
-      q: 'Co potřebuji pro Self-Hosted?',
-      a: 'Vlastní VPS (Hetzner/DigitalOcean ~150-300 Kč/měsíc) a OpenAI nebo Claude API key. My vám nainstalujeme a nastavíme vše během onboarding call zdarma.'
+      q: 'Jak probíhá registrace?',
+      a: 'Registrujete se na webu, během 2 minut vám vytvoříme vlastní OpenClaw kontejner, dostanete přihlašovací údaje k dashboardu. Žádná instalace, všechno hotové.'
     },
     {
       q: 'Co když chci zrušit?',
       a: 'Zrušit můžete kdykoliv. Žádné výpovědní lhůty, žádné penále. Data vám exportujeme, pokud chcete.'
     },
     {
+      q: 'Máte přístup k mým datům?',
+      a: 'NE! Každý účet běží v izolovaném kontejneru. Máte vlastní OpenClaw dashboard s vlastními přihlašovacími údaji. My vidíme pouze technické metriky (uptime, CPU).'
+    },
+    {
       q: 'Dostanu podporu?',
-      a: 'Ano. Email i WhatsApp. Martin odpovídá do 24 hodin. Česky. Pro Self-Hosted klienty: email support + volitelný rozšířený balíček (od 2000 Kč/hod).'
+      a: 'Ano. Email i WhatsApp. Martin odpovídá do 24 hodin. Česky. Plus přístup k dokumentaci a komunitě.'
     }
   ]
 
